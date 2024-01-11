@@ -56,18 +56,26 @@ class SwerveModuleSim implements SwerveModuleIO {
 		drivePosition = MoreMath.toMeters(currentSpeed) + drivePosition;
 
 		double steerVelocity = steer.getAngularVelocityRadPerSec(); // This is the steer velocity of the wheel after the gear ratio is applied
-		steerVelocity = Rotation2d.fromRotations(steerVelocity * Robot.defaultPeriodSecs).getRadians(); // Converting from rotations per second to radians per second
-		steerPosition = Rotation2d.fromRadians(MathUtil.angleModulus(steerPosition.getRadians() + steerVelocity));
+		steerVelocity = Rotation2d.fromRotations(steerVelocity * Robot.defaultPeriodSecs)
+				.getRadians(); // Converting from rotations per second to radians per second
+		steerPosition = Rotation2d.fromRadians(MathUtil.angleModulus(
+				steerPosition.getRadians() + steerVelocity));
 
 		wheelVelocity = drive.getAngularVelocityRPM();
 
-		Logger.recordOutput("Drivetrain/" + details.module.name() + "/WheelVelocity", wheelVelocity);
-		Logger.recordOutput("Drivetrain/" + details.module.name() + "/DriveVoltage", driveVoltage);
-		Logger.recordOutput("Drivetrain/"+ details.module.name() + "/DriveAmpDraw", drive.getCurrentDrawAmps());
+		Logger.recordOutput("Drivetrain/" + details.module.name() +
+				"/WheelVelocity", wheelVelocity);
+		Logger.recordOutput("Drivetrain/" + details.module.name() +
+				"/DriveVoltage", driveVoltage);
+		Logger.recordOutput("Drivetrain/"+ details.module.name() +
+				"/DriveAmpDraw", drive.getCurrentDrawAmps());
 
-		Logger.recordOutput("Drivetrain/" + details.module.name() + "/SteerVoltage", steerVoltage);
-		Logger.recordOutput("Drivetrain/" + details.module.name() + "/WheelAngle", getWheelAngle().getRadians());
-		Logger.recordOutput("Drivetrain/"+ details.module.name() + "/SteerAmpDraw", steer.getCurrentDrawAmps());
+		Logger.recordOutput("Drivetrain/" + details.module.name() +
+				"/SteerVoltage", steerVoltage);
+		Logger.recordOutput("Drivetrain/" + details.module.name() +
+				"/WheelAngle", getWheelAngle().getRadians());
+		Logger.recordOutput("Drivetrain/"+ details.module.name() +
+				"/SteerAmpDraw", steer.getCurrentDrawAmps());
 
 	}
 

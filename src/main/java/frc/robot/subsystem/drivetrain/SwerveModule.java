@@ -89,19 +89,25 @@ class SwerveModule {
     void periodic(){
         module.setState(state);
 
-        double speedOfMotorRPM = (state.speedMetersPerSecond / DrivetrainConstants.DISTANCE_PER_REVOLUTION) * 60 * DrivetrainConstants.GEAR_REDUCTION_DRIVE;
+        double speedOfMotorRPM =
+                (state.speedMetersPerSecond / DrivetrainConstants.DISTANCE_PER_REVOLUTION)
+                        * 60 * DrivetrainConstants.GEAR_REDUCTION_DRIVE;
 
         module.setDriveVoltage(
                 driveController.calculate(module.getWheelVelocity(), speedOfMotorRPM)
         );
         module.setSteerVoltage(
-                steerController.calculate(module.getWheelAngle().getRadians(), MathUtil.angleModulus(state.angle.getRadians()))
+                steerController.calculate(module.getWheelAngle().getRadians(),
+                        MathUtil.angleModulus(state.angle.getRadians()))
         );
 
         module.update();
-        Logger.recordOutput("Drivetrain/" + details.module.name() + "/TargetVelocity", speedOfMotorRPM);
-        Logger.recordOutput("Drivetrain/" + details.module.name() + "/TargetAngle", state.angle.getRadians());
-        Logger.recordOutput("Drivetrain/" + details.module.name() + "/AtAngleSetpoint", steerController.atSetpoint());
+        Logger.recordOutput("Drivetrain/" + details.module.name() +
+                "/TargetVelocity", speedOfMotorRPM);
+        Logger.recordOutput("Drivetrain/" + details.module.name() +
+                "/TargetAngle", state.angle.getRadians());
+        Logger.recordOutput("Drivetrain/" + details.module.name() +
+                "/AtAngleSetpoint", steerController.atSetpoint());
 
         if (RobotState.isDisabled())
         {
@@ -130,6 +136,12 @@ class SwerveModule {
     {
         this.mode = mode;
     }
+
+    SpeedMode getSpeedMode()
+    {
+        return mode;
+    }
+
     public SwerveModulePosition getModulePosition()
     {
         return position;
@@ -138,7 +150,8 @@ class SwerveModule {
     SwerveModuleState getState()
     {
         double speedOfWheel = module.getWheelVelocity();
-        speedOfWheel = (((speedOfWheel / DrivetrainConstants.GEAR_REDUCTION_DRIVE) / 60)) * DrivetrainConstants.DISTANCE_PER_REVOLUTION;
+        speedOfWheel = (((speedOfWheel / DrivetrainConstants.GEAR_REDUCTION_DRIVE) / 60))
+                * DrivetrainConstants.DISTANCE_PER_REVOLUTION;
 
         return new SwerveModuleState(speedOfWheel, module.getWheelAngle());
     }

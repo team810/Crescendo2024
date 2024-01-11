@@ -35,8 +35,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 	private ChassisSpeeds targetTeleopSpeeds;
 	private ChassisSpeeds targetAutoSpeeds;
-	private ChassisSpeeds targetAutoAlineSpeeds;
-	private ChassisSpeeds targetTeleopAutoAlineSpeeds;
+	private final ChassisSpeeds targetAutoAlignSpeeds;
+	private final ChassisSpeeds targetTeleopAutoAlignSpeeds;
 
 	private final SwerveModule frontLeft;
 	private final SwerveModule frontRight;
@@ -83,8 +83,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		targetAutoSpeeds = new ChassisSpeeds();
 		targetTeleopSpeeds = new ChassisSpeeds();
-		targetTeleopAutoAlineSpeeds = new ChassisSpeeds();
-		targetAutoAlineSpeeds = new ChassisSpeeds();
+		targetTeleopAutoAlignSpeeds = new ChassisSpeeds();
+		targetAutoAlignSpeeds = new ChassisSpeeds();
 
 		kinematics = KINEMATICS;
 		odometry = new SwerveDriveOdometry(kinematics, navx.getRotation2d(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
@@ -97,32 +97,27 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	public void periodic() {
 
 
-		ChassisSpeeds targetSpeed;
+		ChassisSpeeds targetSpeed = switch (mode) {
+
+            case teleop -> targetTeleopSpeeds;
+
+            case teleop_autoAlign -> targetTeleopAutoAlignSpeeds;
+
+            case auto -> targetAutoSpeeds;
+
+            case auto_autoAlign -> targetAutoAlignSpeeds;
+
+            case teleop_auto_turn ->
+                    new ChassisSpeeds(targetTeleopSpeeds.vxMetersPerSecond,
+							targetTeleopSpeeds.vyMetersPerSecond, 0);
+
+            default -> throw new RuntimeException("Triggered a default state, " +
+                    "IDK how you did this get help from Matthew, " +
+                    "This will be funny when I eventually adjacently make the error");
+        };
 
 
-		switch (mode)
-		{
-			case teleop:
-				targetSpeed = targetTeleopSpeeds;
-				break;
-			case teleop_autoAline:
-				targetSpeed = targetTeleopAutoAlineSpeeds;
-				break;
-			case auto:
-				targetSpeed = targetAutoSpeeds;
-				break;
-			case auto_autoAline:
-				targetSpeed = targetAutoAlineSpeeds;
-				break;
-			case telop_auto_turn:
-				targetSpeed = new ChassisSpeeds(targetTeleopSpeeds.vxMetersPerSecond, targetTeleopSpeeds.vyMetersPerSecond,0);
-				break;
-			default:
-				throw new RuntimeException("Triggered a default state, IDK how you did this get help from Matthew, " +
-						"This will be funny when I eventually adjacently make the error");
-		}
-
-		if (RobotState.isDisabled())
+        if (RobotState.isDisabled())
 		{
 			targetSpeed = new ChassisSpeeds(0,0,0);
 		}

@@ -105,7 +105,7 @@ public class DriveCommand extends Command {
 
 		if (IO.getJoystickValue(Controls.autoTurnPOV).get().intValue() != -1)
 		{
-			DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.telop_auto_turn);
+			DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.teleop_auto_turn);
 		}
 	}
 }

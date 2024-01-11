@@ -7,7 +7,8 @@ class SwerveModuleDetails {
 	public double encoderOffset;
 	public SwerveModuleEnum module;
 
-	public SwerveModuleDetails(int mDriveID, int mSteerID, int mEncoderID, double mEncoderOffset, SwerveModuleEnum mModule) {
+	public SwerveModuleDetails(int mDriveID, int mSteerID, int mEncoderID,
+							   double mEncoderOffset, SwerveModuleEnum mModule) {
 		driveID = mDriveID;
 		steerID = mSteerID;
 		encoderID = mEncoderID;

@@ -50,23 +50,33 @@ class SwerveModuleRev implements SwerveModuleIO {
 		drive_encoder = drive.getEncoder();
 
 		CANcoderConfiguration configuration = new CANcoderConfiguration();
-		configuration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-		configuration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+		configuration.MagnetSensor.SensorDirection =
+				SensorDirectionValue.CounterClockwise_Positive;
+		configuration.MagnetSensor.AbsoluteSensorRange =
+				AbsoluteSensorRangeValue.Unsigned_0To1;
 
 		driveVoltage = 0;
 		steerVoltage = 0;
 	}
 	@Override
 	public void update() {
-		Logger.recordOutput("Drivetrain/" + details.module.name() + "/WheelVelocity", getWheelVelocity());
-		Logger.recordOutput("Drivetrain/" + details.module.name() + "/DriveVoltage", driveVoltage);
-		Logger.recordOutput("Drivetrain/"+ details.module.name() + "/DriveAmpDraw", drive.getOutputCurrent());
-		Logger.recordOutput("Drivetrain/"+ details.module.name() + "/DriveTemperature", drive.getMotorTemperature());
+		Logger.recordOutput("Drivetrain/" + details.module.name() +
+				"/WheelVelocity", getWheelVelocity());
+		Logger.recordOutput("Drivetrain/" + details.module.name() +
+				"/DriveVoltage", driveVoltage);
+		Logger.recordOutput("Drivetrain/"+ details.module.name() +
+				"/DriveAmpDraw", drive.getOutputCurrent());
+		Logger.recordOutput("Drivetrain/"+ details.module.name() +
+				"/DriveTemperature", drive.getMotorTemperature());
 
-		Logger.recordOutput("Drivetrain/" + details.module.name() + "/SteerVoltage", steerVoltage);
-		Logger.recordOutput("Drivetrain/" + details.module.name() + "/WheelAngle", getWheelAngle().getRadians());
-		Logger.recordOutput("Drivetrain/"+ details.module.name() + "/SteerAmpDraw", drive.getOutputCurrent());
-		Logger.recordOutput("Drivetrain/"+ details.module.name() + "/SteerTemperature", steer.getMotorTemperature());
+		Logger.recordOutput("Drivetrain/" + details.module.name() +
+				"/SteerVoltage", steerVoltage);
+		Logger.recordOutput("Drivetrain/" + details.module.name() +
+				"/WheelAngle", getWheelAngle().getRadians());
+		Logger.recordOutput("Drivetrain/"+ details.module.name() +
+				"/SteerAmpDraw", drive.getOutputCurrent());
+		Logger.recordOutput("Drivetrain/"+ details.module.name() +
+				"/SteerTemperature", steer.getMotorTemperature());
 	}
 
     @Override
@@ -97,7 +107,8 @@ class SwerveModuleRev implements SwerveModuleIO {
 	public Rotation2d getWheelAngle() {
 
 		return new Rotation2d(
-				MathUtil.angleModulus(canCoder.getPosition().getValue() * 2 * Math.PI)
+				MathUtil.angleModulus(canCoder.getPosition().getValue()
+						* 2 * Math.PI)
 		);
 	}
 
