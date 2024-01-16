@@ -4,7 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import frc.lib.MoreMath;
+import frc.lib.Conversions;
 import frc.robot.Robot;
 import org.littletonrobotics.junction.Logger;
 
@@ -53,7 +53,7 @@ class SwerveModuleSim implements SwerveModuleIO {
 						((Math.PI* 4) / 12) * Robot.defaultPeriodSecs )
 		;
 
-		drivePosition = MoreMath.toMeters(currentSpeed) + drivePosition;
+		drivePosition = Conversions.toMeters(currentSpeed) + drivePosition;
 
 		double steerVelocity = steer.getAngularVelocityRadPerSec(); // This is the steer velocity of the wheel after the gear ratio is applied
 		steerVelocity = Rotation2d.fromRotations(steerVelocity * Robot.defaultPeriodSecs)
