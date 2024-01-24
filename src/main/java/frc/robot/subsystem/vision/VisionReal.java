@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class VisionReal {
+public class VisionReal implements VisionIO {
 
     private final PhotonCamera limelight;
     private PhotonPipelineResult result;
@@ -38,6 +38,7 @@ public class VisionReal {
         try {
             layout = AprilTagFieldLayout.loadFromResource(
                     AprilTagFields.k2024Crescendo.m_resourceFile);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -65,7 +66,10 @@ public class VisionReal {
             data[0] = target.getYaw();
             data[1] = target.getPitch();
             data[2] = target.getSkew();
-        }
+            data[3] = target.getFiducialId();
+        } else { data[3] = -1; }
+
+
     }
 
     public void updatePoseEstimation() {
@@ -81,7 +85,7 @@ public class VisionReal {
                             getRotation().getAngle())
             );
         }  else {
-            System.out.println("NO TARGET!!!");
+//            System.out.println("NO TARGET!!!");
             return new Pose2d(new Translation2d(0, 0),
                     new Rotation2d(0));
         }

@@ -22,6 +22,7 @@ public abstract class IO {
         controlsButtons.put(Controls.reset_gyro, primary::getLeftBumper);
         controlsButtons.put(Controls.slowMode, primary::getRightBumper);
         controlsButtons.put(Controls.normalMode, () -> (.75 > primary.getRightTriggerAxis()));
+        controlsButtons.put(Controls.autoAlignment, primary::getAButton);
     }
 
     public static Supplier<Double> getJoystickValue(Controls control)

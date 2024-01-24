@@ -22,6 +22,8 @@ public class VisionSubsystem extends SubsystemBase {
     public static VisionSubsystem INSTANCE;
     public VisionReal vision;
 
+    public double[] targetData = {0, 0, 0, -1};
+
     public static VisionSubsystem getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new VisionSubsystem();
@@ -29,16 +31,22 @@ public class VisionSubsystem extends SubsystemBase {
         return INSTANCE;
     }
 
-    private VisionSubsystem()
-    {
-
+    private VisionSubsystem() {
         vision = new VisionReal();
+    }
+
+    public double getAngle() {
+        return vision.getRobotPosition().getRotation().getDegrees();
     }
 
     @Override
     public void periodic() {
-//        System.out.println("WE GOOD?");
+
         vision.updatePoseEstimation();
+
+        vision.updateTargetData(targetData);
+        Logger.recordOutput("Vision/Yaw",
+                targetData[0]);
 
         Logger.recordOutput("Vision/robotX",
                 vision.getRobotPosition().getX());
@@ -46,11 +54,16 @@ public class VisionSubsystem extends SubsystemBase {
                 vision.getRobotPosition().getY());
         Logger.recordOutput("Vision/robotTheta",
                 vision.getRobotPosition().getRotation().getDegrees());
+        Logger.recordOutput("Vision/fiducialID",
+                targetData[3]);
 
-        DrivetrainSubsystem.getInstance().resetOdometry(
-                vision.getRobotPosition()
-        );
+        if (!((vision.getRobotPosition().getX() == 0)
+                && (vision.getRobotPosition().getY() == 0))) {
+            DrivetrainSubsystem.getInstance().resetOdometry(
+                    vision.getRobotPosition()
+            );
+        }
     }
-
 }
+
 
