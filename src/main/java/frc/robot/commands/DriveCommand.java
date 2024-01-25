@@ -7,9 +7,9 @@ import frc.lib.Deadband;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
 import frc.robot.subsystem.drivetrain.DrivetrainConstants;
-import frc.robot.subsystem.drivetrain.DrivetrainMode;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.drivetrain.SpeedMode;
+import frc.robot.util.AutoTurnUtil;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -103,9 +103,14 @@ public class DriveCommand extends Command {
 			DrivetrainSubsystem.getInstance().setSpeedMode(SpeedMode.normal);
 		}
 
-		if (IO.getJoystickValue(Controls.autoTurnPOV).get().intValue() != -1)
+		if (IO.getButtonValue(Controls.rotateToTarget).get())
 		{
-			DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.telop_auto_turn);
+			DrivetrainSubsystem.getInstance().setRotateEnabled(true);
+			DrivetrainSubsystem.getInstance().setTargetAngle(
+					AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose()).getRadians()
+			);
+		}else{
+			DrivetrainSubsystem.getInstance().setRotateEnabled(false);
 		}
 	}
 }

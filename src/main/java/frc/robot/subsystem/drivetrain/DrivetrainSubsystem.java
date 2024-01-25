@@ -1,6 +1,8 @@
 package frc.robot.subsystem.drivetrain;
 
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
@@ -50,6 +52,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 	private SpeedMode speedMode;
 
+	private final PIDController thetaController;
+	private double targetAngle; // Rads
+	private boolean rotateEnabled;
+
 	private DrivetrainSubsystem() {
 
 		SwerveModuleDetails frontLeftDetails = new SwerveModuleDetails(FRONT_LEFT_MODULE_DRIVE_MOTOR, FRONT_LEFT_MODULE_STEER_MOTOR, FRONT_LEFT_MODULE_STEER_ENCODER, FRONT_LEFT_MODULE_STEER_OFFSET, SwerveModuleEnum.frontLeft);
@@ -91,13 +97,29 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		mode = DrivetrainMode.teleop;
 
 		setSpeedMode(SpeedMode.normal);
+
+		thetaController = new PIDController(0,0,0);
+		if (Robot.isReal())
+		{
+			thetaController.setP(THETA_CONTROLLER_REAL.kP);
+			thetaController.setI(THETA_CONTROLLER_REAL.kI);
+			thetaController.setD(THETA_CONTROLLER_REAL.kD);
+		}else{
+			thetaController.setP(THETA_CONTROLLER_SIM.kP);
+			thetaController.setI(THETA_CONTROLLER_SIM.kI);
+			thetaController.setD(THETA_CONTROLLER_SIM.kD);
+		}
+		thetaController.enableContinuousInput(-Math.PI, Math.PI);
+		thetaController.setTolerance(.01);
+
+		rotateEnabled = false;
+		targetAngle = 0;
 	}
 
 	@Override
 	public void periodic() {
 
 		ChassisSpeeds targetSpeed;
-
 
 		switch (mode)
 		{
@@ -121,6 +143,22 @@ public class DrivetrainSubsystem extends SubsystemBase {
 						"This will be funny when I eventually adjacently make the error");
 		}
 
+		if (RobotState.isEnabled() && rotateEnabled)
+		{
+			double currentAngle = MathUtil.angleModulus(getRotation().getRotations());
+			double setpoint = MathUtil.angleModulus(targetAngle);
+
+			double output = thetaController.calculate(currentAngle, setpoint);
+			output = MathUtil.clamp(output, -AUTO_ROTATE_MAX_SPEED, AUTO_ROTATE_MAX_SPEED);
+			output = MathUtil.applyDeadband(output,.1);
+
+			targetSpeed = new ChassisSpeeds(
+					targetSpeed.vxMetersPerSecond,
+					targetSpeed.vyMetersPerSecond,
+					output
+			);
+		}
+
 		if (RobotState.isDisabled())
 		{
 			targetSpeed = new ChassisSpeeds(0,0,0);
@@ -129,7 +167,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		SwerveModuleState[] states = kinematics.toSwerveModuleStates(
 				ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeed, getRotation())
 		);
-
 
 		// This mess with the pid controllers, it makes the mid controllers go back and forth
 		states[0] = SwerveModuleState.optimize(states[0], frontLeft.getState().angle);
@@ -175,7 +212,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		Logger.recordOutput("Drivetrain/states", frontLeftState, frontRightState, backLeftState, backRightState);
 		Logger.recordOutput("Drivetrain/gyro" ,getRotation().getRadians());
 		Logger.recordOutput("RobotPose", getPose());
-
 	}
 
 
@@ -254,7 +290,23 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		backLeft.setSpeedMode(this.speedMode);
 		backRight.setSpeedMode(this.speedMode);
 	}
+
 	public SpeedMode getSpeedMode() {
 		return speedMode;
+	}
+
+	public double getTargetAngle() {
+		return targetAngle;
+	}
+
+	public void setTargetAngle(double targetAngle) {
+		this.targetAngle = targetAngle;
+	}
+	public boolean isRotateEnabled() {
+		return rotateEnabled;
+	}
+
+	public void setRotateEnabled(boolean rotateEnabled) {
+		this.rotateEnabled = rotateEnabled;
 	}
 }

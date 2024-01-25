@@ -36,9 +36,12 @@ public final class DrivetrainConstants {
 	 * @Unites MPS
 	 */
 	public static final double SLOW_SPEED = 1.0;
-
 	/**
 	 * Units Meters
+	 */
+	public static final double AUTO_ROTATE_MAX_SPEED = 3.0;
+	/**
+	 * Units Rad per second
 	 */
 	public static final double WHEEL_DIAMETER  = .1016;
 

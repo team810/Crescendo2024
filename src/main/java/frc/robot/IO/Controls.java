@@ -7,6 +7,5 @@ public enum Controls {
     reset_gyro,
     slowMode,
     normalMode,
-    autoTurnPOV,
-    autoAlignment
+    rotateToTarget
 }
