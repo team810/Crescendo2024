@@ -12,7 +12,7 @@ public class VisionConstants {
 
     public static final double cameraX = 0;
     public static final double cameraY = 0;
-    public static final double cameraZ = 22;
+    public static final double cameraZ = 0;
     public static final Translation3d cameraPos = new Translation3d(cameraX, cameraY, cameraZ);
 
     public static final double cameraRoll = 0;

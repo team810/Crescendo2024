@@ -39,7 +39,7 @@ public final class DrivetrainConstants {
 	/**
 	 * Units Meters
 	 */
-	public static final double AUTO_ROTATE_MAX_SPEED = 3.0;
+	public static final double AUTO_ROTATE_MAX_SPEED = 4.5;
 	/**
 	 * Units Rad per second
 	 */
@@ -63,7 +63,7 @@ public final class DrivetrainConstants {
 	public static final PIDConstants STEER_CONTROLLER_REAL = new PIDConstants(.5,0,0);
 
 	public static final PIDConstants THETA_CONTROLLER_SIM = new PIDConstants(0,0,0);
-	public static final PIDConstants THETA_CONTROLLER_REAL = new PIDConstants(0,0,0);
+	public static final PIDConstants THETA_CONTROLLER_REAL = new PIDConstants(0.1,0,0);
 	/**
 	 * The measurement of the front Left wheel to the front right wheel or the back left wheel to the back right wheel
 	 * @Unites Meters

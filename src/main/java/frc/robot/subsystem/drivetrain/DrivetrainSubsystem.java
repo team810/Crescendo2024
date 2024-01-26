@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.navx.Navx;
 import frc.lib.navx.NavxReal;
@@ -37,8 +38,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 	private ChassisSpeeds targetTeleopSpeeds;
 	private ChassisSpeeds targetAutoSpeeds;
-	private ChassisSpeeds targetAutoAlineSpeeds;
-	private ChassisSpeeds targetTeleopAutoAlineSpeeds;
+	private ChassisSpeeds targetAutoAlignSpeeds;
+	private ChassisSpeeds targetTeleopAutoAlignSpeeds;
 
 	private final SwerveModule frontLeft;
 	private final SwerveModule frontRight;
@@ -53,6 +54,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	private SpeedMode speedMode;
 
 	private final PIDController thetaController;
+	private double kP = 0, kI = 0, kD = 0;
 	private double targetAngle; // Rads
 	private boolean rotateEnabled;
 
@@ -75,6 +77,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 			navx = new NavxReal();
 		}
 
+		navx.setOffset(-Math.PI/2);
+
 		frontLeftPosition = frontLeft.getModulePosition();
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
@@ -89,8 +93,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		targetAutoSpeeds = new ChassisSpeeds();
 		targetTeleopSpeeds = new ChassisSpeeds();
-		targetTeleopAutoAlineSpeeds = new ChassisSpeeds();
-		targetAutoAlineSpeeds = new ChassisSpeeds();
+		targetTeleopAutoAlignSpeeds = new ChassisSpeeds();
+		targetAutoAlignSpeeds = new ChassisSpeeds();
 
 		kinematics = KINEMATICS;
 		odometry = new SwerveDriveOdometry(kinematics, navx.getRotation2d(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
@@ -114,10 +118,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		rotateEnabled = false;
 		targetAngle = 0;
+
+		SmartDashboard.putNumber("P", kP);
+		SmartDashboard.putNumber("I", kI);
+		SmartDashboard.putNumber("D", kD);
 	}
 
 	@Override
 	public void periodic() {
+
+		thetaController.setP(SmartDashboard.getNumber("P", 0));
+		thetaController.setI(SmartDashboard.getNumber("I", 0));
+		thetaController.setD(SmartDashboard.getNumber("D", 0));
 
 		ChassisSpeeds targetSpeed;
 
@@ -126,37 +138,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
 			case teleop:
 				targetSpeed = targetTeleopSpeeds;
 				break;
-			case teleop_autoAline:
-				targetSpeed = targetTeleopAutoAlineSpeeds;
+			case teleop_autoAlign:
+				targetSpeed = targetTeleopAutoAlignSpeeds;
 				break;
 			case auto:
 				targetSpeed = targetAutoSpeeds;
 				break;
-			case auto_autoAline:
-				targetSpeed = targetAutoAlineSpeeds;
+			case auto_autoAlign:
+				targetSpeed = targetAutoAlignSpeeds;
 				break;
-			case telop_auto_turn:
-				targetSpeed = new ChassisSpeeds(targetTeleopSpeeds.vxMetersPerSecond, targetTeleopSpeeds.vyMetersPerSecond,0);
+			case teleop_auto_turn:
+				targetSpeed = new ChassisSpeeds(
+						targetTeleopSpeeds.vxMetersPerSecond,
+						targetTeleopSpeeds.vyMetersPerSecond,
+						0);
 				break;
 			default:
 				throw new RuntimeException("Triggered a default state, IDK how you did this get help from Matthew, " +
 						"This will be funny when I eventually adjacently make the error");
-		}
-
-		if (RobotState.isEnabled() && rotateEnabled)
-		{
-			double currentAngle = MathUtil.angleModulus(getRotation().getRotations());
-			double setpoint = MathUtil.angleModulus(targetAngle);
-
-			double output = thetaController.calculate(currentAngle, setpoint);
-			output = MathUtil.clamp(output, -AUTO_ROTATE_MAX_SPEED, AUTO_ROTATE_MAX_SPEED);
-			output = MathUtil.applyDeadband(output,.1);
-
-			targetSpeed = new ChassisSpeeds(
-					targetSpeed.vxMetersPerSecond,
-					targetSpeed.vyMetersPerSecond,
-					output
-			);
 		}
 
 		if (RobotState.isDisabled())
@@ -210,8 +209,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		Logger.recordOutput("Drivetrain/currentStates", frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
 		Logger.recordOutput("Drivetrain/states", frontLeftState, frontRightState, backLeftState, backRightState);
-		Logger.recordOutput("Drivetrain/gyro" ,getRotation().getRadians());
+		Logger.recordOutput("Drivetrain/gyro", getRotation().getDegrees());
+		Logger.recordOutput("Drivetrain/targetAngle", this.targetAngle);
 		Logger.recordOutput("RobotPose", getPose());
+		navx.update(0);
 	}
 
 
@@ -261,6 +262,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	{
 		return odometry.getPoseMeters();
 	}
+
 	public void setTargetAutoSpeeds(double x, double y, double z)
 	{
 		targetAutoSpeeds = new ChassisSpeeds(x,y,z);
@@ -282,6 +284,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	public ChassisSpeeds getTargetAutoSpeeds() {
 		return targetAutoSpeeds;
 	}
+	public PIDController getThetaController() { return thetaController; }
 
 	public void setSpeedMode(SpeedMode speedMode) {
 		this.speedMode = speedMode;

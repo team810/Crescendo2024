@@ -2,8 +2,8 @@ package frc.robot.subsystem.drivetrain;
 
 public enum DrivetrainMode {
 	teleop,
-	teleop_autoAline,
+    teleop_autoAlign,
 	auto,
-	auto_autoAline,
-	telop_auto_turn,
+	auto_autoAlign,
+	teleop_auto_turn,
 }

@@ -13,5 +13,14 @@ public class AutoTurnUtil {
     {
         return new Rotation2d(Math.toRadians(90));
     }
+
+    private boolean inRectangle(Pose2d currentPos, double leftX, double rightX,
+                                double bottomY, double topY) {
+
+        double x = currentPos.getX();
+        double y = currentPos.getY();
+
+        return ((x >= leftX) && (x <= rightX) && (y > bottomY) && (y < topY));
+    }
 }
 

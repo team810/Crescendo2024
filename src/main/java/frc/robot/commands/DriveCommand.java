@@ -7,6 +7,7 @@ import frc.lib.Deadband;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
 import frc.robot.subsystem.drivetrain.DrivetrainConstants;
+import frc.robot.subsystem.drivetrain.DrivetrainMode;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.drivetrain.SpeedMode;
 import frc.robot.util.AutoTurnUtil;
@@ -43,42 +44,64 @@ public class DriveCommand extends Command {
 		double y = 0;
 		double theta = 0;
 
+		double currentAngle = 0;
+		double setpointAngle = 0;
+
 		x = IO.getJoystickValue(Controls.drive_x).get();
 		y = IO.getJoystickValue(Controls.drive_y).get();
-		theta = IO.getJoystickValue(Controls.drive_theta).get();
 
+		if (!(IO.getButtonValue(Controls.rotateToTarget).get())) {
+			theta = IO.getJoystickValue(Controls.drive_theta).get();
+			theta = thetaDeadband.apply(theta);
+			theta = Math.pow(theta, 3);
+
+			if (DrivetrainSubsystem.getInstance().getSpeedMode() == SpeedMode.normal) {
+				theta = theta * DrivetrainConstants.NORMAL_SPEED;
+				theta = MathUtil.clamp(theta, -DrivetrainConstants.NORMAL_SPEED, DrivetrainConstants.NORMAL_SPEED);
+			}
+			else if (DrivetrainSubsystem.getInstance().getSpeedMode() == SpeedMode.slow) {
+				theta = theta * DrivetrainConstants.SLOW_SPEED;
+				theta = MathUtil.clamp(theta, -DrivetrainConstants.SLOW_SPEED, DrivetrainConstants.SLOW_SPEED);
+			}
+		} else {
+			currentAngle = DrivetrainSubsystem.getInstance().getRotation().getRadians();
+			setpointAngle = AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose())
+					.getRadians();
+
+			theta = DrivetrainSubsystem.getInstance().getThetaController()
+					.calculate(currentAngle, setpointAngle);
+
+			theta = theta * DrivetrainConstants.AUTO_ROTATE_MAX_SPEED;
+			theta = MathUtil.clamp(theta, -DrivetrainConstants.AUTO_ROTATE_MAX_SPEED, DrivetrainConstants.AUTO_ROTATE_MAX_SPEED);
+		}
 
 		x = xDeadband.apply(x);
 		y = yDeadband.apply(y);
-		theta = thetaDeadband.apply(theta);
 		Logger.recordOutput("RawY", y);
 
 
-		x = Math.pow(x,3);
-		y = Math.pow(y,3);
-		theta = Math.pow(theta,3);
+		x = Math.pow(x, 3);
+		y = Math.pow(y, 3);
 		Logger.recordOutput("LimitY", y);
 
-		if (DrivetrainSubsystem.getInstance().getSpeedMode() == SpeedMode.normal)
-		{
+
+		if (DrivetrainSubsystem.getInstance().getSpeedMode() == SpeedMode.normal) {
 			x = x * DrivetrainConstants.NORMAL_SPEED;
 			y = y * DrivetrainConstants.NORMAL_SPEED;
-			theta = theta * DrivetrainConstants.NORMAL_SPEED;
 
 			x = MathUtil.clamp(x, -DrivetrainConstants.NORMAL_SPEED, DrivetrainConstants.NORMAL_SPEED);
 			y = MathUtil.clamp(y, -DrivetrainConstants.NORMAL_SPEED, DrivetrainConstants.NORMAL_SPEED);
-			theta = MathUtil.clamp(theta, -DrivetrainConstants.NORMAL_SPEED, DrivetrainConstants.NORMAL_SPEED);
 		}
-		if (DrivetrainSubsystem.getInstance().getSpeedMode() == SpeedMode.slow)
-		{
+		if (DrivetrainSubsystem.getInstance().getSpeedMode() == SpeedMode.slow) {
 			x = x * DrivetrainConstants.SLOW_SPEED;
 			y = y * DrivetrainConstants.SLOW_SPEED;
-			theta = theta * DrivetrainConstants.SLOW_SPEED;
 
 			x = MathUtil.clamp(x, -DrivetrainConstants.SLOW_SPEED, DrivetrainConstants.SLOW_SPEED);
 			y = MathUtil.clamp(y, -DrivetrainConstants.SLOW_SPEED, DrivetrainConstants.SLOW_SPEED);
-			theta = MathUtil.clamp(theta, -DrivetrainConstants.SLOW_SPEED, DrivetrainConstants.SLOW_SPEED);
 		}
+
+
+		Logger.recordOutput("Drivetrain/finOutTheta", theta);
 
 
 		DrivetrainSubsystem.getInstance().setTargetTeleopSpeeds(
@@ -103,14 +126,17 @@ public class DriveCommand extends Command {
 			DrivetrainSubsystem.getInstance().setSpeedMode(SpeedMode.normal);
 		}
 
-		if (IO.getButtonValue(Controls.rotateToTarget).get())
-		{
-			DrivetrainSubsystem.getInstance().setRotateEnabled(true);
-			DrivetrainSubsystem.getInstance().setTargetAngle(
-					AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose()).getRadians()
-			);
-		}else{
-			DrivetrainSubsystem.getInstance().setRotateEnabled(false);
-		}
+//		if (IO.getButtonValue(Controls.rotateToTarget).get())
+//		{
+//			System.out.println("WE GOOD?");
+////			DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.teleop_auto_turn);
+//			DrivetrainSubsystem.getInstance().setRotateEnabled(true);
+//			DrivetrainSubsystem.getInstance().setTargetAngle(
+//					AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose())
+//							.getRadians()
+//			);
+//		}else{
+//			DrivetrainSubsystem.getInstance().setRotateEnabled(false);
+//		}
 	}
 }
