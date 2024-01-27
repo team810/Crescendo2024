@@ -1,7 +1,10 @@
 package frc.robot.util;
 
 public enum AutoTurnMode {
-    Speaker,
+    redSpeaker,
+    blueSpeaker,
     Amp,
-    Source
+    redSource,
+    blueSource,
+    noRectangle
 }

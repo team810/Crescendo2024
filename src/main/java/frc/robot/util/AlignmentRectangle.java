@@ -5,15 +5,20 @@ import edu.wpi.first.math.geometry.Pose2d;
 public class AlignmentRectangle {
 
     private double leftX, rightX, bottomY, topY;
+    private String name;
+    private AutoTurnMode type;
 
-    public AlignmentRectangle(double leftX, double rightX, double bottomY, double topY) {
+    public AlignmentRectangle(String name, AutoTurnMode type,
+                              double leftX, double rightX, double bottomY, double topY) {
+        this.name = name;
+        this.type = type;
         this.leftX = leftX;
         this.rightX = rightX;
         this.bottomY = bottomY;
         this.topY = topY;
     }
 
-    private boolean inRectangle(Pose2d currentPos) {
+    public boolean inRectangle(Pose2d currentPos) {
 
         double x = currentPos.getX();
         double y = currentPos.getY();
@@ -21,4 +26,11 @@ public class AlignmentRectangle {
         return ((x >= leftX) && (x <= rightX) && (y > bottomY) && (y < topY));
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public AutoTurnMode getType() {
+        return this.type;
+    }
 }

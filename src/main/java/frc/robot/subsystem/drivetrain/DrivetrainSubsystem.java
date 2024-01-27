@@ -13,6 +13,8 @@ import frc.lib.navx.Navx;
 import frc.lib.navx.NavxReal;
 import frc.lib.navx.NavxSim;
 import frc.robot.Robot;
+import frc.robot.util.AlignmentRectangle;
+import frc.robot.util.AutoTurnConstants;
 import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.subsystem.drivetrain.DrivetrainConstants.*;
@@ -57,6 +59,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	private double kP = 0, kI = 0, kD = 0;
 	private double targetAngle; // Rads
 	private boolean rotateEnabled;
+
+	private AlignmentRectangle currentRectangle;
 
 	private DrivetrainSubsystem() {
 
@@ -122,6 +126,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		SmartDashboard.putNumber("P", kP);
 		SmartDashboard.putNumber("I", kI);
 		SmartDashboard.putNumber("D", kD);
+
+		currentRectangle = AutoTurnConstants.nullRectangle;
 	}
 
 	@Override
@@ -157,6 +163,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 				throw new RuntimeException("Triggered a default state, IDK how you did this get help from Matthew, " +
 						"This will be funny when I eventually adjacently make the error");
 		}
+
+		currentRectangle = AutoTurnConstants.rectangleSet.findRectangle(getPose());
 
 		if (RobotState.isDisabled())
 		{
@@ -212,6 +220,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		Logger.recordOutput("Drivetrain/gyro", getRotation().getDegrees());
 		Logger.recordOutput("Drivetrain/targetAngle", this.targetAngle);
 		Logger.recordOutput("RobotPose", getPose());
+		Logger.recordOutput("currentRectangle", currentRectangle.getName());
 		navx.update(0);
 	}
 
@@ -263,6 +272,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		return odometry.getPoseMeters();
 	}
 
+	public Navx getNavx() {
+		return navx;
+	}
 	public void setTargetAutoSpeeds(double x, double y, double z)
 	{
 		targetAutoSpeeds = new ChassisSpeeds(x,y,z);
@@ -285,6 +297,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		return targetAutoSpeeds;
 	}
 	public PIDController getThetaController() { return thetaController; }
+	public AlignmentRectangle getCurrentRectangle() { return currentRectangle; }
 
 	public void setSpeedMode(SpeedMode speedMode) {
 		this.speedMode = speedMode;

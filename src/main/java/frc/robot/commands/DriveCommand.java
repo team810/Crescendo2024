@@ -10,7 +10,10 @@ import frc.robot.subsystem.drivetrain.DrivetrainConstants;
 import frc.robot.subsystem.drivetrain.DrivetrainMode;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.drivetrain.SpeedMode;
+import frc.robot.util.AutoTurnConstants;
+import frc.robot.util.AutoTurnMode;
 import frc.robot.util.AutoTurnUtil;
+import frc.robot.util.RectangleSet;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -50,7 +53,12 @@ public class DriveCommand extends Command {
 		x = IO.getJoystickValue(Controls.drive_x).get();
 		y = IO.getJoystickValue(Controls.drive_y).get();
 
-		if (!(IO.getButtonValue(Controls.rotateToTarget).get())) {
+		if ((!(IO.getButtonValue(Controls.rotateToTarget).get())) ||
+				(DrivetrainSubsystem.getInstance().getCurrentRectangle().getType()
+						== AutoTurnMode.noRectangle))
+		{
+
+			System.out.println("NOT ALIGNING");
 			theta = IO.getJoystickValue(Controls.drive_theta).get();
 			theta = thetaDeadband.apply(theta);
 			theta = Math.pow(theta, 3);
@@ -64,14 +72,22 @@ public class DriveCommand extends Command {
 				theta = MathUtil.clamp(theta, -DrivetrainConstants.SLOW_SPEED, DrivetrainConstants.SLOW_SPEED);
 			}
 		} else {
+
+			System.out.println("ALIGNING!!");
 			currentAngle = DrivetrainSubsystem.getInstance().getRotation().getRadians();
 			setpointAngle = AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose())
-					.getRadians();
+								.getRadians();
+
+			Logger.recordOutput("currentAngle", currentAngle);
+			Logger.recordOutput("setPointAngle", setpointAngle);
 
 			theta = DrivetrainSubsystem.getInstance().getThetaController()
 					.calculate(currentAngle, setpointAngle);
 
-			theta = theta * DrivetrainConstants.AUTO_ROTATE_MAX_SPEED;
+			Logger.recordOutput("PIDtheta", theta);
+
+//			theta = theta / Math.PI;
+			theta = -theta * DrivetrainConstants.AUTO_ROTATE_MAX_SPEED;
 			theta = MathUtil.clamp(theta, -DrivetrainConstants.AUTO_ROTATE_MAX_SPEED, DrivetrainConstants.AUTO_ROTATE_MAX_SPEED);
 		}
 

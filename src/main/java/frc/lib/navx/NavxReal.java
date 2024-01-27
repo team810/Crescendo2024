@@ -22,6 +22,7 @@ public class NavxReal implements Navx{
 	public void zeroYaw() {
 		navx.zeroYaw();
 	}
+
 	@Override
 	public void setOffset(double offset) {
 		this.offset = offset;
