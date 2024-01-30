@@ -7,8 +7,5 @@ public enum Controls {
     reset_gyro,
     slowMode,
     normalMode,
-    rotateToTarget,
-    manualIntake,
-    intakeFwd,
-    intakeRev
+    rotateToTarget
 }
