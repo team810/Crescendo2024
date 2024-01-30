@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
@@ -20,9 +21,7 @@ import java.io.IOException;
 public class VisionSubsystem extends SubsystemBase {
 
     public static VisionSubsystem INSTANCE;
-    public VisionReal vision;
-
-    public double[] targetData = {0, 0, 0, -1};
+    public VisionIO vision;
 
     public static VisionSubsystem getInstance() {
         if (INSTANCE == null) {
@@ -32,7 +31,14 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     private VisionSubsystem() {
-        vision = new VisionReal();
+
+        if (Robot.isReal()) {
+            vision = new VisionReal();
+        } else if (Robot.isSimulation()) {
+            vision = new VisionSim();
+        } else {
+            throw new RuntimeException("WHAT DID YOU DO");
+        }
     }
 
     public double getAngle() {
@@ -44,9 +50,8 @@ public class VisionSubsystem extends SubsystemBase {
 
         vision.updatePoseEstimation();
 
-        vision.updateTargetData(targetData);
-        Logger.recordOutput("Vision/Yaw",
-                targetData[0]);
+//        Logger.recordOutput("Vision/Yaw",
+//                vision.getTarget().getYaw());
 
         Logger.recordOutput("Vision/robotX",
                 vision.getRobotPosition().getX());
@@ -54,8 +59,8 @@ public class VisionSubsystem extends SubsystemBase {
                 vision.getRobotPosition().getY());
         Logger.recordOutput("Vision/robotTheta",
                 vision.getRobotPosition().getRotation().getDegrees());
-        Logger.recordOutput("Vision/fiducialID",
-                targetData[3]);
+        Logger.recordOutput("Vision/robotPose",
+                vision.getRobotPosition());
 
         if (!((vision.getRobotPosition().getX() == 0)
                 && (vision.getRobotPosition().getY() == 0))) {

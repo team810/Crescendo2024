@@ -58,7 +58,7 @@ public class DriveCommand extends Command {
 						== AutoTurnMode.noRectangle))
 		{
 
-			System.out.println("NOT ALIGNING");
+//			System.out.println("NOT ALIGNING");
 			theta = IO.getJoystickValue(Controls.drive_theta).get();
 			theta = thetaDeadband.apply(theta);
 			theta = Math.pow(theta, 3);
@@ -73,7 +73,7 @@ public class DriveCommand extends Command {
 			}
 		} else {
 
-			System.out.println("ALIGNING!!");
+//			System.out.println("ALIGNING!!");
 			currentAngle = DrivetrainSubsystem.getInstance().getRotation().getRadians();
 			setpointAngle = AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose())
 								.getRadians();
@@ -87,7 +87,7 @@ public class DriveCommand extends Command {
 			Logger.recordOutput("PIDtheta", theta);
 
 //			theta = theta / Math.PI;
-			theta = -theta * DrivetrainConstants.AUTO_ROTATE_MAX_SPEED;
+			theta = theta * DrivetrainConstants.AUTO_ROTATE_MAX_SPEED;
 			theta = MathUtil.clamp(theta, -DrivetrainConstants.AUTO_ROTATE_MAX_SPEED, DrivetrainConstants.AUTO_ROTATE_MAX_SPEED);
 		}
 
@@ -123,7 +123,7 @@ public class DriveCommand extends Command {
 		DrivetrainSubsystem.getInstance().setTargetTeleopSpeeds(
 				x,
 				y,
-				theta
+				-theta
 		);
 
 
