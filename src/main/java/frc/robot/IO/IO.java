@@ -17,11 +17,11 @@ public abstract class IO {
         controlsJoystick.put(Controls.drive_x, primary::getLeftX);
         controlsJoystick.put(Controls.drive_y, primary::getLeftY);
         controlsJoystick.put(Controls.drive_theta, primary::getRightX);
-        controlsJoystick.put(Controls.autoTurnPOV, () -> (double) primary.getPOV());
 
         controlsButtons.put(Controls.reset_gyro, primary::getLeftBumper);
         controlsButtons.put(Controls.slowMode, primary::getRightBumper);
         controlsButtons.put(Controls.normalMode, () -> (.75 > primary.getRightTriggerAxis()));
+        controlsButtons.put(Controls.rotateToTarget, primary::getAButton);
     }
 
     public static Supplier<Double> getJoystickValue(Controls control)

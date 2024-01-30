@@ -1,15 +1,20 @@
 package frc.robot.subsystem.drivetrain;
 
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.navx.Navx;
 import frc.lib.navx.NavxReal;
 import frc.lib.navx.NavxSim;
 import frc.robot.Robot;
+import frc.robot.util.AlignmentRectangle;
+import frc.robot.util.AutoTurnConstants;
 import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.subsystem.drivetrain.DrivetrainConstants.*;
@@ -35,8 +40,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 	private ChassisSpeeds targetTeleopSpeeds;
 	private ChassisSpeeds targetAutoSpeeds;
-	private final ChassisSpeeds targetAutoAlignSpeeds;
-	private final ChassisSpeeds targetTeleopAutoAlignSpeeds;
+	private ChassisSpeeds targetAutoAlignSpeeds;
+	private ChassisSpeeds targetTeleopAutoAlignSpeeds;
 
 	private final SwerveModule frontLeft;
 	private final SwerveModule frontRight;
@@ -49,6 +54,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	private final Navx navx;
 
 	private SpeedMode speedMode;
+
+	private final PIDController thetaController;
+	private double kP = 0, kI = 0, kD = 0;
+	private double targetAngle; // Rads
+	private boolean rotateEnabled;
+
+	private AlignmentRectangle currentRectangle;
 
 	private DrivetrainSubsystem() {
 
@@ -68,6 +80,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		}else{
 			navx = new NavxReal();
 		}
+
+		navx.setOffset(-Math.PI/2);
 
 		frontLeftPosition = frontLeft.getModulePosition();
 		frontRightPosition = frontRight.getModulePosition();
@@ -91,33 +105,68 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		mode = DrivetrainMode.teleop;
 
 		setSpeedMode(SpeedMode.normal);
+
+		thetaController = new PIDController(0,0,0);
+		if (Robot.isReal())
+		{
+			thetaController.setP(THETA_CONTROLLER_REAL.kP);
+			thetaController.setI(THETA_CONTROLLER_REAL.kI);
+			thetaController.setD(THETA_CONTROLLER_REAL.kD);
+		}else{
+			thetaController.setP(THETA_CONTROLLER_SIM.kP);
+			thetaController.setI(THETA_CONTROLLER_SIM.kI);
+			thetaController.setD(THETA_CONTROLLER_SIM.kD);
+		}
+		thetaController.enableContinuousInput(-Math.PI, Math.PI);
+		thetaController.setTolerance(.01);
+
+		rotateEnabled = false;
+		targetAngle = 0;
+
+		SmartDashboard.putNumber("P", kP);
+		SmartDashboard.putNumber("I", kI);
+		SmartDashboard.putNumber("D", kD);
+
+		currentRectangle = AutoTurnConstants.nullRectangle;
 	}
 
 	@Override
 	public void periodic() {
 
+		thetaController.setP(SmartDashboard.getNumber("P", 0));
+		thetaController.setI(SmartDashboard.getNumber("I", 0));
+		thetaController.setD(SmartDashboard.getNumber("D", 0));
 
-		ChassisSpeeds targetSpeed = switch (mode) {
+		ChassisSpeeds targetSpeed;
 
-            case teleop -> targetTeleopSpeeds;
+		switch (mode)
+		{
+			case teleop:
+				targetSpeed = targetTeleopSpeeds;
+				break;
+			case teleop_autoAlign:
+				targetSpeed = targetTeleopAutoAlignSpeeds;
+				break;
+			case auto:
+				targetSpeed = targetAutoSpeeds;
+				break;
+			case auto_autoAlign:
+				targetSpeed = targetAutoAlignSpeeds;
+				break;
+			case teleop_auto_turn:
+				targetSpeed = new ChassisSpeeds(
+						targetTeleopSpeeds.vxMetersPerSecond,
+						targetTeleopSpeeds.vyMetersPerSecond,
+						0);
+				break;
+			default:
+				throw new RuntimeException("Triggered a default state, IDK how you did this get help from Matthew, " +
+						"This will be funny when I eventually adjacently make the error");
+		}
 
-            case teleop_autoAlign -> targetTeleopAutoAlignSpeeds;
+		currentRectangle = AutoTurnConstants.rectangleSet.findRectangle(getPose());
 
-            case auto -> targetAutoSpeeds;
-
-            case auto_autoAlign -> targetAutoAlignSpeeds;
-
-            case teleop_auto_turn ->
-                    new ChassisSpeeds(targetTeleopSpeeds.vxMetersPerSecond,
-							targetTeleopSpeeds.vyMetersPerSecond, 0);
-
-            default -> throw new RuntimeException("Triggered a default state, " +
-                    "IDK how you did this get help from Matthew, " +
-                    "This will be funny when I eventually adjacently make the error");
-        };
-
-
-        if (RobotState.isDisabled())
+		if (RobotState.isDisabled())
 		{
 			targetSpeed = new ChassisSpeeds(0,0,0);
 		}
@@ -125,7 +174,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		SwerveModuleState[] states = kinematics.toSwerveModuleStates(
 				ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeed, getRotation())
 		);
-
 
 		// This mess with the pid controllers, it makes the mid controllers go back and forth
 		states[0] = SwerveModuleState.optimize(states[0], frontLeft.getState().angle);
@@ -169,9 +217,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		Logger.recordOutput("Drivetrain/currentStates", frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
 		Logger.recordOutput("Drivetrain/states", frontLeftState, frontRightState, backLeftState, backRightState);
-		Logger.recordOutput("Drivetrain/gyro" ,getRotation().getRadians());
+		Logger.recordOutput("Drivetrain/gyro", getRotation().getDegrees());
+		Logger.recordOutput("Drivetrain/targetAngle", this.targetAngle);
 		Logger.recordOutput("RobotPose", getPose());
-
+		Logger.recordOutput("currentRectangle", currentRectangle.getName());
+		navx.update(0);
 	}
 
 
@@ -221,6 +271,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	{
 		return odometry.getPoseMeters();
 	}
+
+	public Navx getNavx() {
+		return navx;
+	}
 	public void setTargetAutoSpeeds(double x, double y, double z)
 	{
 		targetAutoSpeeds = new ChassisSpeeds(x,y,z);
@@ -242,6 +296,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	public ChassisSpeeds getTargetAutoSpeeds() {
 		return targetAutoSpeeds;
 	}
+	public PIDController getThetaController() { return thetaController; }
+	public AlignmentRectangle getCurrentRectangle() { return currentRectangle; }
 
 	public void setSpeedMode(SpeedMode speedMode) {
 		this.speedMode = speedMode;
@@ -250,7 +306,23 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		backLeft.setSpeedMode(this.speedMode);
 		backRight.setSpeedMode(this.speedMode);
 	}
+
 	public SpeedMode getSpeedMode() {
 		return speedMode;
+	}
+
+	public double getTargetAngle() {
+		return targetAngle;
+	}
+
+	public void setTargetAngle(double targetAngle) {
+		this.targetAngle = targetAngle;
+	}
+	public boolean isRotateEnabled() {
+		return rotateEnabled;
+	}
+
+	public void setRotateEnabled(boolean rotateEnabled) {
+		this.rotateEnabled = rotateEnabled;
 	}
 }
