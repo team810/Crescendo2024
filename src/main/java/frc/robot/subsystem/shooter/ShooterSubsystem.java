@@ -5,11 +5,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.LinearInterpolation;
 import frc.robot.Robot;
 import org.littletonrobotics.junction.Logger;
-
-import java.util.ArrayList;
 
 public class ShooterSubsystem extends SubsystemBase {
     private final static ShooterSubsystem INSTANCE = new ShooterSubsystem();
@@ -18,12 +15,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private double topTargetRPM;
     private double bottomTargetRPM;
 
-    private final LinearInterpolation topLinearInterpolation;
-    private final LinearInterpolation bottomLinearInterpolation;
-
-    private final ArrayList<LinearInterpolation.Point> topData = new ArrayList<>();
-    private final ArrayList<LinearInterpolation.Point> bottomData = new ArrayList<>();
-
     private final PIDController topController;
     private final PIDController bottomController;
 
@@ -31,9 +22,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
         topController = new PIDController(0,0,0);
         bottomController = new PIDController(0,0,0);
-
-        topLinearInterpolation = new LinearInterpolation(topData);
-        bottomLinearInterpolation = new LinearInterpolation(bottomData);
 
         if (Robot.isReal())
         {
