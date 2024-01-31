@@ -3,6 +3,7 @@ package frc.robot.util;
 
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.simulation.CTREPCMSim;
+import edu.wpi.first.wpilibj.simulation.PneumaticsBaseSim;
 import edu.wpi.first.wpilibj.simulation.REVPHSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -16,7 +17,7 @@ public class Pneumatics extends SubsystemBase {
         return INSTANCE;
     }
 
-    private final PneumaticsModuleType pneumaticsModuleType = PneumaticsModuleType.REVPH;
+    private final PneumaticsModuleType pneumaticsModuleType = PneumaticsModuleType.CTREPCM;
 
     private final PneumaticHub revPneumaticsHub;
     private final REVPHSim revPneumaticsHubSim;
@@ -58,6 +59,28 @@ public class Pneumatics extends SubsystemBase {
                 compressor = null;
                 throw new RuntimeException("Pneumatics Hub type not defined properly, it needs to be ether a ctre or rev Pneumatics module");
         }
+    }
+
+    public PneumaticsBaseSim getPneumaticsHubSim()
+    {
+        if (pneumaticsModuleType == PneumaticsModuleType.REVPH)
+        {
+            return revPneumaticsHubSim;
+        } else if (pneumaticsModuleType == PneumaticsModuleType.CTREPCM) {
+            return ctrePnumaticsControlModuleSim;
+        }
+        return null;
+    }
+
+    public PneumaticsBase getPneumaticsHub()
+    {
+        if (pneumaticsModuleType == PneumaticsModuleType.REVPH)
+        {
+            return revPneumaticsHub;
+        } else if (pneumaticsModuleType == PneumaticsModuleType.CTREPCM) {
+            return ctrePneumaticsControlModule;
+        }
+        return null;
     }
 
     public Solenoid createSolenoid(int channel)

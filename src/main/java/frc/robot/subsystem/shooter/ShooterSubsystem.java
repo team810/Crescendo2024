@@ -5,6 +5,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.MechanismState;
 import frc.robot.Robot;
 import org.littletonrobotics.junction.Logger;
 
@@ -17,6 +18,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final PIDController topController;
     private final PIDController bottomController;
+
+    private MechanismState deflectorState;
+    private MechanismState barState;
 
     private ShooterSubsystem() {
 
@@ -48,6 +52,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
         topController.setTolerance(ShooterConstants.PID_CONTROLLER_TORRENCE);
         bottomController.setTolerance(ShooterConstants.PID_CONTROLLER_TORRENCE);
+
+        barState = MechanismState.stored;
+        deflectorState = MechanismState.deployed;
     }
 
     @Override
@@ -84,9 +91,29 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.recordOutput("Shooter/Bottom/TargetRPM", bottomTargetRPM);
         Logger.recordOutput("Shooter/Bottom/AtSetpoint", bottomController.atSetpoint());
 
+        Logger.recordOutput("Shooter/Bar/State", barState);
+        Logger.recordOutput("Shooter/Deflector/State", deflectorState);
     }
     public static ShooterSubsystem getInstance() {
         return INSTANCE;
+    }
+
+    public MechanismState getDeflectorState() {
+        return deflectorState;
+    }
+
+    public void setDeflectorState(MechanismState deflectorState) {
+        this.deflectorState = deflectorState;
+        shooter.setDeflector(this.deflectorState);
+    }
+
+    public MechanismState getBarState() {
+        return barState;
+    }
+
+    public void setBarState(MechanismState barState) {
+        this.barState = barState;
+        shooter.setBarState(this.barState);
     }
 }
 

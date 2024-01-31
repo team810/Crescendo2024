@@ -16,4 +16,10 @@ public class ShooterConstants {
     public final static double BOTTOM_MOTOR_MAX_RPM = 5676;
 
     public final static double PID_CONTROLLER_TORRENCE = 25;
+
+    public final static int DEFLECTOR_FWD_CHANNEL = 0;
+    public final static int DEFLECTOR_REV_CHANNEL = 1;
+
+    public final static int BAR_FWD_CHANNEL = 2;
+    public final static int BAR_REV_CHANNEL = 3;
 }

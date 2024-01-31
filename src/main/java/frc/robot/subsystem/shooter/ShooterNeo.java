@@ -4,6 +4,9 @@ import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import frc.lib.MechanismState;
+import frc.robot.util.Pneumatics;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterNeo implements ShooterIO{
@@ -16,6 +19,12 @@ public class ShooterNeo implements ShooterIO{
 
     private double topVoltage;
     private double bottomVoltage;
+
+    private final DoubleSolenoid deflector;
+    private final DoubleSolenoid bar;
+
+    private MechanismState deflectorState;
+    private MechanismState barState;
 
     public ShooterNeo()
     {
@@ -36,6 +45,12 @@ public class ShooterNeo implements ShooterIO{
 
         topEncoder = topMotor.getEncoder();
         bottomEncoder = bottomMotor.getEncoder();
+
+        deflector = Pneumatics.getInstance().createSolenoid(ShooterConstants.DEFLECTOR_FWD_CHANNEL, ShooterConstants.BAR_REV_CHANNEL);
+        bar = Pneumatics.getInstance().createSolenoid(ShooterConstants.BAR_FWD_CHANNEL, ShooterConstants.BAR_REV_CHANNEL);
+
+        deflectorState = MechanismState.stored;
+        barState = MechanismState.stored;
     }
     @Override
     public void update()
@@ -65,5 +80,37 @@ public class ShooterNeo implements ShooterIO{
     @Override
     public double getBottomRPM() {
         return bottomEncoder.getVelocity();
+    }
+
+    @Override
+    public MechanismState isDeflector() {
+        return deflectorState;
+    }
+
+    @Override
+    public void setDeflector(MechanismState state) {
+        this.deflectorState = state;
+        if (deflectorState == MechanismState.deployed)
+        {
+            deflector.set(DoubleSolenoid.Value.kForward);
+        } else if (deflectorState == MechanismState.stored) {
+            deflector.set(DoubleSolenoid.Value.kReverse);
+        }
+    }
+
+    @Override
+    public MechanismState getBarState() {
+        return barState;
+    }
+
+    @Override
+    public void setBarState(MechanismState state) {
+        this.barState = state;
+        if (barState == MechanismState.deployed)
+        {
+            bar.set(DoubleSolenoid.Value.kForward);
+        } else if (barState == MechanismState.stored) {
+            bar.set(DoubleSolenoid.Value.kReverse);
+        }
     }
 }

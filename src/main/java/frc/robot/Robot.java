@@ -18,9 +18,8 @@ public class Robot extends LoggedRobot
     @Override
     public void robotInit()
     {
-        Logger.recordMetadata("ProjectName", "Off_season"); // Set a metadata value
+        Logger.recordMetadata("ProjectName", "Crescendo"); // Set a metadata value
         if (isReal()) {
-
             Logger.addDataReceiver(new NT4Publisher());
         } else {
             Logger.addDataReceiver(new NT4Publisher());
