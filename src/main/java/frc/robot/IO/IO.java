@@ -26,6 +26,11 @@ public abstract class IO {
 
         controlsButtons.put(Controls.intakeFwd, secondary::getAButton);
         controlsButtons.put(Controls.intakeRev, secondary::getYButton);
+
+        controlsButtons.put(Controls.climberDown, () -> (secondary.getPOV() == 180));
+        controlsButtons.put(Controls.climberUp, () -> (secondary.getPOV() == 0));
+        controlsButtons.put(Controls.climberAdjUp, () -> (secondary.getPOV() == 90));
+        controlsButtons.put(Controls.climberAdjDown, () -> (secondary.getPOV() == 270));
     }
 
     public static Supplier<Double> getJoystickValue(Controls control)
