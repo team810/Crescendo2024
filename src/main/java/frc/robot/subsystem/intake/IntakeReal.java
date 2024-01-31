@@ -6,23 +6,32 @@ import com.revrobotics.CANSparkMax;
 
 public class IntakeReal implements IntakeIO {
 
-    private CANSparkMax intakeMotor;
+    private CANSparkMax topMotor;
+    private CANSparkMax bottomMotor;
 
     public IntakeReal() {
 
-        intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_ID,
+        topMotor = new CANSparkMax(IntakeConstants.TOP_ID,
                 CANSparkLowLevel.MotorType.kBrushless);
 
-        intakeMotor.clearFaults();
+        bottomMotor = new CANSparkMax(IntakeConstants.BOTTOM_ID,
+                CANSparkLowLevel.MotorType.kBrushless);
 
-        intakeMotor.setSmartCurrentLimit(40);
+        topMotor.clearFaults();
+        bottomMotor.clearFaults();
 
-        intakeMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
+        topMotor.setSmartCurrentLimit(40);
+        bottomMotor.setSmartCurrentLimit(40);
 
-        intakeMotor.set(0);
+        topMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
+        bottomMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
+
+        topMotor.set(0);
+        bottomMotor.set(0);
     }
 
     public void setSpeed(double speed) {
-        intakeMotor.set(speed);
+        topMotor.set(-speed);
+        bottomMotor.set(speed);
     }
 }
