@@ -25,6 +25,8 @@ public class ClimberSubsystem extends SubsystemBase {
 
         if (Robot.isReal()) {
             climber = new ClimberReal();
+        } else {
+            climber = new ClimberSim();
         }
 
         state = ClimberStates.down;
@@ -34,22 +36,24 @@ public class ClimberSubsystem extends SubsystemBase {
 
         Logger.recordOutput("Climber/state", this.state);
 
+        climber.update();
+
         switch (this.state) {
 
             case down:
-                climber.setSpeed(ClimberConstants.CLIMBER_DOWN_SPEED);
+                climber.setVoltage(ClimberConstants.CLIMBER_DOWN_SPEED);
                 break;
             case up:
-                climber.setSpeed(ClimberConstants.CLIMBER_UP_SPEED);
+                climber.setVoltage(ClimberConstants.CLIMBER_UP_SPEED);
                 break;
             case manualUp:
-                climber.setSpeed(ClimberConstants.CLIMBER_ADJ_SPEED);
+                climber.setVoltage(ClimberConstants.CLIMBER_ADJ_SPEED);
                 break;
             case manualDown:
-                climber.setSpeed(-ClimberConstants.CLIMBER_ADJ_SPEED);
+                climber.setVoltage(-ClimberConstants.CLIMBER_ADJ_SPEED);
                 break;
             case stopped:
-                climber.setSpeed(0);
+                climber.setVoltage(0);
                 break;
             default:
                 throw new RuntimeException("trigger default climber state");

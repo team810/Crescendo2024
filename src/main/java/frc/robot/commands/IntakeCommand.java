@@ -20,15 +20,25 @@ public class IntakeCommand extends Command {
     public void execute() {
 
         if (IO.getButtonValue(Controls.intakeFwd).get()) {
+
             IntakeSubsystem.getInstance().setState(IntakeStates.runForward);
+
         } else if (IO.getButtonValue(Controls.intakeRev).get()) {
+
             IntakeSubsystem.getInstance().setState(IntakeStates.runReverse);
+
         } else if (IO.getJoystickValue(Controls.manualIntake).get() != 0) {
+
             IntakeSubsystem.getInstance().setState(IntakeStates.manualInput);
             IntakeSubsystem.getInstance().setManualSpeed(
                     intakeDeadband.apply(IO.getJoystickValue(Controls.manualIntake).get())
             );
-        } else { IntakeSubsystem.getInstance().setState(IntakeStates.stopped); }
+
+        } else {
+
+            IntakeSubsystem.getInstance().setState(IntakeStates.stopped);
+
+        }
 
     }
 }

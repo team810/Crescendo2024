@@ -20,14 +20,26 @@ public class ClimberCommand extends Command {
     public void execute() {
 
         if (IO.getButtonValue(Controls.climberDown).get()) {
+
             ClimberSubsystem.getInstance().setState(ClimberStates.down);
+
         } else if (IO.getButtonValue(Controls.climberUp).get()) {
+
             ClimberSubsystem.getInstance().setState(ClimberStates.up);
+
         } else if (IO.getButtonValue(Controls.climberAdjUp).get()) {
+
             ClimberSubsystem.getInstance().setState(ClimberStates.manualUp);
+
         } else if (IO.getButtonValue(Controls.climberAdjDown).get()) {
+
             ClimberSubsystem.getInstance().setState(ClimberStates.manualDown);
-        } else { IntakeSubsystem.getInstance().setState(IntakeStates.stopped); }
+
+        } else {
+
+            ClimberSubsystem.getInstance().setState(ClimberStates.stopped);
+
+        }
 
     }
 }

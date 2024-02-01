@@ -85,7 +85,6 @@ public class VisionReal implements VisionIO {
                             getRotation().getAngle())
             );
         }  else {
-//            System.out.println("NO TARGET!!!");
             return new Pose2d(new Translation2d(0, 0),
                     new Rotation2d(0));
         }

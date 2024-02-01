@@ -2,6 +2,8 @@ package frc.robot.subsystem.climber;
 
 public interface ClimberIO {
 
-    void setSpeed(double speed);
+    void setVoltage(double voltage);
+
+    void update();
 
 }

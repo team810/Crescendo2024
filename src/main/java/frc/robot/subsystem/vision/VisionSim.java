@@ -45,14 +45,10 @@ public class VisionSim implements VisionIO {
     }
 
     @Override
-    public void updateTargetData(double[] data) {
-
-    }
+    public void updateTargetData(double[] data) { }
 
     @Override
-    public void updatePoseEstimation() {
-
-    }
+    public void updatePoseEstimation() { }
 
     @Override
     public Pose2d getRobotPosition() {

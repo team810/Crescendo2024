@@ -17,7 +17,7 @@ import frc.robot.util.RectangleSet;
 import org.littletonrobotics.junction.Logger;
 
 /**
- * The drive train command is meant to handle drivetrain inputs in telop
+ * The drive train command is meant to handle drivetrain inputs in teleop
  */
 public class DriveCommand extends Command {
 
@@ -53,12 +53,12 @@ public class DriveCommand extends Command {
 		x = IO.getJoystickValue(Controls.drive_x).get();
 		y = IO.getJoystickValue(Controls.drive_y).get();
 
+
 		if ((!(IO.getButtonValue(Controls.rotateToTarget).get())) ||
 				(DrivetrainSubsystem.getInstance().getCurrentRectangle().getType()
 						== AutoTurnMode.noRectangle))
 		{
 
-			System.out.println("NOT ALIGNING");
 			theta = IO.getJoystickValue(Controls.drive_theta).get();
 			theta = thetaDeadband.apply(theta);
 			theta = Math.pow(theta, 3);
@@ -87,7 +87,7 @@ public class DriveCommand extends Command {
 			Logger.recordOutput("PIDtheta", theta);
 
 //			theta = theta / Math.PI;
-			theta = -theta * DrivetrainConstants.AUTO_ROTATE_MAX_SPEED;
+			theta = theta * DrivetrainConstants.AUTO_ROTATE_MAX_SPEED;
 			theta = MathUtil.clamp(theta, -DrivetrainConstants.AUTO_ROTATE_MAX_SPEED, DrivetrainConstants.AUTO_ROTATE_MAX_SPEED);
 		}
 
@@ -123,7 +123,7 @@ public class DriveCommand extends Command {
 		DrivetrainSubsystem.getInstance().setTargetTeleopSpeeds(
 				x,
 				y,
-				theta
+				-theta
 		);
 
 

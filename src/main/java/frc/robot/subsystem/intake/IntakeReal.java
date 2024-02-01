@@ -7,8 +7,10 @@ import org.littletonrobotics.junction.Logger;
 
 public class IntakeReal implements IntakeIO {
 
-    private CANSparkMax topMotor;
-    private CANSparkMax bottomMotor;
+    private final CANSparkMax topMotor;
+    private final CANSparkMax bottomMotor;
+
+    private double inputVoltage;
 
     public IntakeReal() {
 
@@ -17,6 +19,11 @@ public class IntakeReal implements IntakeIO {
 
         bottomMotor = new CANSparkMax(IntakeConstants.BOTTOM_ID,
                 CANSparkLowLevel.MotorType.kBrushless);
+
+        topMotor.setInverted(true);
+
+        topMotor.enableVoltageCompensation(12);
+        bottomMotor.enableVoltageCompensation(12);
 
         topMotor.clearFaults();
         bottomMotor.clearFaults();
@@ -27,22 +34,26 @@ public class IntakeReal implements IntakeIO {
         topMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
         bottomMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
 
-        topMotor.set(0);
-        bottomMotor.set(0);
+        inputVoltage = 0;
+
+        setVoltage(0);
     }
 
     public void setVoltage(double voltage) {
-        topMotor.setVoltage(-voltage);
-        bottomMotor.set(voltage);
+        inputVoltage = voltage;
+        topMotor.setVoltage(inputVoltage);
+        bottomMotor.set(inputVoltage);
     }
 
     public void update() {
         Logger.recordOutput("Intake/Top/Temperature", topMotor.getMotorTemperature());
         Logger.recordOutput("Intake/Top/CurrentDraw", topMotor.getOutputCurrent());
-        Logger.recordOutput("Intake/Top/Voltage", topMotor.getBusVoltage());
+        Logger.recordOutput("Intake/Top/MotorVoltage", topMotor.getBusVoltage());
+        Logger.recordOutput("Intake/Top/InputVoltage", this.inputVoltage);
 
         Logger.recordOutput("Intake/Bottom/Temperature", bottomMotor.getMotorTemperature());
         Logger.recordOutput("Intake/Bottom/CurrentDraw", bottomMotor.getOutputCurrent());
-        Logger.recordOutput("Intake/Bottom/Voltage", bottomMotor.getBusVoltage());
+        Logger.recordOutput("Intake/Bottom/MotorVoltage", bottomMotor.getBusVoltage());
+        Logger.recordOutput("Intake/Bottom/InputVoltage", this.inputVoltage);
     }
 }
