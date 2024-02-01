@@ -7,6 +7,7 @@ import frc.lib.Deadband;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
 import frc.robot.subsystem.drivetrain.DrivetrainConstants;
+import frc.robot.subsystem.drivetrain.DrivetrainMode;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.drivetrain.SpeedMode;
 import frc.robot.util.AutoTurn.AutoTurnMode;
@@ -21,14 +22,6 @@ public class DriveCommand extends Command {
 	private final Deadband xDeadband = new Deadband(.1);
 	private final Deadband yDeadband = new Deadband(.1);
 	private final Deadband thetaDeadband = new Deadband(.1);
-
-	/**
-	 * The Slew Rate Limiter is applied when the input is between -1 and 1.
-	 * If the slew rate is 1 that means that it will take 1 second to get to 1 if it was 2 this would mean it would take 1 second to get to 2
-	 */
-	private final SlewRateLimiter xSlewRate = new SlewRateLimiter(2,-2,0);
-	private final SlewRateLimiter ySlewRate = new SlewRateLimiter(2,-2,0);
-	private final SlewRateLimiter thetaSlewRate = new SlewRateLimiter(1,-1,0);
 
 
 	public DriveCommand() {

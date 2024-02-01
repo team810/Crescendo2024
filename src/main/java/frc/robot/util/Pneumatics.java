@@ -59,6 +59,8 @@ public class Pneumatics extends SubsystemBase {
                 compressor = null;
                 throw new RuntimeException("Pneumatics Hub type not defined properly, it needs to be ether a ctre or rev Pneumatics module");
         }
+        ctrePneumaticsControlModule.disableCompressor();
+
     }
 
     public PneumaticsBaseSim getPneumaticsHubSim()

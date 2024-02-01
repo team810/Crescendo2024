@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.navx.Navx;
 import frc.lib.navx.NavxReal;
@@ -37,10 +36,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 	private ChassisSpeeds currentSpeeds;
 
-	private ChassisSpeeds targetTeleopSpeeds;
-	private ChassisSpeeds targetAutoSpeeds;
-	private ChassisSpeeds targetAutoAlignSpeeds;
-	private ChassisSpeeds targetTeleopAutoAlignSpeeds;
+	private ChassisSpeeds targetSpeeds;
 
 	private final SwerveModule frontLeft;
 	private final SwerveModule frontRight;
@@ -55,7 +51,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	private SpeedMode speedMode;
 
 	private final PIDController thetaController;
-	private double kP = 0, kI = 0, kD = 0;
 	private double targetAngle; // Rads
 	private boolean rotateEnabled;
 
@@ -94,10 +89,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		currentSpeeds = new ChassisSpeeds();
 
-		targetAutoSpeeds = new ChassisSpeeds();
-		targetTeleopSpeeds = new ChassisSpeeds();
-		targetTeleopAutoAlignSpeeds = new ChassisSpeeds();
-		targetAutoAlignSpeeds = new ChassisSpeeds();
+		targetSpeeds = new ChassisSpeeds();
 
 		kinematics = KINEMATICS;
 		odometry = new SwerveDriveOdometry(kinematics, navx.getRotation2d(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
@@ -122,56 +114,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		rotateEnabled = false;
 		targetAngle = 0;
 
-		SmartDashboard.putNumber("P", kP);
-		SmartDashboard.putNumber("I", kI);
-		SmartDashboard.putNumber("D", kD);
-
 		currentRectangle = AutoTurnConstants.nullRectangle;
 	}
 
 	@Override
 	public void periodic() {
 
-		thetaController.setP(SmartDashboard.getNumber("P", 0));
-		thetaController.setI(SmartDashboard.getNumber("I", 0));
-		thetaController.setD(SmartDashboard.getNumber("D", 0));
-
-		ChassisSpeeds targetSpeed;
-
-		switch (mode)
-		{
-			case teleop:
-				targetSpeed = targetTeleopSpeeds;
-				break;
-			case teleop_autoAlign:
-				targetSpeed = targetTeleopAutoAlignSpeeds;
-				break;
-			case auto:
-				targetSpeed = targetAutoSpeeds;
-				break;
-			case auto_autoAlign:
-				targetSpeed = targetAutoAlignSpeeds;
-				break;
-			case teleop_auto_turn:
-				targetSpeed = new ChassisSpeeds(
-						targetTeleopSpeeds.vxMetersPerSecond,
-						targetTeleopSpeeds.vyMetersPerSecond,
-						0);
-				break;
-			default:
-				throw new RuntimeException("Triggered a default state, IDK how you did this get help from Matthew, " +
-						"This will be funny when I eventually adjacently make the error");
-		}
-
 		currentRectangle = AutoTurnConstants.rectangleSet.findRectangle(getPose());
 
 		if (RobotState.isDisabled())
 		{
-			targetSpeed = new ChassisSpeeds(0,0,0);
+			targetSpeeds = new ChassisSpeeds(0,0,0);
 		}
 
 		SwerveModuleState[] states = kinematics.toSwerveModuleStates(
-				ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeed, getRotation())
+				ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds, getRotation())
 		);
 
 		// This mess with the pid controllers, it makes the mid controllers go back and forth
@@ -191,7 +148,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		backLeftState = states[2];
 		backRightState = states[3];
 
-		currentSpeeds = targetSpeed;
+		currentSpeeds = targetSpeeds;
 
 		if (Robot.isSimulation())
 		{
@@ -263,7 +220,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	 */
 	public void setTargetTeleopSpeeds(double x, double y, double z)
 	{
-		targetTeleopSpeeds = new ChassisSpeeds(y,x,z);
+		targetSpeeds = new ChassisSpeeds(y,x,z);
 	}
 
 	public Pose2d getPose()
@@ -273,27 +230,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 	public Navx getNavx() {
 		return navx;
-	}
-	public void setTargetAutoSpeeds(double x, double y, double z)
-	{
-		targetAutoSpeeds = new ChassisSpeeds(x,y,z);
-	}
-	public void setTargetAutoSpeeds(ChassisSpeeds speeds)
-	{
-		targetAutoSpeeds = speeds;
-	}
-	public void setTargetAutoSpeeds(SwerveModuleState[] states)
-	{
-		targetAutoSpeeds = kinematics.toChassisSpeeds(states);
-	}
-	public ChassisSpeeds getTargetTeleopSpeeds() {
-		return targetTeleopSpeeds;
-	}
-	public void setTargetTeleopSpeeds(ChassisSpeeds mTargetTeleopSpeeds) {
-		targetTeleopSpeeds = mTargetTeleopSpeeds;
-	}
-	public ChassisSpeeds getTargetAutoSpeeds() {
-		return targetAutoSpeeds;
 	}
 	public PIDController getThetaController() { return thetaController; }
 	public AlignmentRectangle getCurrentRectangle() { return currentRectangle; }

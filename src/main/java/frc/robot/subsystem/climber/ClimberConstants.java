@@ -2,7 +2,7 @@ package frc.robot.subsystem.climber;
 
 public class ClimberConstants {
 
-    public static final int CLIMBER_ID = 0;
+    public static final int CLIMBER_ID = 0; //FIXME Climber CAN ID
 
     public static final double CLIMBER_DOWN_SPEED = -0.9 * 12;
 

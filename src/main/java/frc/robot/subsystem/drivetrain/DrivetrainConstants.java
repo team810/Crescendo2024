@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 public final class DrivetrainConstants {
 
+	//FIXME CAN ID FOR DRIVER
 	public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2;
 	public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1;
 	public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 12;

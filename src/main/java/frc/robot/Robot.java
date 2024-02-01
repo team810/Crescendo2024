@@ -5,13 +5,10 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.lib.StadiaController;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-import org.photonvision.PhotonCamera;
-import org.photonvision.proto.Photon;
 
 public class Robot extends LoggedRobot
 {
@@ -25,7 +22,7 @@ public class Robot extends LoggedRobot
         Logger.recordMetadata("ProjectName", "Crescendo"); // Set a metadata value
         if (isReal()) {
             Logger.addDataReceiver(new NT4Publisher());
-//            Logger.addDataReceiver(new WPILOGWriter());
+            Logger.addDataReceiver(new WPILOGWriter());
         } else {
             Logger.addDataReceiver(new NT4Publisher());
         }

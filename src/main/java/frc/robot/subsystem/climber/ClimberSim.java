@@ -10,9 +10,7 @@ public class ClimberSim implements ClimberIO {
     private double inputVoltage;
 
     public ClimberSim() {
-
-        climberMotor = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
-
+        climberMotor = new FlywheelSim(DCMotor.getNEO(1), 100, 1);
     }
 
     @Override
@@ -26,5 +24,6 @@ public class ClimberSim implements ClimberIO {
         Logger.recordOutput("Climber/currentDraw", climberMotor.getCurrentDrawAmps());
         Logger.recordOutput("Climber/Velocity", climberMotor.getAngularVelocityRPM());
         Logger.recordOutput("Climber/inputVoltage", this.inputVoltage);
+        
     }
 }
