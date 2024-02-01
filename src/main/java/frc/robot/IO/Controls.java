@@ -10,5 +10,9 @@ public enum Controls {
     rotateToTarget,
     manualIntake,
     intakeFwd,
-    intakeRev
+    intakeRev,
+    climberDown,
+    climberUp,
+    climberAdjUp,
+    climberAdjDown
 }
