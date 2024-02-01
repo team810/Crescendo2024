@@ -59,19 +59,6 @@ public class VisionReal implements VisionIO {
         }
     }
 
-    public void updateTargetData(double[] data) {
-        PhotonTrackedTarget target = getTarget();
-
-        if (target != null) {
-            data[0] = target.getYaw();
-            data[1] = target.getPitch();
-            data[2] = target.getSkew();
-            data[3] = target.getFiducialId();
-        } else { data[3] = -1; }
-
-
-    }
-
     public void updatePoseEstimation() {
             poseEstimation = estimator.update();
     }

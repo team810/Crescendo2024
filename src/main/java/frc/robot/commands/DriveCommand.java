@@ -17,7 +17,7 @@ import frc.robot.util.RectangleSet;
 import org.littletonrobotics.junction.Logger;
 
 /**
- * The drive train command is meant to handle drivetrain inputs in teleop
+ * The drive train command is meant to handle drivetrain inputs in telop
  */
 public class DriveCommand extends Command {
 
@@ -53,12 +53,12 @@ public class DriveCommand extends Command {
 		x = IO.getJoystickValue(Controls.drive_x).get();
 		y = IO.getJoystickValue(Controls.drive_y).get();
 
-
 		if ((!(IO.getButtonValue(Controls.rotateToTarget).get())) ||
 				(DrivetrainSubsystem.getInstance().getCurrentRectangle().getType()
 						== AutoTurnMode.noRectangle))
 		{
 
+//			System.out.println("NOT ALIGNING");
 			theta = IO.getJoystickValue(Controls.drive_theta).get();
 			theta = thetaDeadband.apply(theta);
 			theta = Math.pow(theta, 3);
@@ -73,7 +73,7 @@ public class DriveCommand extends Command {
 			}
 		} else {
 
-			System.out.println("ALIGNING!!");
+//			System.out.println("ALIGNING!!");
 			currentAngle = DrivetrainSubsystem.getInstance().getRotation().getRadians();
 			setpointAngle = AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose())
 								.getRadians();
@@ -141,18 +141,5 @@ public class DriveCommand extends Command {
 		{
 			DrivetrainSubsystem.getInstance().setSpeedMode(SpeedMode.normal);
 		}
-
-//		if (IO.getButtonValue(Controls.rotateToTarget).get())
-//		{
-//			System.out.println("WE GOOD?");
-////			DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.teleop_auto_turn);
-//			DrivetrainSubsystem.getInstance().setRotateEnabled(true);
-//			DrivetrainSubsystem.getInstance().setTargetAngle(
-//					AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose())
-//							.getRadians()
-//			);
-//		}else{
-//			DrivetrainSubsystem.getInstance().setRotateEnabled(false);
-//		}
 	}
 }

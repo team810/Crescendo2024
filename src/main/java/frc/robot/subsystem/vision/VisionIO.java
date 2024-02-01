@@ -7,8 +7,6 @@ public interface VisionIO {
 
     PhotonTrackedTarget getTarget();
 
-    void updateTargetData(double[] data);
-
     void updatePoseEstimation();
 
     Pose2d getRobotPosition();
