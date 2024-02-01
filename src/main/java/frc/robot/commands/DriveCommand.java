@@ -7,13 +7,10 @@ import frc.lib.Deadband;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
 import frc.robot.subsystem.drivetrain.DrivetrainConstants;
-import frc.robot.subsystem.drivetrain.DrivetrainMode;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.drivetrain.SpeedMode;
-import frc.robot.util.AutoTurnConstants;
-import frc.robot.util.AutoTurnMode;
-import frc.robot.util.AutoTurnUtil;
-import frc.robot.util.RectangleSet;
+import frc.robot.util.AutoTurn.AutoTurnMode;
+import frc.robot.util.AutoTurn.AutoTurnUtil;
 import org.littletonrobotics.junction.Logger;
 
 /**

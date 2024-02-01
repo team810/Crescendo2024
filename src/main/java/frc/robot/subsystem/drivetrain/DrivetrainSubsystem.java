@@ -1,7 +1,6 @@
 package frc.robot.subsystem.drivetrain;
 
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,8 +12,8 @@ import frc.lib.navx.Navx;
 import frc.lib.navx.NavxReal;
 import frc.lib.navx.NavxSim;
 import frc.robot.Robot;
-import frc.robot.util.AlignmentRectangle;
-import frc.robot.util.AutoTurnConstants;
+import frc.robot.util.AutoTurn.AlignmentRectangle;
+import frc.robot.util.AutoTurn.AutoTurnConstants;
 import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.subsystem.drivetrain.DrivetrainConstants.*;

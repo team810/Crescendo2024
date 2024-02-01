@@ -1,6 +1,7 @@
-package frc.robot.util;
+package frc.robot.util.AutoTurn;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.util.AutoTurn.AutoTurnMode;
 
 public class AlignmentRectangle {
 

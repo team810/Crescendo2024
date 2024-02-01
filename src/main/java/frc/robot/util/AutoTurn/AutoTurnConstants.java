@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.robot.util.AutoTurn;
 
 public class AutoTurnConstants {
 
