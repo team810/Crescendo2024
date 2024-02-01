@@ -50,8 +50,8 @@ public class ShooterSubsystem extends SubsystemBase {
             bottomController.setD(ShooterConstants.BOTTOM_CONTROLLER_SIM.kD);
         }
 
-        topController.setTolerance(ShooterConstants.PID_CONTROLLER_TORRENCE);
-        bottomController.setTolerance(ShooterConstants.PID_CONTROLLER_TORRENCE);
+        topController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
+        bottomController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
 
         barState = MechanismState.stored;
         deflectorState = MechanismState.deployed;

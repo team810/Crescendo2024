@@ -28,7 +28,7 @@ public class IntakeSubsystem extends SubsystemBase {
         if (Robot.isReal()) {
             intake = new IntakeReal();
         }else{
-            intake = new IntakeReal();
+            intake = new IntakeSim();
         }
 
         state = IntakeStates.stopped;
@@ -37,21 +37,21 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void periodic() {
 
-        Logger.recordOutput("Intake/state", this.state);
+        intake.update();
 
         switch (this.state) {
 
             case runForward:
-                intake.setSpeed(IntakeConstants.INTAKE_MAX_SPEED);
+                intake.setVoltage(IntakeConstants.INTAKE_MAX_SPEED);
                 break;
             case runReverse:
-                intake.setSpeed(-IntakeConstants.INTAKE_MAX_SPEED);
+                intake.setVoltage(-IntakeConstants.INTAKE_MAX_SPEED);
                 break;
             case manualInput:
-                intake.setSpeed(manualSpeed);
+                intake.setVoltage(manualSpeed);
                 break;
             case stopped:
-                intake.setSpeed(0);
+                intake.setVoltage(0);
                 break;
             default:
                 throw new RuntimeException("triggered default intake state");
@@ -59,7 +59,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void setManualSpeed(double speed) {
-        this.manualSpeed = speed;
+        this.manualSpeed = speed * 12;
     }
 
     public void setState(IntakeStates state) {

@@ -3,6 +3,7 @@ package frc.robot.subsystem.intake;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+import org.littletonrobotics.junction.Logger;
 
 public class IntakeReal implements IntakeIO {
 
@@ -30,8 +31,18 @@ public class IntakeReal implements IntakeIO {
         bottomMotor.set(0);
     }
 
-    public void setSpeed(double speed) {
-        topMotor.set(-speed);
-        bottomMotor.set(speed);
+    public void setVoltage(double voltage) {
+        topMotor.setVoltage(-voltage);
+        bottomMotor.set(voltage);
+    }
+
+    public void update() {
+        Logger.recordOutput("Intake/Top/Temperature", topMotor.getMotorTemperature());
+        Logger.recordOutput("Intake/Top/CurrentDraw", topMotor.getOutputCurrent());
+        Logger.recordOutput("Intake/Top/Voltage", topMotor.getBusVoltage());
+
+        Logger.recordOutput("Intake/Bottom/Temperature", bottomMotor.getMotorTemperature());
+        Logger.recordOutput("Intake/Bottom/CurrentDraw", bottomMotor.getOutputCurrent());
+        Logger.recordOutput("Intake/Bottom/Voltage", bottomMotor.getBusVoltage());
     }
 }

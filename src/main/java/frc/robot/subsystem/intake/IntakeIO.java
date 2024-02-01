@@ -1,6 +1,10 @@
 package frc.robot.subsystem.intake;
 
+import com.revrobotics.CANSparkMax;
+
 public interface IntakeIO {
 
-    void setSpeed(double speed);
+    void setVoltage(double voltage);
+
+    void update();
 }

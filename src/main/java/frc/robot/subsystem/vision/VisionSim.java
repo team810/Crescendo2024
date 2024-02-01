@@ -34,26 +34,6 @@ public class VisionSim implements VisionIO {
             throw new RuntimeException(e);
         }
 
-
-//        for (int i = 0; i < 16; i++) {
-//
-//            if (layout.getTagPose(i + 1).isPresent()) {
-//
-//                targetSim[i] = new VisionTargetSim(
-//                        layout.getTagPose(i + 1).get(),
-//                        new TargetModel(0.17, 0.17),
-//                        i + 1
-//                );
-//            } else {
-//                targetSim[i] = new VisionTargetSim(
-//                        new Pose3d(new Translation3d(0, 0, 0),
-//                                new Rotation3d(0, 0, 0)),
-//                        new TargetModel(0.17, 0.17),
-//                        i + 1
-//                );
-//            }
-//        }
-
         systemSim.addAprilTags(layout);
 
         systemSim.addCamera(limelightSim, VisionConstants.robotToCam);
