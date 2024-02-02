@@ -1,6 +1,8 @@
 package frc.robot.subsystem.drivetrain;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
@@ -63,8 +65,8 @@ public final class DrivetrainConstants {
 	public static final PIDConstants DRIVE_CONTROLLER_REAL = new PIDConstants(0.00009,.001,0);
 	public static final PIDConstants STEER_CONTROLLER_REAL = new PIDConstants(.5,0,0);
 
-	public static final PIDConstants THETA_CONTROLLER_SIM = new PIDConstants(0,0,0);
-	public static final PIDConstants THETA_CONTROLLER_REAL = new PIDConstants(0.1,0,0);
+	public static final PIDConstants THETA_CONTROLLER_SIM = new PIDConstants(0.2,0,0);
+	public static final PIDConstants THETA_CONTROLLER_REAL = new PIDConstants(4,0.5,0);
 	/**
 	 * The measurement of the front Left wheel to the front right wheel or the back left wheel to the back right wheel
 	 * @Unites Meters
@@ -75,6 +77,16 @@ public final class DrivetrainConstants {
 	 * @Unites Meters
 	 */
 	public static final double DRIVETRAIN_WHEELBASE_METERS = 0.635; // Width of bot in meters
+
+	// FIXME FIX THIS CONFIG
+	public static final HolonomicPathFollowerConfig autoConfig =
+								new HolonomicPathFollowerConfig(
+									new PIDConstants(0, 0, 0), //translation PID
+									new PIDConstants(0, 0, 0), //rotation PID
+									4.5, //max module speed
+									0.433, //drive base radius,
+									new ReplanningConfig()
+								);
 
 	public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
 			// Front left

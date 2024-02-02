@@ -5,8 +5,6 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 public interface VisionIO {
 
-    PhotonTrackedTarget getTarget();
-
     void updatePoseEstimation();
 
     Pose2d getRobotPosition();

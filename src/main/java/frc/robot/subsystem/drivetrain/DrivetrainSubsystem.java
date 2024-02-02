@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.navx.Navx;
@@ -218,9 +219,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	 * @param z rotate input
 	 * This should get values that have already been altered and changed on a scale of -Max speed to Max speed
 	 */
-	public void setTargetTeleopSpeeds(double x, double y, double z)
+	public void setTargetSpeeds(double x, double y, double z)
 	{
 		targetSpeeds = new ChassisSpeeds(y,x,z);
+	}
+
+	public void setTargetSpeeds(ChassisSpeeds speeds) {
+		targetSpeeds = speeds;
 	}
 
 	public Pose2d getPose()
@@ -248,6 +253,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 	public double getTargetAngle() {
 		return targetAngle;
+	}
+
+	public ChassisSpeeds getTargetSpeeds() {
+		return targetSpeeds;
 	}
 
 	public void setTargetAngle(double targetAngle) {

@@ -23,7 +23,7 @@ import java.util.Set;
 
 public class VisionSim implements VisionIO {
 
-    private PhotonCamera limelight;
+    private final PhotonCamera limelight;
     private PhotonCameraSim limelightSim;
 
     private SimCameraProperties cameraProperties;
@@ -71,13 +71,7 @@ public class VisionSim implements VisionIO {
     }
 
     @Override
-    public PhotonTrackedTarget getTarget() {
-        return null;
-    }
-
-    @Override
     public void updatePoseEstimation() {
-
         systemSim.update(DrivetrainSubsystem.getInstance().getPose());
     }
 

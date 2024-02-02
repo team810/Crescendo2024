@@ -11,6 +11,7 @@ public enum Controls {
     manualIntake,
     intakeFwd,
     intakeRev,
+    fireIntake,
     climberDown,
     climberUp,
     climberAdjUp,

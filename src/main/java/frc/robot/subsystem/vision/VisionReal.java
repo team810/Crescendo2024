@@ -21,7 +21,6 @@ import java.util.Optional;
 public class VisionReal implements VisionIO {
 
     private final PhotonCamera limelight;
-    private PhotonPipelineResult result;
 
     private PhotonPoseEstimator estimator;
 
@@ -48,15 +47,6 @@ public class VisionReal implements VisionIO {
                 limelight,
                 VisionConstants.robotToCam);
 
-    }
-
-    public PhotonTrackedTarget getTarget() {
-        result = limelight.getLatestResult();
-        if (result.hasTargets()) {
-            return result.getBestTarget();
-        } else {
-            return null;
-        }
     }
 
     public void updatePoseEstimation() {

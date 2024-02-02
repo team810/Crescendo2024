@@ -1,15 +1,17 @@
 package frc.robot.commands;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.Deadband;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
+import frc.robot.Robot;
 import frc.robot.subsystem.drivetrain.DrivetrainConstants;
-import frc.robot.subsystem.drivetrain.DrivetrainMode;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.drivetrain.SpeedMode;
+import frc.robot.util.AutoTurn.AlignmentRectangle;
 import frc.robot.util.AutoTurn.AutoTurnMode;
 import frc.robot.util.AutoTurn.AutoTurnUtil;
 import org.littletonrobotics.junction.Logger;
@@ -40,12 +42,24 @@ public class DriveCommand extends Command {
 		double currentAngle = 0;
 		double setpointAngle = 0;
 
+		AutoTurnMode currentRectangle =
+				DrivetrainSubsystem.getInstance().getCurrentRectangle().getType();
+
+		boolean notAligning = (!(IO.getButtonValue(Controls.rotateToTarget).get())) ||
+				(currentRectangle == AutoTurnMode.noRectangle);
+
+		if ((currentRectangle == AutoTurnMode.blueSpeaker) ||
+				(currentRectangle == AutoTurnMode.redSpeaker)) {
+			System.out.println("RRRRRRRRUMBLE!!!");
+			IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, 1);
+		}
+
 		x = IO.getJoystickValue(Controls.drive_x).get();
 		y = IO.getJoystickValue(Controls.drive_y).get();
 
-		if ((!(IO.getButtonValue(Controls.rotateToTarget).get())) ||
-				(DrivetrainSubsystem.getInstance().getCurrentRectangle().getType()
-						== AutoTurnMode.noRectangle))
+
+
+		if (notAligning)
 		{
 
 //			System.out.println("NOT ALIGNING");
@@ -64,9 +78,9 @@ public class DriveCommand extends Command {
 		} else {
 
 //			System.out.println("ALIGNING!!");
-			currentAngle = DrivetrainSubsystem.getInstance().getRotation().getRadians();
-			setpointAngle = AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose())
-								.getRadians();
+			currentAngle = -MathUtil.angleModulus(DrivetrainSubsystem.getInstance().getRotation().getRadians());
+			setpointAngle = MathUtil.angleModulus(AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose())
+								.getRadians());
 
 			Logger.recordOutput("currentAngle", currentAngle);
 			Logger.recordOutput("setPointAngle", setpointAngle);
@@ -110,12 +124,20 @@ public class DriveCommand extends Command {
 		Logger.recordOutput("Drivetrain/finOutTheta", theta);
 
 
-		DrivetrainSubsystem.getInstance().setTargetTeleopSpeeds(
-				x,
-				y,
-				-theta
-		);
 
+		if (Robot.isReal()) {
+			DrivetrainSubsystem.getInstance().setTargetSpeeds(
+					-x,
+					y,
+					-theta
+			);
+		} else {
+			DrivetrainSubsystem.getInstance().setTargetSpeeds(
+					-x,
+					y,
+					theta
+			);
+			}
 
 		if (IO.getButtonValue(Controls.reset_gyro).get())
 		{

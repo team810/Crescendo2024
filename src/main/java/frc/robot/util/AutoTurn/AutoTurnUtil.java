@@ -16,20 +16,19 @@ public class AutoTurnUtil {
             case Amp:
                 return new Rotation2d(Math.toRadians(90));
             case redSource:
-                return new Rotation2d(Math.toRadians(-120));
+                return new Rotation2d(Math.toRadians(120));
             case blueSource:
-                return new Rotation2d(Math.toRadians(-60));
+                return new Rotation2d(Math.toRadians(60));
             case blueSpeaker:
                 return new Rotation2d(MathUtil.angleModulus(
                             Math.atan(
-                                (5.60 - robotPose.getY()) / (robotPose.getX()))
-                            + Math.PI)
+                                (5.60 - robotPose.getY()) / (robotPose.getX())))
                         );
             case redSpeaker:
                 return new Rotation2d(MathUtil.angleModulus(
-                        Math.atan(
+                        -Math.atan(
                                 (5.60 - robotPose.getY()) / (16.50 - robotPose.getX())
-                        ))
+                        ) + Math.PI)
                 );
         }
 

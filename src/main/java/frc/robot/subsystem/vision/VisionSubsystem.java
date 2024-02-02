@@ -50,9 +50,6 @@ public class VisionSubsystem extends SubsystemBase {
 
         vision.updatePoseEstimation();
 
-//        Logger.recordOutput("Vision/Yaw",
-//                vision.getTarget().getYaw());
-
         Logger.recordOutput("Vision/robotX",
                 vision.getRobotPosition().getX());
         Logger.recordOutput("Vision/robotY",
