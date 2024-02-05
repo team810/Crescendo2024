@@ -40,6 +40,5 @@ public class ClimberCommand extends Command {
             ClimberSubsystem.getInstance().setState(ClimberStates.stopped);
 
         }
-
     }
 }

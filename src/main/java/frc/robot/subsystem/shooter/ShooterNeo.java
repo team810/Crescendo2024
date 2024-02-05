@@ -5,11 +5,14 @@ import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Timer;
 import frc.lib.MechanismState;
 import frc.robot.util.Pneumatics;
 import org.littletonrobotics.junction.Logger;
 
-public class ShooterNeo implements ShooterIO{
+import java.time.Instant;
+
+public class ShooterNeo implements ShooterIO {
 
     private final CANSparkMax topMotor;
     private final CANSparkMax bottomMotor;
@@ -21,10 +24,10 @@ public class ShooterNeo implements ShooterIO{
     private double bottomVoltage;
 
     private final DoubleSolenoid deflector;
-    private final DoubleSolenoid bar;
+    private final CANSparkMax bar;
 
     private MechanismState deflectorState;
-    private MechanismState barState;
+    private BarState barState;
 
     public ShooterNeo()
     {
@@ -46,11 +49,12 @@ public class ShooterNeo implements ShooterIO{
         topEncoder = topMotor.getEncoder();
         bottomEncoder = bottomMotor.getEncoder();
 
-        deflector = Pneumatics.getInstance().createSolenoid(ShooterConstants.DEFLECTOR_FWD_CHANNEL, ShooterConstants.BAR_REV_CHANNEL);
-        bar = Pneumatics.getInstance().createSolenoid(ShooterConstants.BAR_FWD_CHANNEL, ShooterConstants.BAR_REV_CHANNEL);
+        deflector = Pneumatics.getInstance().createSolenoid(ShooterConstants.DEFLECTOR_FWD_CHANNEL,
+                ShooterConstants.DEFLECTOR_REV_CHANNEL);
+        bar = new CANSparkMax(ShooterConstants.BAR_ID, CANSparkLowLevel.MotorType.kBrushless);
 
         deflectorState = MechanismState.stored;
-        barState = MechanismState.stored;
+        barState = BarState.stopped;
     }
     @Override
     public void update()
@@ -99,18 +103,23 @@ public class ShooterNeo implements ShooterIO{
     }
 
     @Override
-    public MechanismState getBarState() {
+    public BarState getBarState() {
         return barState;
     }
 
     @Override
-    public void setBarState(MechanismState state) {
+    public void setBarState(BarState state) {
+
         this.barState = state;
-        if (barState == MechanismState.deployed)
-        {
-            bar.set(DoubleSolenoid.Value.kForward);
-        } else if (barState == MechanismState.stored) {
-            bar.set(DoubleSolenoid.Value.kReverse);
+        switch (barState) {
+            case forward:
+                bar.set(ShooterConstants.BAR_SPEED);
+            case stopped:
+                bar.set(0);
+                break;
+            case reversed:
+                bar.set(-ShooterConstants.BAR_SPEED);
+                break;
         }
     }
 }

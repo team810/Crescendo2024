@@ -14,14 +14,15 @@ public class ShooterSim implements ShooterIO{
     private final FlywheelSim topMotor;
     private final FlywheelSim bottomMotor;
 
+    private final FlywheelSim barMotor;
+
     private double topVoltage;
     private double bottomVoltage;
 
     private final DoubleSolenoidSim deflector;
-    private final DoubleSolenoidSim bar;
 
     private MechanismState deflectorState;
-    private MechanismState barState;
+    private BarState barState;
 
 
     public ShooterSim()
@@ -30,10 +31,10 @@ public class ShooterSim implements ShooterIO{
         bottomMotor = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
 
         deflectorState = MechanismState.stored;
-        barState = MechanismState.stored;
+        barState = BarState.stopped;
 
         deflector = new DoubleSolenoidSim(Pneumatics.getInstance().getPneumaticsHubSim(), ShooterConstants.DEFLECTOR_FWD_CHANNEL, ShooterConstants.DEFLECTOR_REV_CHANNEL);
-        bar = new DoubleSolenoidSim(Pneumatics.getInstance().getPneumaticsHubSim(), ShooterConstants.BAR_FWD_CHANNEL, ShooterConstants.DEFLECTOR_REV_CHANNEL);
+        barMotor = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
     }
 
     @Override
@@ -89,18 +90,24 @@ public class ShooterSim implements ShooterIO{
     }
 
     @Override
-    public MechanismState getBarState() {
+    public BarState getBarState() {
         return barState;
     }
 
     @Override
-    public void setBarState(MechanismState state) {
+    public void setBarState(BarState state) {
         this.barState = state;
-        if (barState == MechanismState.deployed)
-        {
-            bar.set(DoubleSolenoid.Value.kForward);
-        } else if (barState == MechanismState.stored) {
-            bar.set(DoubleSolenoid.Value.kReverse);
+
+        switch (barState) {
+            case forward:
+                barMotor.setInputVoltage(ShooterConstants.BAR_SPEED * 12);
+                break;
+            case stopped:
+                barMotor.setInputVoltage(0);
+                break;
+            case reversed:
+                barMotor.setInputVoltage(-ShooterConstants.BAR_SPEED * 12);
+                break;
         }
     }
 }

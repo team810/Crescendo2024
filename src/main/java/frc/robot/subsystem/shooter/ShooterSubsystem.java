@@ -4,6 +4,7 @@ package frc.robot.subsystem.shooter;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.MechanismState;
 import frc.robot.Robot;
@@ -20,7 +21,9 @@ public class ShooterSubsystem extends SubsystemBase {
     private final PIDController bottomController;
 
     private MechanismState deflectorState;
-    private MechanismState barState;
+    private BarState barState;
+
+    private final Timer barTimer;
 
     private ShooterSubsystem() {
 
@@ -53,8 +56,12 @@ public class ShooterSubsystem extends SubsystemBase {
         topController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
         bottomController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
 
-        barState = MechanismState.stored;
+        barState = BarState.stopped;
         deflectorState = MechanismState.deployed;
+
+        barTimer = new Timer();
+        barTimer.reset();
+        barTimer.stop();
     }
 
     @Override
@@ -83,6 +90,10 @@ public class ShooterSubsystem extends SubsystemBase {
             bottomController.reset();
         }
 
+        if (barTimer.hasElapsed(ShooterConstants.BAR_SECONDS)) {
+            stopBar();
+        }
+
         shooter.update();
 
         Logger.recordOutput("Shooter/Top/TargetRPM", topTargetRPM);
@@ -107,13 +118,25 @@ public class ShooterSubsystem extends SubsystemBase {
         shooter.setDeflector(this.deflectorState);
     }
 
-    public MechanismState getBarState() {
+    public BarState getBarState() {
         return barState;
     }
 
-    public void setBarState(MechanismState barState) {
-        this.barState = barState;
-        shooter.setBarState(this.barState);
+    public void stopBar() {
+        shooter.setBarState(BarState.stopped);
+    }
+
+    public void toggleBarState() {
+
+        barTimer.start();
+
+        if (this.barState == BarState.forward) {
+            this.barState = BarState.reversed;
+            shooter.setBarState(BarState.reversed);
+        } else {
+            this.barState = BarState.forward;
+            shooter.setBarState(BarState.forward);
+        }
     }
 }
 
