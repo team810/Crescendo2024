@@ -54,10 +54,14 @@ public class DriveCommand extends Command {
 			IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, 1);
 		}
 
-		x = IO.getJoystickValue(Controls.drive_x).get();
-		y = IO.getJoystickValue(Controls.drive_y).get();
-
-
+		if(Robot.isReal())
+		{
+			x = IO.getJoystickValue(Controls.drive_x).get();
+			y = IO.getJoystickValue(Controls.drive_y).get();
+		}else{
+			x = IO.getJoystickValue(Controls.drive_x).get();
+			y = -IO.getJoystickValue(Controls.drive_y).get();
+		}
 
 		if (notAligning)
 		{

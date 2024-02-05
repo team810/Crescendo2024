@@ -1,6 +1,10 @@
 package frc.robot.subsystem.drivetrain;
 
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -56,6 +60,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	private boolean rotateEnabled;
 
 	private AlignmentRectangle currentRectangle;
+
+	private ChassisSpeeds autoSpeeds;
+
 
 	private DrivetrainSubsystem() {
 
@@ -116,6 +123,33 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		targetAngle = 0;
 
 		currentRectangle = AutoTurnConstants.nullRectangle;
+
+		AutoBuilder.configureHolonomic(
+				this::getPose,
+				this::resetOdometry,
+				this::getRobotRelativeSpeeds,
+				this::setAutoSpeeds,
+				new HolonomicPathFollowerConfig(
+						new PIDConstants(1,0,0),
+						new PIDConstants(1,0,0),
+						4.6,
+						0.4,
+						new ReplanningConfig()
+				),
+				() -> {
+					// Boolean supplier that controls when the path will be mirrored for the red alliance
+					// This will flip the path being followed to the red side of the field.
+					// THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+					var alliance = DriverStation.getAlliance();
+					if (alliance.isPresent()) {
+						return alliance.get() == DriverStation.Alliance.Red;
+					}
+					return false;
+				},
+				this
+		);
+		setAutoSpeeds(new ChassisSpeeds());
 	}
 
 	@Override
@@ -128,9 +162,22 @@ public class DrivetrainSubsystem extends SubsystemBase {
 			targetSpeeds = new ChassisSpeeds(0,0,0);
 		}
 
-		SwerveModuleState[] states = kinematics.toSwerveModuleStates(
-				ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds, getRotation())
-		);
+
+		SwerveModuleState[] states;
+		if (RobotState.isTeleop())
+		{
+			states = kinematics.toSwerveModuleStates(
+					ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds, getRotation())
+			);
+		} else if (RobotState.isAutonomous()) {
+			targetSpeeds = getAutoSpeeds();
+			states = kinematics.toSwerveModuleStates(targetSpeeds);
+		}else{
+			targetSpeeds = new ChassisSpeeds(0,0,0);
+			states = kinematics.toSwerveModuleStates(
+					ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds, getRotation())
+			);
+		}
 
 		// This mess with the pid controllers, it makes the mid controllers go back and forth
 		states[0] = SwerveModuleState.optimize(states[0], frontLeft.getState().angle);
@@ -181,15 +228,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		navx.update(0);
 	}
 
+	private ChassisSpeeds getRobotRelativeSpeeds()
+	{
+		return kinematics.toChassisSpeeds(frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
+	}
+
 
 	public void resetOdometry(Pose2d newPose)
 	{
-
-		frontLeft.resetModulePositions();
-		frontRight.resetModulePositions();
-		backLeft.resetModulePositions();
-		backRight.resetModulePositions();
-
 		frontLeftPosition = frontLeft.getModulePosition();
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
@@ -268,5 +314,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 	public void setRotateEnabled(boolean rotateEnabled) {
 		this.rotateEnabled = rotateEnabled;
+	}
+
+	public void setAutoSpeeds(ChassisSpeeds autoSpeeds) {
+		this.autoSpeeds = autoSpeeds;
+	}
+
+	public ChassisSpeeds getAutoSpeeds() {
+		return autoSpeeds;
 	}
 }

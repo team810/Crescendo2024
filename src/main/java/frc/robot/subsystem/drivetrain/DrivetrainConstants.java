@@ -33,7 +33,7 @@ public final class DrivetrainConstants {
 	 * Max Speed of the robot
 	 * @Unites MPS
 	 */
-	public static final double NORMAL_SPEED = 2.0;
+	public static final double NORMAL_SPEED = 4.6;
 	/**
 	 * Slow mode of the robot
 	 * @Unites MPS

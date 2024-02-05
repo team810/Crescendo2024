@@ -21,7 +21,7 @@ public class LinearInterpolation {
 
   /** Returns the predicted value of y at the provided x coordinate, interpolating if necessary. */
   public double predict(double x) {
-    if (points.size() == 0) {
+    if (points.isEmpty()) {
       return 0.0;
     }
     if (points.size() == 1) {
