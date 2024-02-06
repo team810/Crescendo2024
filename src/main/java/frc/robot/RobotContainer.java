@@ -63,12 +63,12 @@ public class RobotContainer {
     }
     private Command getRevShooterCommand()
     {
-        switch (AutoTurnConstants.rectangleSet.findRectangle(DrivetrainSubsystem.getInstance().getPose()).getType())
+        switch (AutoTurnConstants.RECTANGLE_SET.findRectangle(DrivetrainSubsystem.getInstance().getPose()).getType())
         {
             case redSpeaker, blueSpeaker -> {
                 return new RevSpeakerCommand();
             }
-            case Amp -> {
+            case amp -> {
              return new ScoreAmpCommand();
             }
             default -> {
@@ -78,16 +78,16 @@ public class RobotContainer {
     }
     private Command getFireCommand()
     {
-        switch (AutoTurnConstants.rectangleSet.findRectangle(DrivetrainSubsystem.getInstance().getPose()).getType())
+        switch (AutoTurnConstants.RECTANGLE_SET.findRectangle(DrivetrainSubsystem.getInstance().getPose()).getType())
         {
             case redSpeaker, blueSpeaker -> {
                 return new ScoreSpeakerCommand();
             }
-            case Amp -> {
+            case amp -> {
                 return new ScoreAmpCommand();
             }
             default -> {
-                return new InstantCommand(() -> {System.out.println("Not in amp of speaker zone");});
+                return new InstantCommand(() -> {System.out.println("Not in amp or speaker zone");});
             }
         }
     }
