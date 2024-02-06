@@ -122,7 +122,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		rotateEnabled = false;
 		targetAngle = 0;
 
-		currentRectangle = AutoTurnConstants.nullRectangle;
+		currentRectangle = AutoTurnConstants.NO_RECTANGLE;
 
 		AutoBuilder.configureHolonomic(
 				this::getPose,
@@ -155,7 +155,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 
-		currentRectangle = AutoTurnConstants.rectangleSet.findRectangle(getPose());
+		currentRectangle = AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
 
 		if (RobotState.isDisabled())
 		{
