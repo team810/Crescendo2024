@@ -1,7 +1,6 @@
 package frc.robot.IO;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.lib.StadiaController;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -26,8 +25,7 @@ public abstract class IO {
         controlsButtons.put(Controls.rotateToTarget, primary::getAButton);
 
         controlsButtons.put(Controls.intakeFwd, secondary::getAButton);
-        controlsButtons.put(Controls.intakeRev, secondary::getYButton);
-        controlsButtons.put(Controls.fireIntake, () -> (secondary.getRightTriggerAxis() > .75));
+
 
         controlsButtons.put(Controls.climberDown, () -> (secondary.getPOV() == 180));
         controlsButtons.put(Controls.climberUp, () -> (secondary.getPOV() == 0));

@@ -13,8 +13,8 @@ public class ShooterSim implements ShooterIO{
 
     private final FlywheelSim topMotor;
     private final FlywheelSim bottomMotor;
-
     private final FlywheelSim barMotor;
+
 
     private double topVoltage;
     private double bottomVoltage;
@@ -22,19 +22,19 @@ public class ShooterSim implements ShooterIO{
     private final DoubleSolenoidSim deflector;
 
     private MechanismState deflectorState;
-    private BarState barState;
+
 
 
     public ShooterSim()
     {
         topMotor = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
         bottomMotor = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
+        barMotor = new FlywheelSim(DCMotor.getNEO(1), 1, .1);
 
         deflectorState = MechanismState.stored;
-        barState = BarState.stopped;
+
 
         deflector = new DoubleSolenoidSim(Pneumatics.getInstance().getPneumaticsHubSim(), ShooterConstants.DEFLECTOR_FWD_CHANNEL, ShooterConstants.DEFLECTOR_REV_CHANNEL);
-        barMotor = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
     }
 
     @Override
@@ -90,24 +90,12 @@ public class ShooterSim implements ShooterIO{
     }
 
     @Override
-    public BarState getBarState() {
-        return barState;
+    public void setBarVoltage(double voltage) {
+        barMotor.setInputVoltage(voltage);
     }
 
     @Override
-    public void setBarState(BarState state) {
-        this.barState = state;
-
-        switch (barState) {
-            case forward:
-                barMotor.setInputVoltage(ShooterConstants.BAR_SPEED * 12);
-                break;
-            case stopped:
-                barMotor.setInputVoltage(0);
-                break;
-            case reversed:
-                barMotor.setInputVoltage(-ShooterConstants.BAR_SPEED * 12);
-                break;
-        }
+    public double getBarVoltage() {
+        return 0;
     }
 }

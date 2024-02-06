@@ -4,5 +4,6 @@ public enum IntakeStates {
     fwd,
     rev,
     off,
-    shoot
+    shoot,
+    manual
 }

@@ -52,11 +52,15 @@ public class IntakeSubsystem extends SubsystemBase {
             case shoot -> {
                 intake.setVoltage(IntakeConstants.INTAKE_SHOOT_SPEED * 12);
             }
+            case manual ->
+            {
+                intake.setVoltage(manualSpeed * 12);
+            }
         }
     }
 
     public void setManualSpeed(double speed) {
-        this.manualSpeed = speed * 12;
+        this.manualSpeed = speed;
     }
 
     public void setState(IntakeStates state) {
