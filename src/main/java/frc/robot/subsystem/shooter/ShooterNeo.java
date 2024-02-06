@@ -5,29 +5,27 @@ import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Timer;
 import frc.lib.MechanismState;
 import frc.robot.util.Pneumatics;
 import org.littletonrobotics.junction.Logger;
-
-import java.time.Instant;
 
 public class ShooterNeo implements ShooterIO {
 
     private final CANSparkMax topMotor;
     private final CANSparkMax bottomMotor;
 
+    private final CANSparkMax barMotor;
+
     private final RelativeEncoder topEncoder;
     private final RelativeEncoder bottomEncoder;
 
     private double topVoltage;
     private double bottomVoltage;
+    private double barVoltage;
 
     private final DoubleSolenoid deflector;
-    private final CANSparkMax bar;
 
     private MechanismState deflectorState;
-    private BarState barState;
 
     public ShooterNeo()
     {
@@ -51,10 +49,19 @@ public class ShooterNeo implements ShooterIO {
 
         deflector = Pneumatics.getInstance().createSolenoid(ShooterConstants.DEFLECTOR_FWD_CHANNEL,
                 ShooterConstants.DEFLECTOR_REV_CHANNEL);
-        bar = new CANSparkMax(ShooterConstants.BAR_ID, CANSparkLowLevel.MotorType.kBrushless);
+
+        barMotor = new CANSparkMax(ShooterConstants.BAR_ID, CANSparkLowLevel.MotorType.kBrushless);
+
+        barMotor.setSmartCurrentLimit(40);
+        barMotor.enableVoltageCompensation(12);
+        barMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
+        barMotor.clearFaults();
 
         deflectorState = MechanismState.stored;
-        barState = BarState.stopped;
+
+        setTopVoltage(0);
+        setBottomVoltage(0);
+        setBarVoltage(0);
     }
     @Override
     public void update()
@@ -68,6 +75,10 @@ public class ShooterNeo implements ShooterIO {
         Logger.recordOutput("Shooter/Bottom/CurrentDraw", bottomMotor.getOutputCurrent());
         Logger.recordOutput("Shooter/Bottom/Temperature", bottomMotor.getMotorTemperature());
         Logger.recordOutput("Shooter/Bottom/Velocity", bottomEncoder.getVelocity());
+
+        Logger.recordOutput("Shooter/Bar/BarVoltage", barVoltage);
+        Logger.recordOutput("Shooter/Bar/Temp", barMotor.getMotorTemperature());
+
     }
     @Override
     public void setTopVoltage(double voltage) {
@@ -103,23 +114,13 @@ public class ShooterNeo implements ShooterIO {
     }
 
     @Override
-    public BarState getBarState() {
-        return barState;
+    public void setBarVoltage(double voltage) {
+        barVoltage = voltage;
+        barMotor.setVoltage(voltage);
     }
 
     @Override
-    public void setBarState(BarState state) {
-
-        this.barState = state;
-        switch (barState) {
-            case forward:
-                bar.set(ShooterConstants.BAR_SPEED);
-            case stopped:
-                bar.set(0);
-                break;
-            case reversed:
-                bar.set(-ShooterConstants.BAR_SPEED);
-                break;
-        }
+    public double getBarVoltage() {
+        return barVoltage;
     }
 }

@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,7 +27,7 @@ public class RobotContainer {
 
         IO.Initialize();
 
-//        VisionSubsystem.getInstance();
+        VisionSubsystem.getInstance();
         ShooterSubsystem.getInstance();
         DrivetrainSubsystem.getInstance().setDefaultCommand(new DriveCommand());
         IntakeSubsystem.getInstance().setDefaultCommand(new IntakeCommand());

@@ -9,7 +9,9 @@ public interface ShooterIO {
     public double getBottomRPM();
     public MechanismState isDeflector();
     public void setDeflector(MechanismState state);
-    public BarState getBarState();
-    public void setBarState(BarState state);
+
+    public void setBarVoltage(double voltage);
+    public double getBarVoltage();
+
     public void update();
 }

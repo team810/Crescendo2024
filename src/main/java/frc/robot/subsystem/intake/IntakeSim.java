@@ -31,4 +31,9 @@ public class IntakeSim implements IntakeIO {
         Logger.recordOutput("Intake/Bottom/CurrentDraw", bottomMotor.getCurrentDrawAmps());
         Logger.recordOutput("Intake/Bottom/Velocity", bottomMotor.getAngularVelocityRPM());
     }
+
+    @Override
+    public boolean isLimitSwitchTriggered() {
+        return false;
+    }
 }

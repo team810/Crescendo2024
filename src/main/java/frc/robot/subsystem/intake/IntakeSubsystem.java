@@ -3,7 +3,6 @@ package frc.robot.subsystem.intake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import org.littletonrobotics.junction.Logger;
 
 public class IntakeSubsystem extends SubsystemBase {
 
@@ -31,7 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
             intake = new IntakeSim();
         }
 
-        state = IntakeStates.stopped;
+        state = IntakeStates.off;
         manualSpeed = 0;
     }
 
@@ -39,22 +38,20 @@ public class IntakeSubsystem extends SubsystemBase {
 
         intake.update();
 
-        switch (this.state) {
-
-            case runForward:
-                intake.setVoltage(IntakeConstants.INTAKE_MAX_SPEED);
-                break;
-            case runReverse:
-                intake.setVoltage(-IntakeConstants.INTAKE_MAX_SPEED);
-                break;
-            case manualInput:
-                intake.setVoltage(manualSpeed);
-                break;
-            case stopped:
+        switch (state)
+        {
+            case fwd -> {
+                intake.setVoltage(IntakeConstants.INTAKE_MAX_SPEED * 12);
+            }
+            case rev -> {
+                intake.setVoltage(-IntakeConstants.INTAKE_MAX_SPEED * 12);
+            }
+            case off -> {
                 intake.setVoltage(0);
-                break;
-            default:
-                throw new RuntimeException("triggered default intake state");
+            }
+            case shoot -> {
+                intake.setVoltage(IntakeConstants.INTAKE_SHOOT_SPEED * 12);
+            }
         }
     }
 
@@ -66,5 +63,9 @@ public class IntakeSubsystem extends SubsystemBase {
         this.state = state;
     }
 
+    public boolean isLimitSwitchTriggered()
+    {
+        return intake.isLimitSwitchTriggered();
+    }
 }
 

@@ -24,5 +24,10 @@ public class ShooterConstants {
     public final static int DEFLECTOR_REV_CHANNEL = 1;
 
     //FIXME set ids for stuff
-    public final static int BAR_ID = 2;
+    public final static int BAR_ID = 12;
+    public final static double BAR_HOLD_PERCENT = .15;
+
+    public final static double SOURCE_INTAKE_SPEED = -.5;
+
+    public final static double AMP_SHOOTING_SPEED = 2000;
 }

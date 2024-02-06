@@ -1,19 +1,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystem.shooter.ShooterSubsystem;
 
 
-public class ShooterCommand extends Command {
+public class ScoreSpeakerCommand extends Command {
 
-    public ShooterCommand() {
-
-        addRequirements(ShooterSubsystem.getInstance());
+    public ScoreSpeakerCommand() {
+        // each subsystem used by the command must be passed into the
+        // addRequirements() method (which takes a vararg of Subsystem)
+        addRequirements();
     }
 
     @Override
     public void initialize() {
-        
+
     }
 
     @Override

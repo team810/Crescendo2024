@@ -4,14 +4,13 @@ package frc.robot.subsystem.shooter;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.MechanismState;
 import frc.robot.Robot;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterSubsystem extends SubsystemBase {
-    private final static ShooterSubsystem INSTANCE = new ShooterSubsystem();
+    private static ShooterSubsystem INSTANCE;
     private final ShooterIO shooter;
 
     private double topTargetRPM;
@@ -21,9 +20,10 @@ public class ShooterSubsystem extends SubsystemBase {
     private final PIDController bottomController;
 
     private MechanismState deflectorState;
+
     private BarState barState;
 
-    private final Timer barTimer;
+    private ShooterState shooterState;
 
     private ShooterSubsystem() {
 
@@ -56,42 +56,93 @@ public class ShooterSubsystem extends SubsystemBase {
         topController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
         bottomController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
 
-        barState = BarState.stopped;
+        barState = BarState.stored;
         deflectorState = MechanismState.deployed;
-
-        barTimer = new Timer();
-        barTimer.reset();
-        barTimer.stop();
     }
 
     @Override
     public void periodic() {
-
-        topTargetRPM = MathUtil.clamp(topTargetRPM, ShooterConstants.TOP_MOTOR_MAX_RPM, -ShooterConstants.TOP_MOTOR_MAX_RPM);
-        bottomTargetRPM = MathUtil.clamp(topTargetRPM, ShooterConstants.BOTTOM_MOTOR_MAX_RPM, -ShooterConstants.BOTTOM_MOTOR_MAX_RPM);
         if (RobotState.isEnabled())
         {
-            double topVoltage = topController.calculate(
-                    shooter.getTopRPM(),
-                    topTargetRPM
-            );
-            topVoltage = MathUtil.clamp(topVoltage, -12, 12);
-            shooter.setTopVoltage(topVoltage);
+            double topVoltage = 0;
+            double bottomVoltage = 0;
 
-            double bottomVoltage = bottomController.calculate(
-                    shooter.getBottomRPM(),
-                    bottomTargetRPM
-            );
+            switch (shooterState)
+            {
+                case SourceIntake -> {
+                    setDeflectorState(MechanismState.deployed);
+                    topVoltage = 12 * ShooterConstants.SOURCE_INTAKE_SPEED;
+                    bottomVoltage = 12 * ShooterConstants.SOURCE_INTAKE_SPEED;
+
+                }
+                case Amp -> {
+                    topTargetRPM = ShooterConstants.AMP_SHOOTING_SPEED;
+                    bottomTargetRPM = ShooterConstants.AMP_SHOOTING_SPEED;
+
+                    topTargetRPM = MathUtil.clamp(topTargetRPM, ShooterConstants.TOP_MOTOR_MAX_RPM, -ShooterConstants.TOP_MOTOR_MAX_RPM);
+                    bottomTargetRPM = MathUtil.clamp(bottomTargetRPM, ShooterConstants.BOTTOM_MOTOR_MAX_RPM, -ShooterConstants.BOTTOM_MOTOR_MAX_RPM);
+
+                    topVoltage = topController.calculate(
+                            shooter.getTopRPM(),
+                            topTargetRPM
+                    );
+                    bottomVoltage = bottomController.calculate(
+                            shooter.getBottomRPM(),
+                            bottomTargetRPM
+                    );
+                }
+                case Speaker -> {
+
+                    topTargetRPM = MathUtil.clamp(topTargetRPM, ShooterConstants.TOP_MOTOR_MAX_RPM, -ShooterConstants.TOP_MOTOR_MAX_RPM);
+                    bottomTargetRPM = MathUtil.clamp(topTargetRPM, ShooterConstants.BOTTOM_MOTOR_MAX_RPM, -ShooterConstants.BOTTOM_MOTOR_MAX_RPM);
+
+                    topVoltage = topController.calculate(
+                            shooter.getTopRPM(),
+                            topTargetRPM
+                    );
+                    bottomVoltage = bottomController.calculate(
+                            shooter.getBottomRPM(),
+                            bottomTargetRPM
+                    );
+                }
+                case off -> {
+                    topTargetRPM = 0;
+                    bottomTargetRPM = 0;
+
+                    bottomController.reset();
+                    topController.reset();
+
+                    topVoltage = 0;
+                    bottomVoltage = 0;
+
+                }
+            }
+            switch (barState)
+            {
+                case hold -> {
+                    shooter.setBarVoltage(ShooterConstants.BAR_HOLD_PERCENT * 12);
+                }
+                case revs -> {
+                    shooter.setBarVoltage(-ShooterConstants.BAR_SPEED * 12);
+                }
+                case fwd -> {
+                    shooter.setBarVoltage(ShooterConstants.BAR_SPEED * 12);
+                }
+                default -> {
+                    shooter.setBarVoltage(0);
+                }
+            }
+            topVoltage = MathUtil.clamp(topVoltage, -12, 12);
             bottomVoltage = MathUtil.clamp(bottomVoltage, -12, 12);
+            shooter.setTopVoltage(topVoltage);
             shooter.setBottomVoltage(bottomVoltage);
 
         } else if (RobotState.isDisabled()) {
             topController.reset();
             bottomController.reset();
-        }
 
-        if (barTimer.hasElapsed(ShooterConstants.BAR_SECONDS)) {
-            stopBar();
+            topTargetRPM = 0;
+            bottomTargetRPM = 0;
         }
 
         shooter.update();
@@ -105,10 +156,6 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.recordOutput("Shooter/Bar/State", barState);
         Logger.recordOutput("Shooter/Deflector/State", deflectorState);
     }
-    public static ShooterSubsystem getInstance() {
-        return INSTANCE;
-    }
-
     public MechanismState getDeflectorState() {
         return deflectorState;
     }
@@ -118,25 +165,24 @@ public class ShooterSubsystem extends SubsystemBase {
         shooter.setDeflector(this.deflectorState);
     }
 
+    public void setShooterState(ShooterState shooterState) {
+        this.shooterState = shooterState;
+    }
+
     public BarState getBarState() {
         return barState;
     }
 
-    public void stopBar() {
-        shooter.setBarState(BarState.stopped);
+    public void setBarState(BarState barState) {
+        this.barState = barState;
     }
 
-    public void toggleBarState() {
-
-        barTimer.start();
-
-        if (this.barState == BarState.forward) {
-            this.barState = BarState.reversed;
-            shooter.setBarState(BarState.reversed);
-        } else {
-            this.barState = BarState.forward;
-            shooter.setBarState(BarState.forward);
+    public static ShooterSubsystem getInstance() {
+        if (INSTANCE == null)
+        {
+            INSTANCE = new ShooterSubsystem();
         }
+        return INSTANCE;
     }
 }
 
