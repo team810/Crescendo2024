@@ -16,8 +16,11 @@ import frc.lib.navx.Navx;
 import frc.lib.navx.NavxReal;
 import frc.lib.navx.NavxSim;
 import frc.robot.Robot;
-import frc.robot.util.AutoTurn.AlignmentRectangle;
+import frc.robot.util.Rectangles.AlignmentRectangle;
 import frc.robot.util.AutoTurn.AutoTurnConstants;
+import frc.robot.util.Rectangles.ShooterRectangle;
+import frc.robot.util.Shooting.ShooterUtilConstants;
+import frc.robot.util.Shooting.ShootingZone;
 import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.subsystem.drivetrain.DrivetrainConstants.*;
@@ -60,6 +63,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	private boolean rotateEnabled;
 
 	private AlignmentRectangle currentRectangle;
+	private ShooterRectangle currentZone;
 
 	private ChassisSpeeds autoSpeeds;
 
@@ -123,6 +127,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		targetAngle = 0;
 
 		currentRectangle = AutoTurnConstants.NO_RECTANGLE;
+		currentZone = ShooterUtilConstants.NO_ZONE;
 
 		AutoBuilder.configureHolonomic(
 				this::getPose,
@@ -155,7 +160,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 
-		currentRectangle = AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
+		currentRectangle = (AlignmentRectangle) AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
+		currentZone = (ShooterRectangle) ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(getPose());
 
 		if (RobotState.isDisabled())
 		{
@@ -225,6 +231,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		Logger.recordOutput("Drivetrain/targetAngle", this.targetAngle);
 		Logger.recordOutput("RobotPose", getPose());
 		Logger.recordOutput("currentRectangle", currentRectangle.getName());
+		Logger.recordOutput("currentZone", currentZone.getName());
 		navx.update(0);
 	}
 

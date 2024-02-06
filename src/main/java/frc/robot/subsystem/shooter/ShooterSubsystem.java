@@ -56,6 +56,7 @@ public class ShooterSubsystem extends SubsystemBase {
         topController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
         bottomController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
 
+        shooterState = ShooterState.off;
         barState = BarState.stored;
         deflectorState = MechanismState.deployed;
     }

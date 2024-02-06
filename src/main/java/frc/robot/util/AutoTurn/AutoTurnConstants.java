@@ -1,7 +1,12 @@
 package frc.robot.util.AutoTurn;
 
+import frc.robot.util.Rectangles.AlignmentRectangle;
+import frc.robot.util.Rectangles.RectangleSet;
+
 public class AutoTurnConstants {
 
+
+    //TODO ADJUST THESE AS NEEDED WHEN TESTING
     public static final AlignmentRectangle BLUE_AMP =
             new AlignmentRectangle("blueAmp", AutoTurnMode.amp,
                     0, 5, 7.40, 8.20);
@@ -26,8 +31,8 @@ public class AutoTurnConstants {
             new AlignmentRectangle("no rectangle", AutoTurnMode.noRectangle,
                     0, 0, 0, 0);
 
-    public static final AlignmentRectangle[] rectangles =
-            {NO_RECTANGLE,
+    private static final AlignmentRectangle[] rectangles =
+                    {NO_RECTANGLE,
                     BLUE_AMP, BLUE_SPEAKER, BLUE_SOURCE,
                     RED_AMP, RED_SPEAKER, RED_SOURCE};
 

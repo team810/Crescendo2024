@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,7 +10,6 @@ import frc.robot.Robot;
 import frc.robot.subsystem.drivetrain.DrivetrainConstants;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.drivetrain.SpeedMode;
-import frc.robot.util.AutoTurn.AlignmentRectangle;
 import frc.robot.util.AutoTurn.AutoTurnMode;
 import frc.robot.util.AutoTurn.AutoTurnUtil;
 import org.littletonrobotics.junction.Logger;
@@ -137,7 +135,7 @@ public class DriveCommand extends Command {
 			);
 		} else {
 			DrivetrainSubsystem.getInstance().setTargetSpeeds(
-					-x,
+					x,
 					y,
 					theta
 			);

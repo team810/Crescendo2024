@@ -3,12 +3,13 @@ package frc.robot.util.AutoTurn;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.util.Rectangles.AlignmentRectangle;
 
 public class AutoTurnUtil {
 
     static AutoTurnMode type;
     public static Rotation2d calculateTargetAngle(Pose2d robotPose) {
-        type = AutoTurnConstants.RECTANGLE_SET.findRectangle(robotPose).getType();
+        type = ((AlignmentRectangle) (AutoTurnConstants.RECTANGLE_SET.findRectangle(robotPose))).getType();
 
         switch (type) {
             case amp:

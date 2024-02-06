@@ -3,9 +3,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class RevSourceCommand extends Command {
+public class RevAmpCommand extends Command {
 
-    public RevSourceCommand() {
+    public RevAmpCommand() {
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
         addRequirements();

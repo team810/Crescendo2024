@@ -18,6 +18,7 @@ import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.intake.IntakeSubsystem;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
 import frc.robot.subsystem.vision.VisionSubsystem;
+import frc.robot.util.Rectangles.AlignmentRectangle;
 import frc.robot.util.AutoTurn.AutoTurnConstants;
 
 public class RobotContainer {
@@ -63,7 +64,9 @@ public class RobotContainer {
     }
     private Command getRevShooterCommand()
     {
-        switch (AutoTurnConstants.RECTANGLE_SET.findRectangle(DrivetrainSubsystem.getInstance().getPose()).getType())
+        switch (((AlignmentRectangle)
+                AutoTurnConstants.RECTANGLE_SET.findRectangle(
+                        DrivetrainSubsystem.getInstance().getPose())).getType())
         {
             case redSpeaker, blueSpeaker -> {
                 return new RevSpeakerCommand();
@@ -78,7 +81,9 @@ public class RobotContainer {
     }
     private Command getFireCommand()
     {
-        switch (AutoTurnConstants.RECTANGLE_SET.findRectangle(DrivetrainSubsystem.getInstance().getPose()).getType())
+        switch (((AlignmentRectangle)
+                AutoTurnConstants.RECTANGLE_SET.findRectangle(
+                        DrivetrainSubsystem.getInstance().getPose())).getType())
         {
             case redSpeaker, blueSpeaker -> {
                 return new ScoreSpeakerCommand();

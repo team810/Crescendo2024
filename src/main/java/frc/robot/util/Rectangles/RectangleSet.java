@@ -1,18 +1,17 @@
-package frc.robot.util.AutoTurn;
+package frc.robot.util.Rectangles;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.util.AutoTurn.AlignmentRectangle;
 
 public class RectangleSet {
 
-    private AlignmentRectangle[] rectangles;
+    private final Rectangle[] rectangles;
 
-    public RectangleSet(AlignmentRectangle[] rectangles) {
+    public RectangleSet(Rectangle[] rectangles) {
         this.rectangles = rectangles;
     }
 
     public boolean inRectangle(Pose2d robotPose) {
-        for (AlignmentRectangle rectangle : rectangles) {
+        for (Rectangle rectangle : rectangles) {
             if (rectangle.inRectangle(robotPose)) {
                 return true;
             }
@@ -20,8 +19,8 @@ public class RectangleSet {
         return false;
     }
 
-    public AlignmentRectangle findRectangle(Pose2d robotPose) {
-        for (AlignmentRectangle rectangle : rectangles) {
+    public Rectangle findRectangle(Pose2d robotPose) {
+        for (Rectangle rectangle : rectangles) {
             if (rectangle.inRectangle(robotPose)) {
                 return rectangle;
             }
