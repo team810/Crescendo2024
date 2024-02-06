@@ -13,7 +13,10 @@ public class ShooterUtil {
 
     static ShootingZone zone;
 
-    public Pair<Double, Double> calculateTargetSpeeds(Pose2d robotPose) {
+    public static Pair<Double, Double> calculateTargetSpeeds(Pose2d robotPose) {
+
+        //FIXME ADD PROPER RPM VALUES FOR TUPLES
+
 
         zone = ((ShooterRectangle) (AutoTurnConstants.RECTANGLE_SET.findRectangle(robotPose))).getZone();
 
@@ -24,7 +27,10 @@ public class ShooterUtil {
             case topTape -> {return new Pair<Double, Double>(0.0, 0.0);}
             case midTape -> {return new Pair<Double, Double>(0.0, 0.0);}
             case podium -> {return new Pair<Double, Double>(0.0, 0.0);}
-            default -> {return new Pair<Double, Double>(0.0, 0.0);}
+            default -> {
+                System.out.println("NOT IN A ZONE");
+                return new Pair<Double, Double>(0.0, 0.0);
+            }
         }
 
     }

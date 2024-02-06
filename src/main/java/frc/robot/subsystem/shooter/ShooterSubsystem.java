@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.MechanismState;
 import frc.robot.Robot;
+import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
+import frc.robot.util.Shooting.ShooterUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -94,8 +96,17 @@ public class ShooterSubsystem extends SubsystemBase {
                 }
                 case Speaker -> {
 
-                    topTargetRPM = MathUtil.clamp(topTargetRPM, ShooterConstants.TOP_MOTOR_MAX_RPM, -ShooterConstants.TOP_MOTOR_MAX_RPM);
-                    bottomTargetRPM = MathUtil.clamp(topTargetRPM, ShooterConstants.BOTTOM_MOTOR_MAX_RPM, -ShooterConstants.BOTTOM_MOTOR_MAX_RPM);
+                    topTargetRPM = MathUtil.clamp(
+                            ShooterUtil.calculateTargetSpeeds(
+                                    DrivetrainSubsystem.getInstance().getPose()).getFirst(),
+                            ShooterConstants.TOP_MOTOR_MAX_RPM,
+                            -ShooterConstants.TOP_MOTOR_MAX_RPM);
+
+                    topTargetRPM = MathUtil.clamp(
+                            ShooterUtil.calculateTargetSpeeds(
+                                    DrivetrainSubsystem.getInstance().getPose()).getSecond(),
+                            ShooterConstants.BOTTOM_MOTOR_MAX_RPM,
+                            -ShooterConstants.BOTTOM_MOTOR_MAX_RPM);
 
                     topVoltage = topController.calculate(
                             shooter.getTopRPM(),

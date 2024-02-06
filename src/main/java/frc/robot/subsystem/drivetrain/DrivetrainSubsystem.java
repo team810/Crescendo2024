@@ -63,6 +63,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	private boolean rotateEnabled;
 
 	private AlignmentRectangle currentRectangle;
+
 	private ShooterRectangle currentZone;
 
 	private ChassisSpeeds autoSpeeds;
@@ -250,14 +251,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
 	}
+
 	public DrivetrainMode getMode() {
 		return mode;
 	}
-
 	public Rotation2d getRotation()
 	{
 		return navx.getRotation2d();
 	}
+
 	public void zeroGyro()
 	{
 		navx.zeroYaw();
@@ -265,7 +267,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	public void setMode(DrivetrainMode mode) {
 		this.mode = mode;
 	}
-
 	/**
 	 * @param x this is the x input
 	 * @param y this is the y input
@@ -289,8 +290,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	public Navx getNavx() {
 		return navx;
 	}
+
 	public PIDController getThetaController() { return thetaController; }
 	public AlignmentRectangle getCurrentRectangle() { return currentRectangle; }
+	public ShooterRectangle getCurrentZone() {
+		return currentZone;
+	}
 
 	public void setSpeedMode(SpeedMode speedMode) {
 		this.speedMode = speedMode;

@@ -5,8 +5,10 @@ import frc.robot.subsystem.intake.IntakeStates;
 import frc.robot.subsystem.intake.IntakeSubsystem;
 
 
-public class ScoreSpeakerCommand extends Command {
-    public ScoreSpeakerCommand() {
+public class FireCommand extends Command {
+
+    public FireCommand() {
+
         addRequirements(IntakeSubsystem.getInstance());
     }
 

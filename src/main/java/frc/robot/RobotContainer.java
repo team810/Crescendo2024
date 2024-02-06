@@ -72,10 +72,10 @@ public class RobotContainer {
                 return new RevSpeakerCommand();
             }
             case amp -> {
-             return new ScoreAmpCommand();
+                return new RevAmpCommand();
             }
             default -> {
-                return new InstantCommand(() -> {System.out.println("Not in amp of speaker zone");});
+                return new InstantCommand(() -> {System.out.println("Not in Amp or Speaker Zone!!!");});
             }
         }
     }
@@ -85,11 +85,8 @@ public class RobotContainer {
                 AutoTurnConstants.RECTANGLE_SET.findRectangle(
                         DrivetrainSubsystem.getInstance().getPose())).getType())
         {
-            case redSpeaker, blueSpeaker -> {
-                return new ScoreSpeakerCommand();
-            }
-            case amp -> {
-                return new ScoreAmpCommand();
+            case redSpeaker, blueSpeaker, amp -> {
+                return new FireCommand();
             }
             default -> {
                 return new InstantCommand(() -> {System.out.println("Not in amp or speaker zone");});

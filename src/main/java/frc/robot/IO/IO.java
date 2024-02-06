@@ -26,6 +26,7 @@ public abstract class IO {
 
         controlsButtons.put(Controls.intakeFwd, secondary::getAButton);
 
+        controlsButtons.put(Controls.revShooter, () -> (secondary.getLeftTriggerAxis() > 0.75));
 
         controlsButtons.put(Controls.climberDown, () -> (secondary.getPOV() == 180));
         controlsButtons.put(Controls.climberUp, () -> (secondary.getPOV() == 0));
