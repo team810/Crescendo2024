@@ -24,7 +24,6 @@ public class ShooterSim implements ShooterIO{
     private MechanismState deflectorState;
 
 
-
     public ShooterSim()
     {
         topMotor = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);

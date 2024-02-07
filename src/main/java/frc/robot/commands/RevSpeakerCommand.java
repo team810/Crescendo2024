@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystem.shooter.ShooterState;
+import frc.robot.subsystem.shooter.ShooterMode;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
 
 
@@ -13,10 +13,10 @@ public class RevSpeakerCommand extends Command {
 
     @Override
     public void execute() {
-        ShooterSubsystem.getInstance().setShooterState(ShooterState.Speaker);
+        ShooterSubsystem.getInstance().setShooterState(ShooterMode.Speaker);
     }
 
     public void end(boolean interrupted) {
-        ShooterSubsystem.getInstance().setShooterState(ShooterState.off);
+        ShooterSubsystem.getInstance().setShooterState(ShooterMode.off);
     }
 }

@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.MechanismState;
 import frc.robot.subsystem.intake.IntakeStates;
 import frc.robot.subsystem.intake.IntakeSubsystem;
-import frc.robot.subsystem.shooter.ShooterState;
+import frc.robot.subsystem.shooter.ShooterMode;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
 
 
@@ -17,7 +17,7 @@ public class IntakeSourceCommand extends Command {
 
     @Override
     public void initialize() {
-        ShooterSubsystem.getInstance().setShooterState(ShooterState.SourceIntake);
+        ShooterSubsystem.getInstance().setShooterState(ShooterMode.SourceIntake);
         ShooterSubsystem.getInstance().setDeflectorState(MechanismState.deployed);
         IntakeSubsystem.getInstance().setState(IntakeStates.rev);
     }
@@ -29,7 +29,7 @@ public class IntakeSourceCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        ShooterSubsystem.getInstance().setShooterState(ShooterState.off);
+        ShooterSubsystem.getInstance().setShooterState(ShooterMode.off);
         ShooterSubsystem.getInstance().setDeflectorState(MechanismState.stored);
         IntakeSubsystem.getInstance().setState(IntakeStates.off);
     }

@@ -30,4 +30,5 @@ public class ShooterConstants {
     public final static double SOURCE_INTAKE_SPEED = -.5;
 
     public final static double AMP_SHOOTING_SPEED = 2000;
+    
 }

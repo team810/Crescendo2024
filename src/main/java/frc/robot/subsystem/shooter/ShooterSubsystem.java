@@ -25,7 +25,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private BarState barState;
 
-    private ShooterState shooterState;
+    private ShooterMode shooterState;
 
     private ShooterSubsystem() {
 
@@ -58,7 +58,7 @@ public class ShooterSubsystem extends SubsystemBase {
         topController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
         bottomController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
 
-        shooterState = ShooterState.off;
+        shooterState = ShooterMode.off;
         barState = BarState.stored;
         deflectorState = MechanismState.deployed;
     }
@@ -93,18 +93,18 @@ public class ShooterSubsystem extends SubsystemBase {
                             shooter.getBottomRPM(),
                             bottomTargetRPM
                     );
+                    setDeflectorState(MechanismState.stored);
                 }
                 case Speaker -> {
 
+                    ShooterState state = ShooterUtil.calculateTargetSpeeds(DrivetrainSubsystem.getInstance().getPose());
                     topTargetRPM = MathUtil.clamp(
-                            ShooterUtil.calculateTargetSpeeds(
-                                    DrivetrainSubsystem.getInstance().getPose()).getFirst(),
+                            state.getTopSpeed(),
                             ShooterConstants.TOP_MOTOR_MAX_RPM,
                             -ShooterConstants.TOP_MOTOR_MAX_RPM);
 
                     topTargetRPM = MathUtil.clamp(
-                            ShooterUtil.calculateTargetSpeeds(
-                                    DrivetrainSubsystem.getInstance().getPose()).getSecond(),
+                            state.getBottomSpeed(),
                             ShooterConstants.BOTTOM_MOTOR_MAX_RPM,
                             -ShooterConstants.BOTTOM_MOTOR_MAX_RPM);
 
@@ -116,6 +116,9 @@ public class ShooterSubsystem extends SubsystemBase {
                             shooter.getBottomRPM(),
                             bottomTargetRPM
                     );
+
+                    setDeflectorState(state.getDeflectorState());
+
                 }
                 case off -> {
                     topTargetRPM = 0;
@@ -177,7 +180,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooter.setDeflector(this.deflectorState);
     }
 
-    public void setShooterState(ShooterState shooterState) {
+    public void setShooterState(ShooterMode shooterState) {
         this.shooterState = shooterState;
     }
 
