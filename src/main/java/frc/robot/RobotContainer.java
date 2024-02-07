@@ -60,6 +60,9 @@ public class RobotContainer {
         new Trigger(() -> IO.getButtonValue(Controls.fire).get()).
                 toggleOnTrue(getFireCommand());
 
+        new Trigger(() -> IO.getButtonValue(Controls.releaseClimber).get()).
+                toggleOnTrue(new InstantCommand(() -> ClimberSubsystem.getInstance().releaseClimber()));
+
 
     }
     private Command getRevShooterCommand()

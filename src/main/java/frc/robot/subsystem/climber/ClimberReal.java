@@ -3,6 +3,8 @@ package frc.robot.subsystem.climber;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import frc.robot.util.Pneumatics;
 import org.littletonrobotics.junction.Logger;
 
 public class ClimberReal implements ClimberIO {
@@ -10,6 +12,8 @@ public class ClimberReal implements ClimberIO {
     private final CANSparkMax climberMotor;
 
     private double inputVoltage;
+
+    private DoubleSolenoid solenoid = Pneumatics.getInstance().createSolenoid(0,1);
 
     public ClimberReal() {
 
@@ -41,5 +45,10 @@ public class ClimberReal implements ClimberIO {
         Logger.recordOutput("Climber/CurrentDraw", climberMotor.getOutputCurrent());
         Logger.recordOutput("Climber/motorVoltage", climberMotor.getBusVoltage());
         Logger.recordOutput("Climber/inputVoltage", this.inputVoltage);
+    }
+
+    @Override
+    public void release() {
+        solenoid.set(DoubleSolenoid.Value.kReverse);
     }
 }

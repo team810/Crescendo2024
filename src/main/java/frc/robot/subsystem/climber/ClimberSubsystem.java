@@ -3,7 +3,6 @@ package frc.robot.subsystem.climber;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.subsystem.intake.IntakeSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 public class ClimberSubsystem extends SubsystemBase {
@@ -30,6 +29,11 @@ public class ClimberSubsystem extends SubsystemBase {
         }
 
         state = ClimberStates.down;
+    }
+
+    public void releaseClimber()
+    {
+        climber.release();
     }
 
     public void periodic() {

@@ -21,5 +21,6 @@ public enum Controls {
     climberDown,
     climberUp,
     climberAdjUp,
-    climberAdjDown
+    climberAdjDown,
+    releaseClimber,
 }

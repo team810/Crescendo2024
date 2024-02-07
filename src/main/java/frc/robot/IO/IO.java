@@ -19,6 +19,7 @@ public abstract class IO {
         controlsJoystick.put(Controls.drive_theta, primary::getRightX);
         controlsJoystick.put(Controls.manualIntake, secondary::getRightY);
 
+
         controlsButtons.put(Controls.reset_gyro, primary::getLeftBumper);
         controlsButtons.put(Controls.slowMode, primary::getRightBumper);
         controlsButtons.put(Controls.normalMode, () -> (.75 < primary.getRightTriggerAxis()));
@@ -33,6 +34,7 @@ public abstract class IO {
         controlsButtons.put(Controls.climberUp, () -> (secondary.getPOV() == 0 && primary.getPOV() == 0));
         controlsButtons.put(Controls.climberAdjUp, () -> (secondary.getPOV() == 90 && primary.getPOV() == 90));
         controlsButtons.put(Controls.climberAdjDown, () -> (secondary.getPOV() == 270 & primary.getPOV() == 270));
+        controlsButtons.put(Controls.releaseClimber, secondary::getBButton);
     }
 
     public static Supplier<Double> getJoystickValue(Controls control)

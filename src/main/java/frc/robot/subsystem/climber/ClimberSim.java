@@ -26,4 +26,9 @@ public class ClimberSim implements ClimberIO {
         Logger.recordOutput("Climber/inputVoltage", this.inputVoltage);
         
     }
+
+    @Override
+    public void release() {
+        
+    }
 }
