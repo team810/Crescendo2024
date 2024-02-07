@@ -5,11 +5,12 @@ import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Encoder;
 import frc.lib.MechanismState;
 import frc.robot.util.Pneumatics;
 import org.littletonrobotics.junction.Logger;
 
-public class ShooterNeo implements ShooterIO {
+public class ShooterReal implements ShooterIO {
 
     private final CANSparkMax topMotor;
     private final CANSparkMax bottomMotor;
@@ -27,7 +28,9 @@ public class ShooterNeo implements ShooterIO {
 
     private MechanismState deflectorState;
 
-    public ShooterNeo()
+    private Encoder barEncoder;
+
+    public ShooterReal()
     {
         topMotor = new CANSparkMax(ShooterConstants.TOP_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless);
         bottomMotor = new CANSparkMax(ShooterConstants.BOTTOM_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless);
@@ -52,10 +55,12 @@ public class ShooterNeo implements ShooterIO {
 
         barMotor = new CANSparkMax(ShooterConstants.BAR_ID, CANSparkLowLevel.MotorType.kBrushless);
 
-        barMotor.setSmartCurrentLimit(40);
+        barMotor.setSmartCurrentLimit(30);
         barMotor.enableVoltageCompensation(12);
         barMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
         barMotor.clearFaults();
+
+        barEncoder = new Encoder(0,1);
 
         deflectorState = MechanismState.stored;
 
@@ -76,9 +81,9 @@ public class ShooterNeo implements ShooterIO {
         Logger.recordOutput("Shooter/Bottom/Temperature", bottomMotor.getMotorTemperature());
         Logger.recordOutput("Shooter/Bottom/Velocity", bottomEncoder.getVelocity());
 
-        Logger.recordOutput("Shooter/Bar/BarVoltage", barVoltage);
+        Logger.recordOutput("Shooter/Bar/BarVoltage", getBarVoltage());
         Logger.recordOutput("Shooter/Bar/Temp", barMotor.getMotorTemperature());
-
+        Logger.recordOutput("Shooter/Bar/EncoderValue", getBarPosition());
     }
     @Override
     public void setTopVoltage(double voltage) {
@@ -122,5 +127,10 @@ public class ShooterNeo implements ShooterIO {
     @Override
     public double getBarVoltage() {
         return barVoltage;
+    }
+
+    @Override
+    public double getBarPosition() {
+        return barEncoder.get();
     }
 }
