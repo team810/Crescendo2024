@@ -18,12 +18,14 @@ public class ShooterSubsystem extends SubsystemBase {
     private double topTargetRPM;
     private double bottomTargetRPM;
 
-    private final PIDController topController;
-    private final PIDController bottomController;
+    private final PIDController topController; // Velocity controller
+    private final PIDController bottomController; // Velocity controller
+    private final PIDController barController; // Bar Controller
 
     private MechanismState deflectorState;
-
     private BarState barState;
+
+    private double barSetpoint;
 
     private ShooterMode shooterState;
 
@@ -31,10 +33,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
         topController = new PIDController(0,0,0);
         bottomController = new PIDController(0,0,0);
+        barController = new PIDController(0,0,0);
 
         if (Robot.isReal())
         {
-            shooter = new ShooterNeo();
+            shooter = new ShooterReal();
 
             topController.setP(ShooterConstants.TOP_CONTROLLER_REAL.kP);
             topController.setI(ShooterConstants.TOP_CONTROLLER_REAL.kI);
@@ -61,6 +64,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterState = ShooterMode.off;
         barState = BarState.stored;
         deflectorState = MechanismState.deployed;
+        barSetpoint = 0;
     }
 
     @Override
@@ -107,7 +111,6 @@ public class ShooterSubsystem extends SubsystemBase {
                             state.getBottomSpeed(),
                             ShooterConstants.BOTTOM_MOTOR_MAX_RPM,
                             -ShooterConstants.BOTTOM_MOTOR_MAX_RPM);
-
                     topVoltage = topController.calculate(
                             shooter.getTopRPM(),
                             topTargetRPM
@@ -129,24 +132,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
                     topVoltage = 0;
                     bottomVoltage = 0;
+                }
+            }
 
-                }
-            }
-            switch (barState)
-            {
-                case hold -> {
-                    shooter.setBarVoltage(ShooterConstants.BAR_HOLD_PERCENT * 12);
-                }
-                case revs -> {
-                    shooter.setBarVoltage(-ShooterConstants.BAR_SPEED * 12);
-                }
-                case fwd -> {
-                    shooter.setBarVoltage(ShooterConstants.BAR_SPEED * 12);
-                }
-                default -> {
-                    shooter.setBarVoltage(0);
-                }
-            }
+            shooter.setBarVoltage(
+                    MathUtil.clamp(barController.calculate(shooter.getBarPosition(), getBarSetpoint()),-12,12)
+            );
+
             topVoltage = MathUtil.clamp(topVoltage, -12, 12);
             bottomVoltage = MathUtil.clamp(bottomVoltage, -12, 12);
             shooter.setTopVoltage(topVoltage);
@@ -170,6 +162,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
         Logger.recordOutput("Shooter/Bar/State", barState);
         Logger.recordOutput("Shooter/Deflector/State", deflectorState);
+
+        Logger.recordOutput("Shooter/Bar/Setpoint", getBarSetpoint());
     }
     public MechanismState getDeflectorState() {
         return deflectorState;
@@ -198,6 +192,14 @@ public class ShooterSubsystem extends SubsystemBase {
             INSTANCE = new ShooterSubsystem();
         }
         return INSTANCE;
+    }
+
+    public double getBarSetpoint() {
+        return barSetpoint;
+    }
+
+    public void setBarSetpoint(double barSetpoint) {
+        this.barSetpoint = barSetpoint;
     }
 }
 

@@ -12,6 +12,6 @@ public interface ShooterIO {
 
     public void setBarVoltage(double voltage);
     public double getBarVoltage();
-
+    public double getBarPosition();
     public void update();
 }

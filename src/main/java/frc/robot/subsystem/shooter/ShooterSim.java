@@ -97,4 +97,9 @@ public class ShooterSim implements ShooterIO{
     public double getBarVoltage() {
         return 0;
     }
+
+    @Override
+    public double getBarPosition() {
+        return 0;
+    }
 }
