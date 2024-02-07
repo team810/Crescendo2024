@@ -20,18 +20,19 @@ public class StoreBarCommand extends Command {
     @Override
     public void initialize() {
         timer.start();
-        ShooterSubsystem.getInstance().setBarState(BarState.fwd);
+        ShooterSubsystem.getInstance().setBarState(BarState.revs);
     }
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(ShooterConstants.BAR_SECONDS) || ShooterSubsystem.getInstance().getBarState() == BarState.revs;
+        return (timer.hasElapsed(ShooterConstants.BAR_SECONDS)) ||
+                (ShooterSubsystem.getInstance().getBarState() == BarState.stored);
     }
 
     @Override
     public void end(boolean interrupted) {
-        ShooterSubsystem.getInstance().setBarState(BarState.deployed);
+        ShooterSubsystem.getInstance().setBarState(BarState.stored);
         timer.stop();
-
+        timer.reset();
     }
 }

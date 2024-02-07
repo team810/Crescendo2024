@@ -25,7 +25,8 @@ public class DeployBarCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(ShooterConstants.BAR_SECONDS) || ShooterSubsystem.getInstance().getBarState() == BarState.deployed;
+        return (timer.hasElapsed(ShooterConstants.BAR_SECONDS))
+        || (ShooterSubsystem.getInstance().getBarState() == BarState.deployed);
     }
 
     @Override

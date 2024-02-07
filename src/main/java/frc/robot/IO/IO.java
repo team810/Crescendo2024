@@ -27,11 +27,12 @@ public abstract class IO {
         controlsButtons.put(Controls.intakeFwd, secondary::getAButton);
 
         controlsButtons.put(Controls.revShooter, () -> (secondary.getLeftTriggerAxis() > 0.75));
+        controlsButtons.put(Controls.fire, () -> (secondary.getRightTriggerAxis() > 0.75));
 
         controlsButtons.put(Controls.climberDown, () -> (secondary.getPOV() == 180));
-        controlsButtons.put(Controls.climberUp, () -> (secondary.getPOV() == 0));
-        controlsButtons.put(Controls.climberAdjUp, () -> (secondary.getPOV() == 90));
-        controlsButtons.put(Controls.climberAdjDown, () -> (secondary.getPOV() == 270));
+        controlsButtons.put(Controls.climberUp, () -> (secondary.getPOV() == 0 && primary.getPOV() == 0));
+        controlsButtons.put(Controls.climberAdjUp, () -> (secondary.getPOV() == 90 && primary.getPOV() == 90));
+        controlsButtons.put(Controls.climberAdjDown, () -> (secondary.getPOV() == 270 & primary.getPOV() == 270));
     }
 
     public static Supplier<Double> getJoystickValue(Controls control)

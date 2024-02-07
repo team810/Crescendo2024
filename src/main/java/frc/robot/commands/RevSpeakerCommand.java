@@ -8,8 +8,6 @@ import frc.robot.subsystem.shooter.ShooterSubsystem;
 public class RevSpeakerCommand extends Command {
 
     public RevSpeakerCommand() {
-        // each subsystem used by the command must be passed into the
-        // addRequirements() method (which takes a vararg of Subsystem)
         addRequirements(ShooterSubsystem.getInstance());
     }
 
