@@ -4,6 +4,8 @@ package frc.robot.subsystem.shooter;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.MechanismState;
 import frc.robot.Robot;
@@ -29,9 +31,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private ShooterMode shooterState;
 
+    private double kP = 0, kI = 0, kD = 0;
+
     private ShooterSubsystem() {
 
-        topController = new PIDController(0,0,0);
+        topController = new PIDController(kP,kI,kD);
         bottomController = new PIDController(0,0,0);
         barController = new PIDController(0,0,0);
 
@@ -65,10 +69,19 @@ public class ShooterSubsystem extends SubsystemBase {
         barState = BarState.stored;
         deflectorState = MechanismState.deployed;
         barSetpoint = 0;
+
+        SmartDashboard.putNumber("Shooter P", kP);
+        SmartDashboard.putNumber("Shooter I", kI);
+        SmartDashboard.putNumber("Shooter D", kD);
     }
 
     @Override
     public void periodic() {
+
+        topController.setP(SmartDashboard.getNumber("Shooter P", 0));
+        topController.setI(SmartDashboard.getNumber("Shooter I", 0));
+        topController.setD(SmartDashboard.getNumber("Shooter D", 0));
+
         if (RobotState.isEnabled())
         {
             double topVoltage = 0;

@@ -41,6 +41,15 @@ public class RobotContainer {
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
+
+        // manual overrides
+        SmartDashboard.putData("Intake Forward", new IntakeGroundCommand());
+        SmartDashboard.putData("Fire!", new FireCommand());
+        SmartDashboard.putData("Deploy Bar", new DeployBarCommand());
+        SmartDashboard.putData("Store Bar", new StoreBarCommand());
+        SmartDashboard.putData("Rev Amp", new RevAmpCommand());
+        SmartDashboard.putData("Rev Speaker", new RevSpeakerCommand());
+
     }
 
     void buttonConfig()
