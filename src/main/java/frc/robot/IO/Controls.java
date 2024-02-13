@@ -23,4 +23,7 @@ public enum Controls {
     climberAdjUp,
     climberAdjDown,
     releaseClimber,
+
+    toggleDeflector,
+    toggleBar
 }

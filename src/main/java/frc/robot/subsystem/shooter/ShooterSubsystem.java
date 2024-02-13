@@ -4,13 +4,10 @@ package frc.robot.subsystem.shooter;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.MechanismState;
 import frc.robot.Robot;
-import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
-import frc.robot.util.Shooting.ShooterUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -29,9 +26,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private double barSetpoint;
 
-    private ShooterMode shooterState;
+    private ShooterMode shooterMode;
 
     private double kP = 0, kI = 0, kD = 0;
+
+    private ShooterState testingState;
 
     private ShooterSubsystem() {
 
@@ -65,7 +64,7 @@ public class ShooterSubsystem extends SubsystemBase {
         topController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
         bottomController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
 
-        shooterState = ShooterMode.off;
+        shooterMode = ShooterMode.off;
         barState = BarState.stored;
         deflectorState = MechanismState.deployed;
         barSetpoint = 0;
@@ -73,6 +72,12 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Shooter P", kP);
         SmartDashboard.putNumber("Shooter I", kI);
         SmartDashboard.putNumber("Shooter D", kD);
+
+        SmartDashboard.putNumber("Shooter Top Speed", 0);
+        SmartDashboard.putNumber("Shooter Bottom Speed", 0);
+        SmartDashboard.putBoolean("Shooter Deflector Deployed", false);
+
+        testingState = new ShooterState(0,0,MechanismState.stored);
     }
 
     @Override
@@ -87,7 +92,7 @@ public class ShooterSubsystem extends SubsystemBase {
             double topVoltage = 0;
             double bottomVoltage = 0;
 
-            switch (shooterState)
+            switch (shooterMode)
             {
                 case SourceIntake -> {
                     setDeflectorState(MechanismState.deployed);
@@ -113,15 +118,22 @@ public class ShooterSubsystem extends SubsystemBase {
                     setDeflectorState(MechanismState.stored);
                 }
                 case Speaker -> {
+                    ShooterState state;
+//                    state = ShooterUtil.calculateTargetSpeeds(DrivetrainSubsystem.getInstance().getPose());
 
-                    ShooterState state = ShooterUtil.calculateTargetSpeeds(DrivetrainSubsystem.getInstance().getPose());
-                    topTargetRPM = MathUtil.clamp(
-                            state.getTopSpeed(),
-                            ShooterConstants.TOP_MOTOR_MAX_RPM,
-                            -ShooterConstants.TOP_MOTOR_MAX_RPM);
+                    double topSpeed = SmartDashboard.getNumber("Shooter Top Speed",0);
+                    double bottomSpeed = SmartDashboard.getNumber("Shooter Bottom Speed",0);
+                    boolean deflectorState = SmartDashboard.putBoolean("Shooter Deflector Deployed", false);
+
+                    if (deflectorState)
+                    {
+                        state = new ShooterState(topSpeed, bottomSpeed, MechanismState.deployed);
+                    }else{
+                        state = new ShooterState(topSpeed, bottomSpeed, MechanismState.stored);
+                    }
 
                     topTargetRPM = MathUtil.clamp(
-                            state.getBottomSpeed(),
+                            state.bottomSpeed(),
                             ShooterConstants.BOTTOM_MOTOR_MAX_RPM,
                             -ShooterConstants.BOTTOM_MOTOR_MAX_RPM);
                     topVoltage = topController.calculate(
@@ -133,7 +145,7 @@ public class ShooterSubsystem extends SubsystemBase {
                             bottomTargetRPM
                     );
 
-                    setDeflectorState(state.getDeflectorState());
+                    setDeflectorState(state.deflectorState());
 
                 }
                 case off -> {
@@ -187,8 +199,8 @@ public class ShooterSubsystem extends SubsystemBase {
         shooter.setDeflector(this.deflectorState);
     }
 
-    public void setShooterState(ShooterMode shooterState) {
-        this.shooterState = shooterState;
+    public void setShooterMode(ShooterMode shooterMode) {
+        this.shooterMode = shooterMode;
     }
 
     public BarState getBarState() {

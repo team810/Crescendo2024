@@ -36,7 +36,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void periodic() {
 
-        intake.update();
 
         switch (state)
         {
@@ -57,6 +56,8 @@ public class IntakeSubsystem extends SubsystemBase {
                 intake.setVoltage(manualSpeed * 12);
             }
         }
+        intake.update();
+
     }
 
     public void setManualSpeed(double speed) {
@@ -69,7 +70,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public boolean isLimitSwitchTriggered()
     {
-        return intake.isLimitSwitchTriggered();
+        return false;
     }
 }
 

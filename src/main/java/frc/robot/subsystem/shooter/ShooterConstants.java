@@ -6,8 +6,8 @@ public class ShooterConstants {
     public static final int TOP_MOTOR_ID = 11;
     public static final int BOTTOM_MOTOR_ID = 10;
 
-    public static final PIDConstants TOP_CONTROLLER_REAL = new PIDConstants(0,0,0);
-    public static final PIDConstants BOTTOM_CONTROLLER_REAL = new PIDConstants(0,0,0);
+    public static final PIDConstants TOP_CONTROLLER_REAL = new PIDConstants(.0003,.001,0);
+    public static final PIDConstants BOTTOM_CONTROLLER_REAL = new PIDConstants(.0003,.001,0);
 
     public static final PIDConstants TOP_CONTROLLER_SIM = new PIDConstants(0,0,0);
     public static final PIDConstants BOTTOM_CONTROLLER_SIM = new PIDConstants(0,0,0);
@@ -24,7 +24,7 @@ public class ShooterConstants {
     public final static int DEFLECTOR_REV_CHANNEL = 1;
 
     //FIXME set ids for stuff
-    public final static int BAR_ID = 12;
+    public final static int BAR_ID = 15;
     public final static double BAR_HOLD_PERCENT = .15;
 
     public final static double SOURCE_INTAKE_SPEED = -.5;

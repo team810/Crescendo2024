@@ -4,5 +4,5 @@ public enum ShooterMode {
     SourceIntake,
     Amp,
     Speaker,
-    off
+    off,
 }

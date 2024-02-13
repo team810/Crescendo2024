@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.lib.MechanismState;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
 import frc.robot.commands.*;
@@ -17,9 +18,8 @@ import frc.robot.subsystem.climber.ClimberSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.intake.IntakeSubsystem;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
-import frc.robot.subsystem.vision.VisionSubsystem;
-import frc.robot.util.Rectangles.AlignmentRectangle;
 import frc.robot.util.AutoTurn.AutoTurnConstants;
+import frc.robot.util.Rectangles.AlignmentRectangle;
 
 public class RobotContainer {
 
@@ -31,48 +31,41 @@ public class RobotContainer {
 
         IO.Initialize();
 
-        VisionSubsystem.getInstance();
-        ShooterSubsystem.getInstance();
+//        VisionSubsystem.getInstance();
+//        ShooterSubsystem.getInstance();
         IntakeSubsystem.getInstance();
-        
+//
         DrivetrainSubsystem.getInstance().setDefaultCommand(new DriveCommand());
-        ClimberSubsystem.getInstance().setDefaultCommand(new ClimberCommand());
+//        ClimberSubsystem.getInstance().setDefaultCommand(new ClimberCommand());
 
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
-
-        // manual overrides
-        SmartDashboard.putData("Intake Forward", new IntakeGroundCommand());
-        SmartDashboard.putData("Fire!", new FireCommand());
-        SmartDashboard.putData("Deploy Bar", new DeployBarCommand());
-        SmartDashboard.putData("Store Bar", new StoreBarCommand());
-        SmartDashboard.putData("Rev Amp", new RevAmpCommand());
-        SmartDashboard.putData("Rev Speaker", new RevSpeakerCommand());
 
     }
 
     void buttonConfig()
     {
         new Trigger(() -> IO.getButtonValue(Controls.intakeFwd).get()).
-                toggleOnTrue(new IntakeGroundCommand());
+                onTrue(new IntakeGroundCommand());
 
         new Trigger(() -> MathUtil.applyDeadband(IO.getJoystickValue(Controls.intakeManual).get(),.1) != 0).
-                toggleOnTrue(new IntakeManualCommand(IO.getJoystickValue(Controls.manualIntake)));
+                whileTrue(new IntakeManualCommand(IO.getJoystickValue(Controls.manualIntake)));
 
         new Trigger(() -> IO.getButtonValue(Controls.intakeSource).get()).
-                toggleOnTrue(new IntakeSourceCommand());
+                whileTrue(new IntakeSourceCommand());
 
+//        new Trigger(() -> IO.getButtonValue(Controls.revShooter).get()).
+//                whileTrue(getRevShooterCommand());
         new Trigger(() -> IO.getButtonValue(Controls.revShooter).get()).
-                toggleOnTrue(getRevShooterCommand());
+                whileTrue(new RevSpeakerCommand());
 
         new Trigger(() -> IO.getButtonValue(Controls.fire).get()).
-                toggleOnTrue(getFireCommand());
+                whileTrue(getFireCommand());
 
         new Trigger(() -> IO.getButtonValue(Controls.releaseClimber).get()).
-                toggleOnTrue(new InstantCommand(() -> ClimberSubsystem.getInstance().releaseClimber()));
-
-
+                whileTrue(new InstantCommand(() -> ClimberSubsystem.getInstance().releaseClimber()));
+        new Trigger(() -> IO.getButtonValue(Controls.toggleDeflector).get()).toggleOnTrue(new InstantCommand(() -> ShooterSubsystem.getInstance().setDeflectorState(MechanismState.deployed)));
     }
     private Command getRevShooterCommand()
     {
@@ -105,7 +98,6 @@ public class RobotContainer {
             }
         }
     }
-
     public Command getAutonomousCommand()
     {
         DrivetrainSubsystem.getInstance().resetOdometry(new Pose2d(2,2, new Rotation2d()));

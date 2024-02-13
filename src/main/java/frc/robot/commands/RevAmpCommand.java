@@ -13,11 +13,11 @@ public class RevAmpCommand extends Command {
 
     @Override
     public void execute() {
-        ShooterSubsystem.getInstance().setShooterState(ShooterMode.Amp);
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.Amp);
     }
 
     @Override
     public void end(boolean interrupted) {
-        ShooterSubsystem.getInstance().setShooterState(ShooterMode.off);
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.off);
     }
 }

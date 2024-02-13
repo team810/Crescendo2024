@@ -19,12 +19,6 @@ public class IntakeGroundCommand extends Command {
 
 
     @Override
-    public boolean isFinished() {
-        return IntakeSubsystem.getInstance().isLimitSwitchTriggered();
-    }
-
-    @Override
     public void end(boolean interrupted) {
-        IntakeSubsystem.getInstance().setState(IntakeStates.off);
     }
 }

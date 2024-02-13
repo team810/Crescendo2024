@@ -13,10 +13,10 @@ public class RevSpeakerCommand extends Command {
 
     @Override
     public void execute() {
-        ShooterSubsystem.getInstance().setShooterState(ShooterMode.Speaker);
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.Speaker);
     }
 
     public void end(boolean interrupted) {
-        ShooterSubsystem.getInstance().setShooterState(ShooterMode.off);
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.off);
     }
 }

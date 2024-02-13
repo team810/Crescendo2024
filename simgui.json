@@ -3,6 +3,12 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Deploy Bar": "Command",
+      "/SmartDashboard/Fire!": "Command",
+      "/SmartDashboard/Intake Forward": "Command",
+      "/SmartDashboard/Rev Amp": "Command",
+      "/SmartDashboard/Rev Speaker": "Command",
+      "/SmartDashboard/Store Bar": "Command",
       "/SmartDashboard/VisionSystemSim-LIMELIGHT SIM/Sim Field": "Field2d",
       "/SmartDashboard/VisionSystemSim-visionSim/Sim Field": "Field2d"
     }

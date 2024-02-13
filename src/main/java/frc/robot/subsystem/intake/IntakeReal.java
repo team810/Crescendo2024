@@ -3,7 +3,6 @@ package frc.robot.subsystem.intake;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
-import edu.wpi.first.wpilibj.DigitalInput;
 import org.littletonrobotics.junction.Logger;
 
 public class IntakeReal implements IntakeIO {
@@ -11,7 +10,7 @@ public class IntakeReal implements IntakeIO {
     private final CANSparkMax topMotor;
     private final CANSparkMax bottomMotor;
 
-    private final DigitalInput limitSwitch;
+//    private final DigitalInput limitSwitch;
 
     private double inputVoltage;
 
@@ -40,12 +39,12 @@ public class IntakeReal implements IntakeIO {
         inputVoltage = 0;
         setVoltage(0);
 
-        limitSwitch = new DigitalInput(IntakeConstants.LIMIT_SWITCH_PORT);
+//        limitSwitch = new DigitalInput(IntakeConstants.LIMIT_SWITCH_PORT);
     }
 
     public void setVoltage(double voltage) {
         inputVoltage = voltage;
-        topMotor.setVoltage(inputVoltage);
+        topMotor.set(inputVoltage);
         bottomMotor.set(inputVoltage);
     }
 
@@ -63,6 +62,6 @@ public class IntakeReal implements IntakeIO {
 
     @Override
     public boolean isLimitSwitchTriggered() {
-        return limitSwitch.get();
+        return false;
     }
 }

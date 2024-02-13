@@ -17,7 +17,7 @@ public class IntakeSourceCommand extends Command {
 
     @Override
     public void initialize() {
-        ShooterSubsystem.getInstance().setShooterState(ShooterMode.SourceIntake);
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.SourceIntake);
         ShooterSubsystem.getInstance().setDeflectorState(MechanismState.deployed);
         IntakeSubsystem.getInstance().setState(IntakeStates.rev);
     }
@@ -29,7 +29,7 @@ public class IntakeSourceCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        ShooterSubsystem.getInstance().setShooterState(ShooterMode.off);
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.off);
         ShooterSubsystem.getInstance().setDeflectorState(MechanismState.stored);
         IntakeSubsystem.getInstance().setState(IntakeStates.off);
     }

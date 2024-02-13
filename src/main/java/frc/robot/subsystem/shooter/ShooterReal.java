@@ -5,7 +5,6 @@ import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Encoder;
 import frc.lib.MechanismState;
 import frc.robot.util.Pneumatics;
 import org.littletonrobotics.junction.Logger;
@@ -28,7 +27,7 @@ public class ShooterReal implements ShooterIO {
 
     private MechanismState deflectorState;
 
-    private Encoder barEncoder;
+//    private Encoder barEncoder;
 
     public ShooterReal()
     {
@@ -53,14 +52,14 @@ public class ShooterReal implements ShooterIO {
         deflector = Pneumatics.getInstance().createSolenoid(ShooterConstants.DEFLECTOR_FWD_CHANNEL,
                 ShooterConstants.DEFLECTOR_REV_CHANNEL);
 
-        barMotor = new CANSparkMax(ShooterConstants.BAR_ID, CANSparkLowLevel.MotorType.kBrushless);
+        barMotor = new CANSparkMax(ShooterConstants.BAR_ID, CANSparkLowLevel.MotorType.kBrushed);
 
         barMotor.setSmartCurrentLimit(30);
         barMotor.enableVoltageCompensation(12);
         barMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
         barMotor.clearFaults();
 
-        barEncoder = new Encoder(0,1);
+//        barEncoder = new Encoder(0,1);
 
         deflectorState = MechanismState.stored;
 
@@ -131,6 +130,6 @@ public class ShooterReal implements ShooterIO {
 
     @Override
     public double getBarPosition() {
-        return barEncoder.get();
+        return 0;
     }
 }
