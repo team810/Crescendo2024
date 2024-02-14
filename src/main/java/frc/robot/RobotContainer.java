@@ -10,22 +10,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.lib.MechanismState;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
 import frc.robot.commands.*;
 import frc.robot.subsystem.climber.ClimberSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.intake.IntakeSubsystem;
-import frc.robot.subsystem.shooter.ShooterSubsystem;
 import frc.robot.util.AutoTurn.AutoTurnConstants;
 import frc.robot.util.Rectangles.AlignmentRectangle;
 
 public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser;
-    public RobotContainer()
-    {
+    public RobotContainer() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
@@ -42,15 +39,15 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
+        buttonConfig();
     }
-
     void buttonConfig()
     {
         new Trigger(() -> IO.getButtonValue(Controls.intakeFwd).get()).
                 onTrue(new IntakeGroundCommand());
 
         new Trigger(() -> MathUtil.applyDeadband(IO.getJoystickValue(Controls.intakeManual).get(),.1) != 0).
-                whileTrue(new IntakeManualCommand(IO.getJoystickValue(Controls.manualIntake)));
+                whileTrue(new IntakeManualCommand(IO.getJoystickValue(Controls.intakeManual)));
 
         new Trigger(() -> IO.getButtonValue(Controls.intakeSource).get()).
                 whileTrue(new IntakeSourceCommand());
@@ -65,7 +62,8 @@ public class RobotContainer {
 
         new Trigger(() -> IO.getButtonValue(Controls.releaseClimber).get()).
                 whileTrue(new InstantCommand(() -> ClimberSubsystem.getInstance().releaseClimber()));
-        new Trigger(() -> IO.getButtonValue(Controls.toggleDeflector).get()).toggleOnTrue(new InstantCommand(() -> ShooterSubsystem.getInstance().setDeflectorState(MechanismState.deployed)));
+
+//        new Trigger(() -> IO.getButtonValue(Controls.toggleDeflector).get()).toggleOnTrue(new InstantCommand(() -> ShooterSubsystem.getInstance().setDeflectorState(MechanismState.deployed)));
     }
     private Command getRevShooterCommand()
     {

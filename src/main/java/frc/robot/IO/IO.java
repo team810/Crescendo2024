@@ -17,8 +17,6 @@ public abstract class IO {
         controlsJoystick.put(Controls.drive_x, primary::getLeftX);
         controlsJoystick.put(Controls.drive_y, primary::getLeftY);
         controlsJoystick.put(Controls.drive_theta, primary::getRightX);
-        controlsJoystick.put(Controls.manualIntake, secondary::getRightY);
-
 
         controlsButtons.put(Controls.reset_gyro, primary::getLeftBumper);
         controlsButtons.put(Controls.slowMode, primary::getRightBumper);

@@ -9,7 +9,7 @@ public enum Controls {
     slowMode,
     normalMode,
     rotateToTarget,
-    manualIntake,
+
 
     intakeFwd,
     intakeSource,
