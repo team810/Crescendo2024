@@ -1,7 +1,6 @@
 package frc.robot.util.Rectangles;
 
 import frc.robot.util.AutoTurn.AutoTurnMode;
-import frc.robot.util.Rectangles.Rectangle;
 
 public class AlignmentRectangle extends Rectangle  {
 

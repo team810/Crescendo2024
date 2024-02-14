@@ -16,11 +16,10 @@ import frc.lib.navx.Navx;
 import frc.lib.navx.NavxReal;
 import frc.lib.navx.NavxSim;
 import frc.robot.Robot;
-import frc.robot.util.Rectangles.AlignmentRectangle;
 import frc.robot.util.AutoTurn.AutoTurnConstants;
+import frc.robot.util.Rectangles.AlignmentRectangle;
 import frc.robot.util.Rectangles.ShooterRectangle;
 import frc.robot.util.Shooting.ShooterUtilConstants;
-import frc.robot.util.Shooting.ShootingZone;
 import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.subsystem.drivetrain.DrivetrainConstants.*;

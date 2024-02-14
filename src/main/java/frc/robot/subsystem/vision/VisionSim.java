@@ -2,24 +2,14 @@ package frc.robot.subsystem.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
-import org.opencv.video.Video;
 import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonTargetSortMode;
-import org.photonvision.estimation.TargetModel;
 import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.VisionSystemSim;
-import org.photonvision.simulation.VisionTargetSim;
 import org.photonvision.simulation.SimCameraProperties;
-import org.photonvision.simulation.VideoSimUtil;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.simulation.VisionSystemSim;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
 
 public class VisionSim implements VisionIO {
 
