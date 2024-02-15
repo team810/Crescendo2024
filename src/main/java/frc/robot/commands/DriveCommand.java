@@ -47,7 +47,6 @@ public class DriveCommand extends Command {
 
 		if ((currentRectangle == AutoTurnMode.blueSpeaker) ||
 				(currentRectangle == AutoTurnMode.redSpeaker)) {
-			System.out.println("RRRRRRRRUMBLE!!!");
 //			IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, 1);
 		}
 

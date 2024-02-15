@@ -10,21 +10,15 @@ public enum Controls {
     normalMode,
     rotateToTarget,
 
+    intakeFWD,
+    intakeREVS,
+    sourceIntake,
 
-    intakeFwd,
-    intakeRevs,
-    intakeSource,
-    intakeManual,
-
-    revShooter,
     fire,
+    rev,
 
-    climberDown,
-    climberUp,
-    climberAdjUp,
-    climberAdjDown,
     releaseClimber,
+    climb,
 
     toggleDeflector,
-    toggleBar
 }

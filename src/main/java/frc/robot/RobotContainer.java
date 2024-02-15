@@ -9,16 +9,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.lib.MechanismState;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
-import frc.robot.commands.*;
+import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.FireCommand;
+import frc.robot.commands.Intake.IntakeFwdCommand;
+import frc.robot.commands.Intake.IntakeRevCommand;
+import frc.robot.commands.Intake.IntakeSourceCommand;
+import frc.robot.commands.RevShooterTestCommand;
+import frc.robot.subsystem.climber.ClimberSubsystem;
+import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.intake.IntakeSubsystem;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
-import frc.robot.util.AutoTurn.AutoTurnConstants;
 import frc.robot.util.Pneumatics;
-import frc.robot.util.Rectangles.AlignmentRectangle;
 
 public class RobotContainer {
 
@@ -33,9 +38,9 @@ public class RobotContainer {
 //        VisionSubsystem.getInstance();
         ShooterSubsystem.getInstance();
         IntakeSubsystem.getInstance();
-//
+        ClimberSubsystem.getInstance();
+
         DrivetrainSubsystem.getInstance().setDefaultCommand(new DriveCommand());
-//        ClimberSubsystem.getInstance().setDefaultCommand(new ClimberCommand());
 
 
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -46,60 +51,50 @@ public class RobotContainer {
     }
     void buttonConfig()
     {
-        new Trigger(() -> IO.getButtonValue(Controls.intakeFwd).get()).
-                whileTrue(new IntakeGroundCommand());
-        new Trigger(() -> IO.getButtonValue(Controls.intakeRevs).get()).whileTrue(new IntakeReversCommand());
+        new Trigger(() -> IO.getButtonValue(Controls.intakeFWD).get()).whileTrue(new IntakeFwdCommand());
+        new Trigger(() -> IO.getButtonValue(Controls.intakeREVS).get()).whileTrue(new IntakeRevCommand());
+        new Trigger(() -> IO.getButtonValue(Controls.sourceIntake).get()).whileTrue(new IntakeSourceCommand());
 
-//        new Trigger(() -> MathUtil.applyDeadband(IO.getJoystickValue(Controls.intakeManual).get(),.1) != 0).
-//                whileTrue(new IntakeManualCommand(IO.getJoystickValue(Controls.intakeManual)));
+        new Trigger(() -> IO.getButtonValue(Controls.fire).get()).whileTrue(new FireCommand());
+        new Trigger(() -> IO.getButtonValue(Controls.rev).get()).whileTrue(new RevShooterTestCommand());
 
-//        new Trigger(() -> IO.getButtonValue(Controls.intakeSource).get()).
-//                whileTrue(new IntakeSourceCommand());
+        new Trigger(() -> IO.getButtonValue(Controls.releaseClimber).get()).toggleOnTrue(new InstantCommand(() -> ClimberSubsystem.getInstance().releaseClimber()));
+        new Trigger(() -> IO.getButtonValue(Controls.climb).get()).whileTrue(new ClimbCommand());
 
-//        new Trigger(() -> IO.getButtonValue(Controls.revShooter).get()).
-//                whileTrue(getRevShooterCommand());
-        new Trigger(() -> IO.getButtonValue(Controls.revShooter).get()).
-                whileTrue(new RevSpeakerCommand());
+        new Trigger(() -> IO.getButtonValue(Controls.toggleDeflector).get()).onTrue(new InstantCommand(() -> DeflectorSubsystem.getInstance().toggleDeflectorState()));
 
-        new Trigger(() -> IO.getButtonValue(Controls.fire).get()).
-                whileTrue(getFireCommand());
-
-//        new Trigger(() -> IO.getButtonValue(Controls.releaseClimber).get()).
-//                whileTrue(new InstantCommand(() -> ClimberSubsystem.getInstance().releaseClimber()));
-
-        new Trigger(() -> IO.getButtonValue(Controls.toggleDeflector).get()).toggleOnTrue(new InstantCommand(() -> ShooterSubsystem.getInstance().setDeflectorState(MechanismState.deployed)));
     }
-    private Command getRevShooterCommand()
-    {
-        switch (((AlignmentRectangle)
-                AutoTurnConstants.RECTANGLE_SET.findRectangle(
-                        DrivetrainSubsystem.getInstance().getPose())).getType())
-        {
-            case redSpeaker, blueSpeaker -> {
-                return new RevSpeakerCommand();
-            }
-            case amp -> {
-                return new RevAmpCommand();
-            }
-            default -> {
-                return new InstantCommand(() -> {System.out.println("Not in Amp or Speaker Zone!!!");});
-            }
-        }
-    }
-    private Command getFireCommand()
-    {
-        switch (((AlignmentRectangle)
-                AutoTurnConstants.RECTANGLE_SET.findRectangle(
-                        DrivetrainSubsystem.getInstance().getPose())).getType())
-        {
-            case redSpeaker, blueSpeaker, amp -> {
-                return new FireCommand();
-            }
-            default -> {
-                return new InstantCommand(() -> {System.out.println("Not in amp or speaker zone");});
-            }
-        }
-    }
+//    private Command getRevShooterCommand()
+//    {
+//        switch (((AlignmentRectangle)
+//                AutoTurnConstants.RECTANGLE_SET.findRectangle(
+//                        DrivetrainSubsystem.getInstance().getPose())).getType())
+//        {
+//            case redSpeaker, blueSpeaker -> {
+//                return new RevSpeakerCommand();
+//            }
+//            case amp -> {
+//                return new RevAmpCommand();
+//            }
+//            default -> {
+//                return new InstantCommand(() -> {System.out.println("Not in Amp or Speaker Zone!!!");});
+//            }
+//        }
+//    }
+//    private Command getFireCommand()
+//    {
+//        switch (((AlignmentRectangle)
+//                AutoTurnConstants.RECTANGLE_SET.findRectangle(
+//                        DrivetrainSubsystem.getInstance().getPose())).getType())
+//        {
+//            case redSpeaker, blueSpeaker, amp -> {
+//                return new FireCommand();
+//            }
+//            default -> {
+//                return new InstantCommand(() -> {System.out.println("Not in amp or speaker zone");});
+//            }
+//        }
+//    }
     public Command getAutonomousCommand()
     {
         DrivetrainSubsystem.getInstance().resetOdometry(new Pose2d(2,2, new Rotation2d()));

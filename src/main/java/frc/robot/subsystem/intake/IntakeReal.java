@@ -10,8 +10,6 @@ public class IntakeReal implements IntakeIO {
     private final CANSparkMax topMotor;
     private final CANSparkMax bottomMotor;
 
-//    private final DigitalInput limitSwitch;
-
     private double inputVoltage;
 
     public IntakeReal() {
@@ -38,8 +36,6 @@ public class IntakeReal implements IntakeIO {
 
         inputVoltage = 0;
         setVoltage(0);
-
-//        limitSwitch = new DigitalInput(IntakeConstants.LIMIT_SWITCH_PORT);
     }
 
     public void setVoltage(double voltage) {
@@ -58,10 +54,5 @@ public class IntakeReal implements IntakeIO {
         Logger.recordOutput("Intake/Bottom/CurrentDraw", bottomMotor.getOutputCurrent());
         Logger.recordOutput("Intake/Bottom/MotorVoltage", bottomMotor.getBusVoltage());
         Logger.recordOutput("Intake/Bottom/InputVoltage", this.inputVoltage);
-    }
-
-    @Override
-    public boolean isLimitSwitchTriggered() {
-        return false;
     }
 }

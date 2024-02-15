@@ -13,7 +13,7 @@ public class ClimberReal implements ClimberIO {
 
     private double inputVoltage;
 
-    private DoubleSolenoid solenoid = Pneumatics.getInstance().createSolenoid(6,0);
+    private DoubleSolenoid releasePistion = Pneumatics.getInstance().createSolenoid(ClimberConstants.RELEASE_FWD,ClimberConstants.RELEASE_REVS);
 
     public ClimberReal() {
 
@@ -45,10 +45,12 @@ public class ClimberReal implements ClimberIO {
         Logger.recordOutput("Climber/CurrentDraw", climberMotor.getOutputCurrent());
         Logger.recordOutput("Climber/motorVoltage", climberMotor.getBusVoltage());
         Logger.recordOutput("Climber/inputVoltage", this.inputVoltage);
+
+        Logger.recordOutput("Climber/ReleasePiston", releasePistion.get());
     }
 
     @Override
     public void release() {
-        solenoid.set(DoubleSolenoid.Value.kReverse);
+        releasePistion.set(DoubleSolenoid.Value.kReverse);
     }
 }

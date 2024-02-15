@@ -6,6 +6,4 @@ public class IntakeConstants {
 
     public static final double INTAKE_MAX_SPEED = 0.75;
     public static final double INTAKE_SHOOT_SPEED = .25;
-
-    public static final int LIMIT_SWITCH_PORT = 0;
 }

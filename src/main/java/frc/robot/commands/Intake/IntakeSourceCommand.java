@@ -1,7 +1,8 @@
-package frc.robot.commands;
+package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.MechanismState;
+import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.intake.IntakeStates;
 import frc.robot.subsystem.intake.IntakeSubsystem;
 import frc.robot.subsystem.shooter.ShooterMode;
@@ -12,25 +13,20 @@ public class IntakeSourceCommand extends Command {
 
     public IntakeSourceCommand() {
 
-        addRequirements(ShooterSubsystem.getInstance(), IntakeSubsystem.getInstance());
+        addRequirements(ShooterSubsystem.getInstance(), IntakeSubsystem.getInstance(), DeflectorSubsystem.getInstance());
     }
 
     @Override
     public void initialize() {
-        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.SourceIntake);
-        ShooterSubsystem.getInstance().setDeflectorState(MechanismState.deployed);
+        DeflectorSubsystem.getInstance().setDeflectorState(MechanismState.deployed);
         IntakeSubsystem.getInstance().setState(IntakeStates.rev);
-    }
-
-    @Override
-    public boolean isFinished() {
-        return IntakeSubsystem.getInstance().isLimitSwitchTriggered();
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.SourceIntake);
     }
 
     @Override
     public void end(boolean interrupted) {
-        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.off);
-        ShooterSubsystem.getInstance().setDeflectorState(MechanismState.stored);
         IntakeSubsystem.getInstance().setState(IntakeStates.off);
+        DeflectorSubsystem.getInstance().setDeflectorState(MechanismState.stored);
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.off);
     }
 }

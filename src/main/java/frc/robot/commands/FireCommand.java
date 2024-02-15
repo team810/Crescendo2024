@@ -14,7 +14,7 @@ public class FireCommand extends Command {
 
     @Override
     public void initialize() {
-        IntakeSubsystem.getInstance().setState(IntakeStates.shoot);
+        IntakeSubsystem.getInstance().setState(IntakeStates.fire);
     }
     @Override
     public void end(boolean interrupted) {

@@ -12,6 +12,7 @@ public class ShooterConstants {
     public static final PIDConstants TOP_CONTROLLER_SIM = new PIDConstants(0,0,0);
     public static final PIDConstants BOTTOM_CONTROLLER_SIM = new PIDConstants(0,0,0);
 
+    public static final double SOURCE_INTAKE_SPEED = -.5;
     public final static double TOP_MOTOR_MAX_RPM = 5676;
     public final static double BOTTOM_MOTOR_MAX_RPM = 5676;
 
@@ -23,12 +24,6 @@ public class ShooterConstants {
     public final static int DEFLECTOR_FWD_CHANNEL = 4;
     public final static int DEFLECTOR_REV_CHANNEL = 5;
 
-    //FIXME set ids for stuff
     public final static int BAR_ID = 15;
     public final static double BAR_HOLD_PERCENT = .15;
-
-    public final static double SOURCE_INTAKE_SPEED = -.5;
-
-    public final static double AMP_SHOOTING_SPEED = 2000;
-    
 }
