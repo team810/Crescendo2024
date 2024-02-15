@@ -5,16 +5,16 @@ import frc.robot.subsystem.intake.IntakeStates;
 import frc.robot.subsystem.intake.IntakeSubsystem;
 
 
-public class IntakeGroundCommand extends Command {
+public class IntakeReversCommand extends Command {
 
-    public IntakeGroundCommand() {
+    public IntakeReversCommand() {
 
         addRequirements(IntakeSubsystem.getInstance());
     }
 
     @Override
     public void initialize() {
-        IntakeSubsystem.getInstance().setState(IntakeStates.fwd);
+        IntakeSubsystem.getInstance().setState(IntakeStates.rev);
     }
 
 

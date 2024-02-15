@@ -12,6 +12,7 @@ public enum Controls {
 
 
     intakeFwd,
+    intakeRevs,
     intakeSource,
     intakeManual,
 

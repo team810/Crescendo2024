@@ -29,10 +29,6 @@ public class VisionSubsystem extends SubsystemBase {
         }
     }
 
-    public double getAngle() {
-        return vision.getRobotPosition().getRotation().getDegrees();
-    }
-
     @Override
     public void periodic() {
 

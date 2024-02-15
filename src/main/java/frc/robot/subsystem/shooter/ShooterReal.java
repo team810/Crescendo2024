@@ -120,7 +120,7 @@ public class ShooterReal implements ShooterIO {
     @Override
     public void setBarVoltage(double voltage) {
         barVoltage = voltage;
-        barMotor.setVoltage(voltage);
+//        barMotor.setVoltage(voltage);
     }
 
     @Override

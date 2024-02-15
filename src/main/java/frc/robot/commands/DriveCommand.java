@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.Deadband;
 import frc.robot.IO.Controls;
@@ -49,7 +48,7 @@ public class DriveCommand extends Command {
 		if ((currentRectangle == AutoTurnMode.blueSpeaker) ||
 				(currentRectangle == AutoTurnMode.redSpeaker)) {
 			System.out.println("RRRRRRRRUMBLE!!!");
-			IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, 1);
+//			IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, 1);
 		}
 
 		if(Robot.isReal())
@@ -58,9 +57,10 @@ public class DriveCommand extends Command {
 			y = IO.getJoystickValue(Controls.drive_y).get();
 		}else{
 			x = IO.getJoystickValue(Controls.drive_x).get();
-			y = -IO.getJoystickValue(Controls.drive_y).get();
+			y = IO.getJoystickValue(Controls.drive_y).get();
 		}
 
+		theta = -theta;
 		if (notAligning)
 		{
 

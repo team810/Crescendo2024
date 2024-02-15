@@ -1,12 +1,9 @@
 package frc.robot.subsystem.shooter;
 
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.simulation.DoubleSolenoidSim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.lib.MechanismState;
 import frc.robot.Robot;
-import frc.robot.util.Pneumatics;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterSim implements ShooterIO{
@@ -19,7 +16,7 @@ public class ShooterSim implements ShooterIO{
     private double topVoltage;
     private double bottomVoltage;
 
-    private final DoubleSolenoidSim deflector;
+//    private final DoubleSolenoidSim deflector;
 
     private MechanismState deflectorState;
 
@@ -33,7 +30,7 @@ public class ShooterSim implements ShooterIO{
         deflectorState = MechanismState.stored;
 
 
-        deflector = new DoubleSolenoidSim(Pneumatics.getInstance().getPneumaticsHubSim(), ShooterConstants.DEFLECTOR_FWD_CHANNEL, ShooterConstants.DEFLECTOR_REV_CHANNEL);
+//        deflector = new DoubleSolenoidSim(Pneumatics.getInstance().getPneumaticsHubSim(), ShooterConstants.DEFLECTOR_FWD_CHANNEL, ShooterConstants.DEFLECTOR_REV_CHANNEL);
     }
 
     @Override
@@ -82,9 +79,9 @@ public class ShooterSim implements ShooterIO{
         this.deflectorState = state;
         if (deflectorState == MechanismState.deployed)
         {
-            deflector.set(DoubleSolenoid.Value.kForward);
+//            deflector.set(DoubleSolenoid.Value.kForward);
         } else if (deflectorState == MechanismState.stored) {
-            deflector.set(DoubleSolenoid.Value.kReverse);
+//            deflector.set(DoubleSolenoid.Value.kReverse);
         }
     }
 

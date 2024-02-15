@@ -20,8 +20,8 @@ public class ShooterConstants {
 
     public final static double PID_CONTROLLER_TOLERANCE = 25;
 
-    public final static int DEFLECTOR_FWD_CHANNEL = 0;
-    public final static int DEFLECTOR_REV_CHANNEL = 1;
+    public final static int DEFLECTOR_FWD_CHANNEL = 4;
+    public final static int DEFLECTOR_REV_CHANNEL = 5;
 
     //FIXME set ids for stuff
     public final static int BAR_ID = 15;

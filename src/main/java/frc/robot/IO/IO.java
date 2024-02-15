@@ -24,8 +24,10 @@ public abstract class IO {
         controlsButtons.put(Controls.rotateToTarget, primary::getAButton);
 
         controlsButtons.put(Controls.intakeFwd, secondary::getAButton);
+        controlsButtons.put(Controls.intakeSource, secondary::getBButton);
+        controlsButtons.put(Controls.intakeRevs, secondary::getYButton);
 
-        controlsButtons.put(Controls.revShooter, () -> (secondary.getLeftTriggerAxis() > 0.75));
+        controlsButtons.put(Controls.revShooter, secondary::getLeftBumper);
         controlsButtons.put(Controls.fire, () -> (secondary.getRightTriggerAxis() > 0.75));
 
         controlsButtons.put(Controls.climberDown, () -> (secondary.getPOV() == 180));
@@ -33,6 +35,8 @@ public abstract class IO {
         controlsButtons.put(Controls.climberAdjUp, () -> (secondary.getPOV() == 90 && primary.getPOV() == 90));
         controlsButtons.put(Controls.climberAdjDown, () -> (secondary.getPOV() == 270 & primary.getPOV() == 270));
         controlsButtons.put(Controls.releaseClimber, secondary::getBButton);
+
+        controlsButtons.put(Controls.toggleDeflector, secondary::getRightBumper);
 
     }
 

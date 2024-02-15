@@ -69,9 +69,6 @@ public class ShooterSubsystem extends SubsystemBase {
         deflectorState = MechanismState.deployed;
         barSetpoint = 0;
 
-        SmartDashboard.putNumber("Shooter P", kP);
-        SmartDashboard.putNumber("Shooter I", kI);
-        SmartDashboard.putNumber("Shooter D", kD);
 
         SmartDashboard.putNumber("Shooter Top Speed", 0);
         SmartDashboard.putNumber("Shooter Bottom Speed", 0);
@@ -83,9 +80,9 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        topController.setP(SmartDashboard.getNumber("Shooter P", 0));
-        topController.setI(SmartDashboard.getNumber("Shooter I", 0));
-        topController.setD(SmartDashboard.getNumber("Shooter D", 0));
+//        topController.setP(SmartDashboard.getNumber("Shooter P", 0));
+//        topController.setI(SmartDashboard.getNumber("Shooter I", 0));
+//        topController.setD(SmartDashboard.getNumber("Shooter D", 0));
 
         if (RobotState.isEnabled())
         {
@@ -160,9 +157,9 @@ public class ShooterSubsystem extends SubsystemBase {
                 }
             }
 
-            shooter.setBarVoltage(
-                    MathUtil.clamp(barController.calculate(shooter.getBarPosition(), getBarSetpoint()),-12,12)
-            );
+//            shooter.setBarVoltage(
+//                    MathUtil.clamp(barController.calculate(shooter.getBarPosition(), getBarSetpoint()),-12,12)
+//            );
 
             topVoltage = MathUtil.clamp(topVoltage, -12, 12);
             bottomVoltage = MathUtil.clamp(bottomVoltage, -12, 12);

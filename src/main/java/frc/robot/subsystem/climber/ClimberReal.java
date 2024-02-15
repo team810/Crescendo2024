@@ -13,7 +13,7 @@ public class ClimberReal implements ClimberIO {
 
     private double inputVoltage;
 
-    private DoubleSolenoid solenoid = Pneumatics.getInstance().createSolenoid(0,1);
+    private DoubleSolenoid solenoid = Pneumatics.getInstance().createSolenoid(6,0);
 
     public ClimberReal() {
 
