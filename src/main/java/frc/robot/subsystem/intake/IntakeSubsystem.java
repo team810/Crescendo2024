@@ -8,19 +8,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private static IntakeSubsystem INSTANCE = new IntakeSubsystem();
 
-    private IntakeIO intake;
+    private final IntakeIO intake;
 
     private IntakeStates state;
-
-    private double manualSpeed;
-
-
-    public static IntakeSubsystem getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new IntakeSubsystem();
-        }
-        return INSTANCE;
-    }
 
     private IntakeSubsystem() {
 
@@ -31,7 +21,6 @@ public class IntakeSubsystem extends SubsystemBase {
         }
 
         state = IntakeStates.off;
-        manualSpeed = 0;
     }
 
     public void periodic() {
@@ -45,32 +34,26 @@ public class IntakeSubsystem extends SubsystemBase {
             case rev -> {
                 intake.setVoltage(-IntakeConstants.INTAKE_MAX_SPEED * 12);
             }
-            case off -> {
-                intake.setVoltage(0);
-            }
-            case shoot -> {
+            case fire -> {
                 intake.setVoltage(IntakeConstants.INTAKE_SHOOT_SPEED * 12);
             }
-            case manual ->
-            {
-                intake.setVoltage(manualSpeed * 12);
+            case off -> {
+                intake.setVoltage(0);
             }
         }
         intake.update();
 
     }
 
-    public void setManualSpeed(double speed) {
-        this.manualSpeed = speed;
-    }
-
     public void setState(IntakeStates state) {
         this.state = state;
     }
 
-    public boolean isLimitSwitchTriggered()
-    {
-        return false;
+    public static IntakeSubsystem getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new IntakeSubsystem();
+        }
+        return INSTANCE;
     }
 }
 

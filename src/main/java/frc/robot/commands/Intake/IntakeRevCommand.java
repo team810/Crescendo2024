@@ -1,22 +1,21 @@
-package frc.robot.commands;
+package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystem.intake.IntakeStates;
 import frc.robot.subsystem.intake.IntakeSubsystem;
 
 
-public class IntakeGroundCommand extends Command {
+public class IntakeRevCommand extends Command {
 
-    public IntakeGroundCommand() {
+    public IntakeRevCommand() {
 
         addRequirements(IntakeSubsystem.getInstance());
     }
 
     @Override
     public void initialize() {
-        IntakeSubsystem.getInstance().setState(IntakeStates.fwd);
+        IntakeSubsystem.getInstance().setState(IntakeStates.rev);
     }
-
 
     @Override
     public void end(boolean interrupted) {

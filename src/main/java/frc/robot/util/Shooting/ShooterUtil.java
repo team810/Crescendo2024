@@ -2,7 +2,6 @@ package frc.robot.util.Shooting;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.lib.MechanismState;
-import frc.robot.subsystem.shooter.ShooterState;
 import frc.robot.util.AutoTurn.AutoTurnConstants;
 import frc.robot.util.Rectangles.ShooterRectangle;
 

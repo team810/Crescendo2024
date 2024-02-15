@@ -2,7 +2,6 @@ package frc.robot.subsystem.shooter;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import frc.lib.MechanismState;
 import frc.robot.Robot;
 import org.littletonrobotics.junction.Logger;
 
@@ -10,27 +9,16 @@ public class ShooterSim implements ShooterIO{
 
     private final FlywheelSim topMotor;
     private final FlywheelSim bottomMotor;
-    private final FlywheelSim barMotor;
-
 
     private double topVoltage;
     private double bottomVoltage;
 
-//    private final DoubleSolenoidSim deflector;
-
-    private MechanismState deflectorState;
 
 
     public ShooterSim()
     {
         topMotor = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
         bottomMotor = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
-        barMotor = new FlywheelSim(DCMotor.getNEO(1), 1, .1);
-
-        deflectorState = MechanismState.stored;
-
-
-//        deflector = new DoubleSolenoidSim(Pneumatics.getInstance().getPneumaticsHubSim(), ShooterConstants.DEFLECTOR_FWD_CHANNEL, ShooterConstants.DEFLECTOR_REV_CHANNEL);
     }
 
     @Override
@@ -67,36 +55,5 @@ public class ShooterSim implements ShooterIO{
     @Override
     public double getBottomRPM() {
         return bottomMotor.getAngularVelocityRPM();
-    }
-
-    @Override
-    public MechanismState isDeflector() {
-        return deflectorState;
-    }
-
-    @Override
-    public void setDeflector(MechanismState state) {
-        this.deflectorState = state;
-        if (deflectorState == MechanismState.deployed)
-        {
-//            deflector.set(DoubleSolenoid.Value.kForward);
-        } else if (deflectorState == MechanismState.stored) {
-//            deflector.set(DoubleSolenoid.Value.kReverse);
-        }
-    }
-
-    @Override
-    public void setBarVoltage(double voltage) {
-        barMotor.setInputVoltage(voltage);
-    }
-
-    @Override
-    public double getBarVoltage() {
-        return 0;
-    }
-
-    @Override
-    public double getBarPosition() {
-        return 0;
     }
 }

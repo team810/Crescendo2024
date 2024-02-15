@@ -4,7 +4,5 @@ public interface IntakeIO {
 
     void setVoltage(double voltage);
 
-    boolean isLimitSwitchTriggered();
-
     void update();
 }

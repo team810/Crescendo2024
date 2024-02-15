@@ -3,7 +3,6 @@ package frc.robot.subsystem.climber;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import org.littletonrobotics.junction.Logger;
 
 public class ClimberSubsystem extends SubsystemBase {
 
@@ -28,40 +27,26 @@ public class ClimberSubsystem extends SubsystemBase {
             climber = new ClimberSim();
         }
 
-        state = ClimberStates.down;
+        state = ClimberStates.off;
+    }
+
+    public void periodic() {
+
+        switch (state)
+        {
+            case on -> {
+                climber.setVoltage(ClimberConstants.CLIMBER_SPEED * 12);
+            }
+            case off -> {
+                climber.setVoltage(0);
+            }
+        }
+        climber.update();
     }
 
     public void releaseClimber()
     {
         climber.release();
-    }
-
-    public void periodic() {
-
-        Logger.recordOutput("Climber/state", this.state);
-
-        climber.update();
-
-        switch (this.state) {
-
-            case down:
-                climber.setVoltage(ClimberConstants.CLIMBER_DOWN_SPEED);
-                break;
-            case up:
-                climber.setVoltage(ClimberConstants.CLIMBER_UP_SPEED);
-                break;
-            case manualUp:
-                climber.setVoltage(ClimberConstants.CLIMBER_ADJ_SPEED);
-                break;
-            case manualDown:
-                climber.setVoltage(-ClimberConstants.CLIMBER_ADJ_SPEED);
-                break;
-            case stopped:
-                climber.setVoltage(0);
-                break;
-            default:
-                throw new RuntimeException("trigger default climber state");
-        }
     }
 
     public void setState(ClimberStates state) {
