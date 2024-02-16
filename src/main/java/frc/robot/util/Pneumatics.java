@@ -20,7 +20,7 @@ public class Pneumatics extends SubsystemBase {
 
 
     private Pneumatics() {
-//        pcm.enableCompressorDigital();
+        pcm.enableCompressorDigital();
     }
 
 

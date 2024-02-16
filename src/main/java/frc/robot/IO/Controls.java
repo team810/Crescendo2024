@@ -18,7 +18,10 @@ public enum Controls {
     rev,
 
     releaseClimber,
+    pinClimber,
     climb,
+
+    toggleTBone,
 
     toggleDeflector,
 }

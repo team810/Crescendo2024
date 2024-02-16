@@ -130,7 +130,7 @@ public class DriveCommand extends Command {
 			DrivetrainSubsystem.getInstance().setTargetSpeeds(
 					-x,
 					y,
-					-theta
+					theta
 			);
 		} else {
 			DrivetrainSubsystem.getInstance().setTargetSpeeds(

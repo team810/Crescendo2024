@@ -3,7 +3,9 @@ package frc.robot.subsystem.tbone;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import org.littletonrobotics.junction.Logger;
 
 public class TboneReal implements TBoneIO {
 
@@ -11,7 +13,9 @@ public class TboneReal implements TBoneIO {
 
     private double inputVoltage;
 
-    private DutyCycleEncoder encoder;
+    private DutyCycleEncoder TBEncoder;
+
+    private RelativeEncoder regEncoder;
 
     public TboneReal() {
 
@@ -26,7 +30,9 @@ public class TboneReal implements TBoneIO {
 
         motor.setSmartCurrentLimit(40);
 
-        encoder = new DutyCycleEncoder(0);
+        TBEncoder = new DutyCycleEncoder(0);
+        TBEncoder.reset();
+//        regEncoder = motor.getEncoder();
 
         motor.setIdleMode(CANSparkBase.IdleMode.kBrake);
 
@@ -36,15 +42,20 @@ public class TboneReal implements TBoneIO {
 
     @Override
     public double getEncoderPosition() {
-        return encoder.getAbsolutePosition();
+        return TBEncoder.getDistance();
     }
 
     public void setVoltage(double voltage) {
         inputVoltage = voltage;
         motor.set(inputVoltage);
-
     }
 
     public void update() {
+
+        Logger.recordOutput("T-Bone/Position", getEncoderPosition());
+//        Logger.recordOutput("T-Bone/Velocity", regEncoder.getVelocity());
+        Logger.recordOutput("T-Bone/Temperature", motor.getMotorTemperature());
+        Logger.recordOutput("T-Bone/CurrentDraw", motor.getOutputCurrent());
+
     }
 }

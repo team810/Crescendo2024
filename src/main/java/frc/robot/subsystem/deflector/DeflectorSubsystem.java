@@ -26,6 +26,7 @@ public class DeflectorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+
         Logger.recordOutput("Deflector/MechanismState", deflectorState);
     }
 
@@ -40,8 +41,10 @@ public class DeflectorSubsystem extends SubsystemBase {
     public void toggleDeflectorState()
     {
         if (deflectorState == MechanismState.deployed) {
+            deflector.setState(DoubleSolenoid.Value.kForward);
             deflectorState = MechanismState.stored;
         } else if (deflectorState == MechanismState.stored) {
+            deflector.setState(DoubleSolenoid.Value.kReverse);
             deflectorState = MechanismState.deployed;
         }
     }

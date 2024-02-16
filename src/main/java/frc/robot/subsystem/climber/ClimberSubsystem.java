@@ -49,6 +49,8 @@ public class ClimberSubsystem extends SubsystemBase {
         climber.release();
     }
 
+    public void pinClimber() { climber.pin(); }
+
     public void setState(ClimberStates state) {
         this.state = state;
     }

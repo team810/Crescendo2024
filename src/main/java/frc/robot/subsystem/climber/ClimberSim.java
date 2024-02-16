@@ -31,4 +31,6 @@ public class ClimberSim implements ClimberIO {
     public void release() {
         
     }
+
+    public void pin() { }
 }

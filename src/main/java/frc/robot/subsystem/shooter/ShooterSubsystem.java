@@ -26,8 +26,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private ShooterSubsystem()
     {
-        topController = new PIDController(0,0,0);
-        bottomController = new PIDController(0,0,0);
+        topController = new PIDController(0,0,0, Robot.defaultPeriodSecs);
+        bottomController = new PIDController(0,0,0, Robot.defaultPeriodSecs);
 
         if (Robot.isReal())
         {
@@ -70,12 +70,12 @@ public class ShooterSubsystem extends SubsystemBase {
             switch (shooterMode)
             {
                 case SourceIntake -> {
-                    topVoltage = - ShooterConstants.SOURCE_INTAKE_SPEED * 12;
-                    bottomVoltage = - ShooterConstants.SOURCE_INTAKE_SPEED * 12;
+                    topVoltage =  ShooterConstants.SOURCE_INTAKE_SPEED * 12;
+                    bottomVoltage =  ShooterConstants.SOURCE_INTAKE_SPEED * 12;
                 }
                 case Amp -> {
-                    topTargetSpeed = 1000;
-                    bottomTargetSpeed = 1000;
+                    topTargetSpeed = 2000;
+                    bottomTargetSpeed = 2000;
                 }
                 case Speaker -> {
                     topTargetSpeed = 0 ;
@@ -83,7 +83,7 @@ public class ShooterSubsystem extends SubsystemBase {
                 }
                 case test -> {
                     topTargetSpeed = 2000;
-                    bottomTargetSpeed = 2000;
+                    bottomTargetSpeed = 2400;
                 }
                 case off -> {
                     topVoltage = 0;
@@ -93,8 +93,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
             if (shooterMode == ShooterMode.test || shooterMode == ShooterMode.Speaker || shooterMode == ShooterMode.Amp)
             {
-                topVoltage = topController.calculate(shooter.getTopRPM(), topTargetSpeed);
-                bottomVoltage = bottomController.calculate(shooter.getBottomRPM(), bottomTargetSpeed);
+//                topVoltage = topController.calculate(shooter.getTopRPM(), topTargetSpeed);
+//                bottomVoltage = bottomController.calculate(shooter.getBottomRPM(), bottomTargetSpeed);
+
+                topVoltage = (topTargetSpeed / ShooterConstants.TOP_MOTOR_MAX_RPM) * 12;
+                bottomVoltage = (bottomTargetSpeed / ShooterConstants.BOTTOM_MOTOR_MAX_RPM) * 12;
 
                 topVoltage = MathUtil.clamp(topVoltage, -12, 12);
                 bottomVoltage = MathUtil.clamp(bottomVoltage, -12, 12);
@@ -113,6 +116,7 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.recordOutput("Shooter/Top/TargetSpeed", topTargetSpeed);
         Logger.recordOutput("Shooter/Bottom/TargetSpeed", bottomTargetSpeed);
         Logger.recordOutput("Shooter/Mode/ShooterMode", shooterMode);
+        Logger.recordOutput("Shooter/Top/atSetpoint", topController.atSetpoint());
 
         shooter.update();
     }

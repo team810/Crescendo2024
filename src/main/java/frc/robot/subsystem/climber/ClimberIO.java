@@ -6,5 +6,7 @@ public interface ClimberIO {
     void update();
     void release();
 
+    void pin();
+
 
 }

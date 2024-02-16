@@ -39,10 +39,15 @@ public class ShooterReal implements ShooterIO {
 
         setTopVoltage(0);
         setBottomVoltage(0);
+
+        topMotor.setInverted(true);
     }
     @Override
     public void update()
     {
+        topMotor.setVoltage(topVoltage);
+        bottomMotor.setVoltage(bottomVoltage);
+
         Logger.recordOutput("Shooter/Top/Voltage", topVoltage);
         Logger.recordOutput("Shooter/Top/CurrentDraw", topMotor.getOutputCurrent());
         Logger.recordOutput("Shooter/Top/Temperature", topMotor.getMotorTemperature());
