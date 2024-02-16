@@ -43,9 +43,9 @@ public class ShooterSubsystem extends SubsystemBase {
         }else{
             shooter = new ShooterSim();
 
-            topController.setP(ShooterConstants.BOTTOM_CONTROLLER_SIM.kP);
-            topController.setI(ShooterConstants.BOTTOM_CONTROLLER_SIM.kI);
-            topController.setD(ShooterConstants.BOTTOM_CONTROLLER_SIM.kD);
+            topController.setP(ShooterConstants.TOP_CONTROLLER_SIM.kP);
+            topController.setI(ShooterConstants.TOP_CONTROLLER_SIM.kI);
+            topController.setD(ShooterConstants.TOP_CONTROLLER_SIM.kD);
 
             bottomController.setP(ShooterConstants.BOTTOM_CONTROLLER_SIM.kP);
             bottomController.setI(ShooterConstants.BOTTOM_CONTROLLER_SIM.kI);

@@ -13,17 +13,6 @@ public class ShooterConstants {
     public static final PIDConstants BOTTOM_CONTROLLER_SIM = new PIDConstants(0,0,0);
 
     public static final double SOURCE_INTAKE_SPEED = -.5;
-    public final static double TOP_MOTOR_MAX_RPM = 5676;
-    public final static double BOTTOM_MOTOR_MAX_RPM = 5676;
-
-    public final static double BAR_SPEED = 0.5;
-    public final static double BAR_SECONDS = 3;
 
     public final static double PID_CONTROLLER_TOLERANCE = 25;
-
-    public final static int DEFLECTOR_FWD_CHANNEL = 4;
-    public final static int DEFLECTOR_REV_CHANNEL = 5;
-
-    public final static int BAR_ID = 15;
-    public final static double BAR_HOLD_PERCENT = .15;
 }
