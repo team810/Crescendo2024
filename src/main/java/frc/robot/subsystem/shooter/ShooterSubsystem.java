@@ -1,8 +1,6 @@
 package frc.robot.subsystem.shooter;
 
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -12,9 +10,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private static ShooterSubsystem INSTANCE;
 
     private final ShooterIO shooter;
-
-    private final PIDController topController;
-    private final PIDController bottomController;
 
     private double topTargetSpeed;
     private double bottomTargetSpeed;
@@ -26,34 +21,15 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private ShooterSubsystem()
     {
-        topController = new PIDController(0,0,0, Robot.defaultPeriodSecs);
-        bottomController = new PIDController(0,0,0, Robot.defaultPeriodSecs);
 
         if (Robot.isReal())
         {
             shooter = new ShooterReal();
 
-            topController.setP(ShooterConstants.TOP_CONTROLLER_REAL.kP);
-            topController.setI(ShooterConstants.TOP_CONTROLLER_REAL.kI);
-            topController.setD(ShooterConstants.TOP_CONTROLLER_REAL.kD);
-
-            bottomController.setP(ShooterConstants.BOTTOM_CONTROLLER_REAL.kP);
-            bottomController.setI(ShooterConstants.BOTTOM_CONTROLLER_REAL.kI);
-            bottomController.setD(ShooterConstants.BOTTOM_CONTROLLER_REAL.kD);
         }else{
             shooter = new ShooterSim();
 
-            topController.setP(ShooterConstants.TOP_CONTROLLER_SIM.kP);
-            topController.setI(ShooterConstants.TOP_CONTROLLER_SIM.kI);
-            topController.setD(ShooterConstants.TOP_CONTROLLER_SIM.kD);
-
-            bottomController.setP(ShooterConstants.BOTTOM_CONTROLLER_SIM.kP);
-            bottomController.setI(ShooterConstants.BOTTOM_CONTROLLER_SIM.kI);
-            bottomController.setD(ShooterConstants.BOTTOM_CONTROLLER_SIM.kD);
         }
-
-        topController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
-        bottomController.setTolerance(ShooterConstants.PID_CONTROLLER_TOLERANCE);
 
         topTargetSpeed = 0;
         bottomTargetSpeed = 0;
@@ -70,53 +46,37 @@ public class ShooterSubsystem extends SubsystemBase {
             switch (shooterMode)
             {
                 case SourceIntake -> {
-                    topVoltage =  ShooterConstants.SOURCE_INTAKE_SPEED * 12;
-                    bottomVoltage =  ShooterConstants.SOURCE_INTAKE_SPEED * 12;
+                    topTargetSpeed = -2000;
+                    bottomTargetSpeed = -2000;
                 }
                 case Amp -> {
                     topTargetSpeed = 2000;
                     bottomTargetSpeed = 2000;
                 }
                 case Speaker -> {
-                    topTargetSpeed = 0 ;
-                    bottomTargetSpeed = 0;
+                    topTargetSpeed = 1 ;
+                    bottomTargetSpeed = 1;
                 }
                 case test -> {
                     topTargetSpeed = 2000;
                     bottomTargetSpeed = 2400;
                 }
                 case off -> {
-                    topVoltage = 0;
-                    bottomVoltage = 0;
+                    topTargetSpeed = 0;
+                    bottomTargetSpeed = 0;
                 }
             }
-
-            if (shooterMode == ShooterMode.test || shooterMode == ShooterMode.Speaker || shooterMode == ShooterMode.Amp)
-            {
-//                topVoltage = topController.calculate(shooter.getTopRPM(), topTargetSpeed);
-//                bottomVoltage = bottomController.calculate(shooter.getBottomRPM(), bottomTargetSpeed);
-
-                topVoltage = (topTargetSpeed / ShooterConstants.TOP_MOTOR_MAX_RPM) * 12;
-                bottomVoltage = (bottomTargetSpeed / ShooterConstants.BOTTOM_MOTOR_MAX_RPM) * 12;
-
-                topVoltage = MathUtil.clamp(topVoltage, -12, 12);
-                bottomVoltage = MathUtil.clamp(bottomVoltage, -12, 12);
-            }
-
-            shooter.setTopVoltage(topVoltage);
-            shooter.setBottomVoltage(bottomVoltage);
         }else{
-            topVoltage = 0;
-            bottomVoltage = 0;
-
-            shooter.setTopVoltage(topVoltage);
-            shooter.setBottomVoltage(bottomVoltage);
-
+            topTargetSpeed = 0;
+            bottomTargetSpeed =0;
         }
+
+        shooter.setTopTargetRPM(topTargetSpeed);
+        shooter.setBottomTargetRPM(bottomTargetSpeed);
+
         Logger.recordOutput("Shooter/Top/TargetSpeed", topTargetSpeed);
         Logger.recordOutput("Shooter/Bottom/TargetSpeed", bottomTargetSpeed);
         Logger.recordOutput("Shooter/Mode/ShooterMode", shooterMode);
-        Logger.recordOutput("Shooter/Top/atSetpoint", topController.atSetpoint());
 
         shooter.update();
     }

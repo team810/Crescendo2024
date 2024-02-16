@@ -1,22 +1,24 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.lib.MechanismState;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
-import frc.robot.commands.*;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.FireCommand;
 import frc.robot.commands.Intake.IntakeFwdCommand;
 import frc.robot.commands.Intake.IntakeRevCommand;
 import frc.robot.commands.Intake.IntakeSourceCommand;
+import frc.robot.commands.RevShooterTestCommand;
+import frc.robot.commands.TBoneCommand;
 import frc.robot.subsystem.climber.ClimberSubsystem;
 import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
@@ -36,8 +38,9 @@ public class RobotContainer {
         IO.Initialize();
 
 //        VisionSubsystem.getInstance();
-//        ShooterSubsystem.getInstance();
+        ShooterSubsystem.getInstance();
         IntakeSubsystem.getInstance();
+        CommandScheduler.getInstance().setPeriod(.035);
 //
         DrivetrainSubsystem.getInstance().setDefaultCommand(new DriveCommand());
 //        ClimberSubsystem.getInstance().setDefaultCommand(new ClimberCommand());

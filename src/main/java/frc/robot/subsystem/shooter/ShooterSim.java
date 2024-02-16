@@ -22,6 +22,16 @@ public class ShooterSim implements ShooterIO{
     }
 
     @Override
+    public void setTopTargetRPM(double targetRPM) {
+
+    }
+
+    @Override
+    public void setBottomTargetRPM(double targetRPM) {
+
+    }
+
+    @Override
     public void update() {
         topMotor.update(Robot.defaultPeriodSecs);
         bottomMotor.update(Robot.defaultPeriodSecs);
@@ -35,25 +45,4 @@ public class ShooterSim implements ShooterIO{
         Logger.recordOutput("Shooter/Bottom/Velocity", bottomMotor.getAngularVelocityRPM());
     }
 
-    @Override
-    public void setTopVoltage(double voltage) {
-        topVoltage = voltage;
-        topMotor.setInputVoltage(topVoltage);
-    }
-
-    @Override
-    public void setBottomVoltage(double voltage) {
-        bottomVoltage = voltage;
-        bottomMotor.setInputVoltage(bottomVoltage);
-    }
-
-    @Override
-    public double getTopRPM() {
-        return topMotor.getAngularVelocityRPM();
-    }
-
-    @Override
-    public double getBottomRPM() {
-        return bottomMotor.getAngularVelocityRPM();
-    }
 }

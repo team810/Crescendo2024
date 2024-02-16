@@ -1,24 +1,27 @@
 package frc.robot.subsystem.shooter;
 
-import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
+import com.revrobotics.*;
+import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterReal implements ShooterIO {
-
     private final CANSparkMax topMotor;
     private final CANSparkMax bottomMotor;
 
     private final RelativeEncoder topEncoder;
     private final RelativeEncoder bottomEncoder;
 
-    private double topVoltage;
-    private double bottomVoltage;
+    private double topTargetRPM;
+    private double bottomTargetRPM;
 
-    public ShooterReal()
-    {
+    private final SparkPIDController topController;
+    private final SparkPIDController bottomController;
+
+    public double BottomP, BottomI, BottomD, BottomIz, BottomFF, BottomMaxOutput,BottomMinOutput, BottomMaxRPM;
+    public double TopP, TopI, TopD, TopIz, TopFF, TopMaxOutput, TopMinOutput, TopMaxRPM;
+
+    public ShooterReal() {
         topMotor = new CANSparkMax(ShooterConstants.TOP_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless);
         bottomMotor = new CANSparkMax(ShooterConstants.BOTTOM_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless);
 
@@ -37,42 +40,74 @@ public class ShooterReal implements ShooterIO {
         topEncoder = topMotor.getEncoder();
         bottomEncoder = bottomMotor.getEncoder();
 
-        setTopVoltage(0);
-        setBottomVoltage(0);
-
         topMotor.setInverted(true);
+
+        topController = topMotor.getPIDController();
+        bottomController = bottomMotor.getPIDController();
+
+
+        SmartDashboard.putNumber("Top/kP", 0.00006);
+        SmartDashboard.putNumber("Top/kI", TopI);
+        SmartDashboard.putNumber("Top/kD", TopD);
+        SmartDashboard.putNumber("Top/kFF", 0.000185);
+
+        SmartDashboard.putNumber("Bottom/kP", BottomP);
+        SmartDashboard.putNumber("Bottom/kI", BottomI);
+        SmartDashboard.putNumber("Bottom/kD", BottomD);
+        SmartDashboard.putNumber("Bottom/kFF", BottomFF);
     }
+
     @Override
     public void update()
     {
-        topMotor.setVoltage(topVoltage);
-        bottomMotor.setVoltage(bottomVoltage);
+        TopP = SmartDashboard.getNumber("Top/kP",0);
+        TopI = SmartDashboard.getNumber("Top/kI",0);
+        TopD = SmartDashboard.getNumber("Top/kD", 0);
+        TopFF = SmartDashboard.getNumber("Top/kFF", 0);
 
-        Logger.recordOutput("Shooter/Top/Voltage", topVoltage);
+        BottomP = SmartDashboard.getNumber("Bottom/kP",0);
+        BottomI = SmartDashboard.getNumber("Bottom/kI",0);
+        BottomD = SmartDashboard.getNumber("Bottom/kD", 0);
+        BottomFF = SmartDashboard.getNumber("Bottom/kFF", 0);
+
+        topController.setP(TopP);
+        topController.setI(TopI);
+        topController.setD(TopD);
+        topController.setFF(TopFF);
+
+        bottomController.setP(BottomP);
+        bottomController.setI(BottomI);
+        bottomController.setD(BottomD);
+        bottomController.setFF(BottomFF);
+
         Logger.recordOutput("Shooter/Top/CurrentDraw", topMotor.getOutputCurrent());
         Logger.recordOutput("Shooter/Top/Temperature", topMotor.getMotorTemperature());
         Logger.recordOutput("Shooter/Top/Velocity", topEncoder.getVelocity());
+        Logger.recordOutput("Shooter/Top/TargetVelocity", topTargetRPM);
 
-        Logger.recordOutput("Shooter/Bottom/Voltage", bottomVoltage);
         Logger.recordOutput("Shooter/Bottom/CurrentDraw", bottomMotor.getOutputCurrent());
         Logger.recordOutput("Shooter/Bottom/Temperature", bottomMotor.getMotorTemperature());
         Logger.recordOutput("Shooter/Bottom/Velocity", bottomEncoder.getVelocity());
-    }
-    @Override
-    public void setTopVoltage(double voltage) {
-        topVoltage = voltage;
-    }
-    @Override
-    public void setBottomVoltage(double voltage) {
-        bottomVoltage = voltage;
-    }
-    @Override
-    public double getTopRPM() {
-        return topEncoder.getVelocity();
-    }
-    @Override
-    public double getBottomRPM() {
-        return bottomEncoder.getVelocity();
+        Logger.recordOutput("Shooter/Bottom/TargetVelocity", bottomTargetRPM);
+
+
+        topController.setReference(topTargetRPM, CANSparkBase.ControlType.kVelocity);
+        bottomController.setReference(bottomTargetRPM, CANSparkBase.ControlType.kVelocity);
+
+        if (RobotState.isDisabled())
+        {
+            topController.setIAccum(0);
+            bottomController.setIAccum(0);
+        }
     }
 
+    @Override
+    public void setTopTargetRPM(double targetRPM) {
+        this.topTargetRPM = targetRPM;
+    }
+
+    @Override
+    public void setBottomTargetRPM(double targetRPM) {
+        this.bottomTargetRPM = targetRPM;
+    }
 }
