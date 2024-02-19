@@ -12,6 +12,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private IntakeStates state;
 
+    private double manualSpeed;
+
     private IntakeSubsystem() {
 
         if (Robot.isReal()) {
@@ -21,6 +23,8 @@ public class IntakeSubsystem extends SubsystemBase {
         }
 
         state = IntakeStates.off;
+        manualSpeed = 0;
+
     }
 
     public void periodic() {
@@ -36,6 +40,9 @@ public class IntakeSubsystem extends SubsystemBase {
             }
             case fire -> {
                 intake.setVoltage(IntakeConstants.INTAKE_SHOOT_SPEED * 12);
+            }
+            case manual -> {
+                intake.setVoltage(getManualSpeed() * 12);
             }
             case off -> {
                 intake.setVoltage(0);
@@ -54,6 +61,14 @@ public class IntakeSubsystem extends SubsystemBase {
             INSTANCE = new IntakeSubsystem();
         }
         return INSTANCE;
+    }
+
+    public double getManualSpeed() {
+        return manualSpeed;
+    }
+
+    public void setManualSpeed(double manualSpeed) {
+        this.manualSpeed = manualSpeed;
     }
 }
 

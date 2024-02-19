@@ -45,6 +45,8 @@ public abstract class IO {
         controlsButtons.put(Controls.sourceIntake, secondary::getXButton);
 
         controlsButtons.put(Controls.toggleTBone, secondary::getRightBumper);
+
+        controlsJoystick.put(Controls.intakeManual, secondary::getLeftY);
     }
 
     public static Supplier<Double> getJoystickValue(Controls control)

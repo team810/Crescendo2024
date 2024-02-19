@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -13,6 +14,7 @@ import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.Intake.IntakeManualCommand;
 import frc.robot.commands.TBoneCommand;
 import frc.robot.commands.Intake.IntakeFwdCommand;
 import frc.robot.commands.Intake.IntakeRevCommand;
@@ -71,6 +73,8 @@ public class RobotContainer {
 
         new Trigger(() -> IO.getButtonValue(Controls.toggleTBone).get()).toggleOnTrue(new TBoneCommand());
         new Trigger(() -> IO.getButtonValue(Controls.toggleDeflector).get()).onTrue(new InstantCommand(() -> DeflectorSubsystem.getInstance().toggleDeflectorState()));
+
+        new Trigger(() -> MathUtil.applyDeadband(IO.getJoystickValue(Controls.intakeManual).get(), .1) != 0).whileTrue(new IntakeManualCommand());
     }
 
     public Command getAutonomousCommand()
