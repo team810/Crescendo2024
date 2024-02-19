@@ -4,9 +4,9 @@ package frc.robot.subsystem.tbone;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.MechanismState;
+import frc.robot.Robot;
 import org.littletonrobotics.junction.Logger;
 
 public class TBoneSubsystem extends SubsystemBase {
@@ -23,7 +23,12 @@ public class TBoneSubsystem extends SubsystemBase {
     private double setpoint;
 
     private TBoneSubsystem() {
-        tBone = new TboneReal();
+        if (Robot.isReal())
+        {
+            tBone = new TboneReal();
+        }else{
+            tBone = new TBoneSim();
+        }
 
         state = MechanismState.stored;
     }

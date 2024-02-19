@@ -7,18 +7,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
-import frc.robot.commands.DriveCommand;
-import frc.robot.commands.FireCommand;
+import frc.robot.commands.*;
 import frc.robot.commands.Intake.IntakeFwdCommand;
 import frc.robot.commands.Intake.IntakeRevCommand;
 import frc.robot.commands.Intake.IntakeSourceCommand;
-import frc.robot.commands.RevShooterTestCommand;
-import frc.robot.commands.TBoneCommand;
 import frc.robot.subsystem.climber.ClimberSubsystem;
 import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
@@ -40,7 +36,7 @@ public class RobotContainer {
 //        VisionSubsystem.getInstance();
         ShooterSubsystem.getInstance();
         IntakeSubsystem.getInstance();
-        CommandScheduler.getInstance().setPeriod(.035);
+
 //
         DrivetrainSubsystem.getInstance().setDefaultCommand(new DriveCommand());
 //        ClimberSubsystem.getInstance().setDefaultCommand(new ClimberCommand());
@@ -64,7 +60,7 @@ public class RobotContainer {
 
         new Trigger(() -> IO.getButtonValue(Controls.releaseClimber).get()).toggleOnTrue(new InstantCommand(() -> ClimberSubsystem.getInstance().releaseClimber()));
         new Trigger(() -> IO.getButtonValue(Controls.pinClimber).get()).toggleOnTrue(new InstantCommand(() -> ClimberSubsystem.getInstance().pinClimber()));
-                //        new Trigger(() -> IO.getButtonValue(Controls.climb).get()).whileTrue(new ClimbCommand());
+        new Trigger(() -> IO.getButtonValue(Controls.climb).get()).whileTrue(new ClimbCommand());
 
         new Trigger(() -> IO.getButtonValue(Controls.toggleTBone).get()).toggleOnTrue(new TBoneCommand());
         new Trigger(() -> IO.getButtonValue(Controls.toggleDeflector).get()).onTrue(new InstantCommand(() -> DeflectorSubsystem.getInstance().toggleDeflectorState()));

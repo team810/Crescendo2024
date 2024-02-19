@@ -52,7 +52,7 @@ public class DriveCommand extends Command {
 
 		if(Robot.isReal())
 		{
-			x = IO.getJoystickValue(Controls.drive_x).get();
+			x = -IO.getJoystickValue(Controls.drive_x).get();
 			y = IO.getJoystickValue(Controls.drive_y).get();
 		}else{
 			x = IO.getJoystickValue(Controls.drive_x).get();

@@ -41,6 +41,7 @@ public class Robot extends LoggedRobot
         }
         CommandScheduler.getInstance().run();
 
+
         Logger.recordOutput("BatteryVoltage/", RobotController.getBatteryVoltage());
     }
 

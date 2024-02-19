@@ -35,7 +35,7 @@ public abstract class IO {
         controlsButtons.put(Controls.fire, () -> secondary.getRightTriggerAxis() > .65);
         controlsButtons.put(Controls.rev, () -> secondary.getLeftTriggerAxis() > .75);
 
-//        controlsButtons.put(Controls.climb, secondary::getLeftBumper);
+        controlsButtons.put(Controls.climb, secondary::getLeftBumper);
         controlsButtons.put(Controls.releaseClimber, () -> (secondary.getPOV() == 0));
         controlsButtons.put(Controls.pinClimber, () -> (secondary.getPOV() == 180));
 
