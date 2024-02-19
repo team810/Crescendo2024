@@ -2,8 +2,11 @@ package frc.robot.subsystem.shooter;
 
 
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.MechanismState;
 import frc.robot.Robot;
+import frc.robot.util.Shooting.ShooterState;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -16,31 +19,38 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private ShooterMode shooterMode;
 
-    private double topVoltage;
-    private double bottomVoltage;
+    private double targetTopTestRPM;
+    private double targetBottomTestRPM;
+
+    private ShooterState speakerState;
 
     private ShooterSubsystem()
     {
-
         if (Robot.isReal())
         {
             shooter = new ShooterReal();
 
         }else{
             shooter = new ShooterSim();
-
         }
 
         topTargetSpeed = 0;
         bottomTargetSpeed = 0;
 
-        topVoltage = 0;
-        bottomVoltage = 0;
-
         shooterMode = ShooterMode.off;
+
+        SmartDashboard.putNumber("TopSpeedTest", targetTopTestRPM);
+        SmartDashboard.putNumber("BottomSpeedTest", targetBottomTestRPM);
+
+        setSpeakerState(new ShooterState(0,0, MechanismState.stored));
     }
+
     @Override
     public void periodic() {
+
+        targetTopTestRPM = SmartDashboard.getNumber("TopSpeedTest", targetTopTestRPM);
+        targetBottomTestRPM = SmartDashboard.getNumber("BottomSpeedTest", targetBottomTestRPM);
+
         if (RobotState.isEnabled())
         {
             switch (shooterMode)
@@ -54,12 +64,12 @@ public class ShooterSubsystem extends SubsystemBase {
                     bottomTargetSpeed = 2000;
                 }
                 case Speaker -> {
-                    topTargetSpeed = 1 ;
-                    bottomTargetSpeed = 1;
+                    topTargetSpeed = getSpeakerState().getTopRPM();
+                    bottomTargetSpeed = getSpeakerState().getBottomRPM();
                 }
                 case test -> {
-                    topTargetSpeed = 2000;
-                    bottomTargetSpeed = 2400;
+                    topTargetSpeed = targetTopTestRPM;
+                    bottomTargetSpeed = targetBottomTestRPM;
                 }
                 case off -> {
                     topTargetSpeed = 0;
@@ -68,7 +78,7 @@ public class ShooterSubsystem extends SubsystemBase {
             }
         }else{
             topTargetSpeed = 0;
-            bottomTargetSpeed =0;
+            bottomTargetSpeed = 0;
         }
 
         shooter.setTopTargetRPM(topTargetSpeed);
@@ -93,6 +103,14 @@ public class ShooterSubsystem extends SubsystemBase {
             INSTANCE = new ShooterSubsystem();
         }
         return INSTANCE;
+    }
+
+    public ShooterState getSpeakerState() {
+        return speakerState;
+    }
+
+    public void setSpeakerState(ShooterState speakerState) {
+        this.speakerState = speakerState;
     }
 }
 

@@ -30,21 +30,11 @@ public class TBoneSubsystem extends SubsystemBase {
             tBone = new TBoneSim();
         }
 
-        state = MechanismState.stored;
+        setState(MechanismState.stored);
     }
 
     @Override
     public void periodic() {
-
-        switch (getState())
-        {
-            case deployed -> {
-                setpoint = TboneConstants.DEPLOY_SETPOINT;
-            }
-            case stored -> {
-                setpoint = TboneConstants.STORED_SETPOINT;
-            }
-        }
 
         if (RobotState.isEnabled())
         {
@@ -65,12 +55,23 @@ public class TBoneSubsystem extends SubsystemBase {
 
     public void setState(MechanismState state) {
         this.state = state;
+        switch (getState())
+        {
+            case deployed -> {
+                setpoint = TboneConstants.DEPLOY_SETPOINT;
+            }
+            case stored -> {
+                setpoint = TboneConstants.STORED_SETPOINT;
+            }
+        }
     }
 
     public void toggleState() {
         if (this.state == MechanismState.deployed) {
-            this.state = MechanismState.stored;
-        } else { this.state = MechanismState.deployed; }
+            setState(MechanismState.stored);
+        } else {
+            setState(MechanismState.deployed);
+        }
     }
 }
 

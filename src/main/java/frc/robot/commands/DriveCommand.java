@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.Deadband;
 import frc.robot.IO.Controls;
@@ -29,9 +30,6 @@ public class DriveCommand extends Command {
 
 	@Override
 	public void execute() {
-
-		// Joystick input
-
 		double x = 0;
 		double y = 0;
 		double theta = 0;
@@ -47,23 +45,22 @@ public class DriveCommand extends Command {
 
 		if ((currentRectangle == AutoTurnMode.blueSpeaker) ||
 				(currentRectangle == AutoTurnMode.redSpeaker)) {
-//			IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, 1);
+			IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, .4);
 		}
 
 		if(Robot.isReal())
 		{
 			x = -IO.getJoystickValue(Controls.drive_x).get();
 			y = IO.getJoystickValue(Controls.drive_y).get();
+			theta = -theta;
 		}else{
-			x = IO.getJoystickValue(Controls.drive_x).get();
-			y = IO.getJoystickValue(Controls.drive_y).get();
+			x = -IO.getJoystickValue(Controls.drive_x).get();
+			y = -IO.getJoystickValue(Controls.drive_y).get();
+			theta = -theta;
 		}
 
-		theta = -theta;
 		if (notAligning)
 		{
-
-//			System.out.println("NOT ALIGNING");
 			theta = IO.getJoystickValue(Controls.drive_theta).get();
 			theta = thetaDeadband.apply(theta);
 			theta = Math.pow(theta, 3);
@@ -76,34 +73,27 @@ public class DriveCommand extends Command {
 				theta = theta * DrivetrainConstants.SLOW_SPEED;
 				theta = MathUtil.clamp(theta, -DrivetrainConstants.SLOW_SPEED, DrivetrainConstants.SLOW_SPEED);
 			}
-		} else {
 
-//			System.out.println("ALIGNING!!");
+		} else {
 			currentAngle = -MathUtil.angleModulus(DrivetrainSubsystem.getInstance().getRotation().getRadians());
 			setpointAngle = MathUtil.angleModulus(AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose())
 								.getRadians());
 
-			Logger.recordOutput("currentAngle", currentAngle);
-			Logger.recordOutput("setPointAngle", setpointAngle);
+			Logger.recordOutput("Theta/Target", currentAngle);
+			Logger.recordOutput("Theta/Setpoint", setpointAngle);
 
 			theta = DrivetrainSubsystem.getInstance().getThetaController()
 					.calculate(currentAngle, setpointAngle);
 
-			Logger.recordOutput("PIDtheta", theta);
-
-//			theta = theta / Math.PI;
 			theta = theta * DrivetrainConstants.AUTO_ROTATE_MAX_SPEED;
 			theta = MathUtil.clamp(theta, -DrivetrainConstants.AUTO_ROTATE_MAX_SPEED, DrivetrainConstants.AUTO_ROTATE_MAX_SPEED);
 		}
 
 		x = xDeadband.apply(x);
 		y = yDeadband.apply(y);
-		Logger.recordOutput("RawY", y);
-
 
 		x = Math.pow(x, 3);
 		y = Math.pow(y, 3);
-		Logger.recordOutput("LimitY", y);
 
 
 		if (DrivetrainSubsystem.getInstance().getSpeedMode() == SpeedMode.normal) {
@@ -112,8 +102,9 @@ public class DriveCommand extends Command {
 
 			x = MathUtil.clamp(x, -DrivetrainConstants.NORMAL_SPEED, DrivetrainConstants.NORMAL_SPEED);
 			y = MathUtil.clamp(y, -DrivetrainConstants.NORMAL_SPEED, DrivetrainConstants.NORMAL_SPEED);
-		}
-		if (DrivetrainSubsystem.getInstance().getSpeedMode() == SpeedMode.slow) {
+
+		} else if (DrivetrainSubsystem.getInstance().getSpeedMode() == SpeedMode.slow) {
+
 			x = x * DrivetrainConstants.SLOW_SPEED;
 			y = y * DrivetrainConstants.SLOW_SPEED;
 
@@ -121,24 +112,11 @@ public class DriveCommand extends Command {
 			y = MathUtil.clamp(y, -DrivetrainConstants.SLOW_SPEED, DrivetrainConstants.SLOW_SPEED);
 		}
 
-
-		Logger.recordOutput("Drivetrain/finOutTheta", theta);
-
-
-
-		if (Robot.isReal()) {
-			DrivetrainSubsystem.getInstance().setTargetSpeeds(
-					-x,
-					y,
-					theta
-			);
-		} else {
-			DrivetrainSubsystem.getInstance().setTargetSpeeds(
-					x,
-					y,
-					theta
-			);
-			}
+		DrivetrainSubsystem.getInstance().setTargetSpeeds(
+				x,
+				y,
+				theta
+		);
 
 		if (IO.getButtonValue(Controls.reset_gyro).get())
 		{
