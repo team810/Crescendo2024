@@ -3,7 +3,6 @@ package frc.robot.subsystem.tbone;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import org.littletonrobotics.junction.Logger;
 
@@ -13,9 +12,7 @@ public class TboneReal implements TBoneIO {
 
     private double inputVoltage;
 
-    private DutyCycleEncoder TBEncoder;
-
-    private RelativeEncoder regEncoder;
+    private DutyCycleEncoder encoder;
 
     public TboneReal() {
 
@@ -30,9 +27,8 @@ public class TboneReal implements TBoneIO {
 
         motor.setSmartCurrentLimit(40);
 
-        TBEncoder = new DutyCycleEncoder(0);
-        TBEncoder.reset();
-//        regEncoder = motor.getEncoder();
+        encoder = new DutyCycleEncoder(0);
+        encoder.reset();
 
         motor.setIdleMode(CANSparkBase.IdleMode.kBrake);
 
@@ -42,7 +38,7 @@ public class TboneReal implements TBoneIO {
 
     @Override
     public double getEncoderPosition() {
-        return TBEncoder.getDistance();
+        return encoder.getDistance();
     }
 
     public void setVoltage(double voltage) {
