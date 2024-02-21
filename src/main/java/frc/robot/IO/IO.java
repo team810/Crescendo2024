@@ -1,6 +1,5 @@
 package frc.robot.IO;
 
-import edu.wpi.first.wpilibj.StadiaController;
 import edu.wpi.first.wpilibj.XboxController;
 
 import java.util.HashMap;
@@ -11,8 +10,8 @@ public abstract class IO {
     private static final XboxController primary = new XboxController(0);
     //    private static final StadiaController primary = new StadiaController(0);
 
-//    private static final XboxController secondary = new XboxController(1);
-    private static final StadiaController secondary = new StadiaController(1);
+    private static final XboxController secondary = new XboxController(1);
+//    private static final StadiaController secondary = new StadiaController(1);
 
 
     private static final HashMap<Controls,Supplier<Double>> controlsJoystick = new HashMap<>();
@@ -33,10 +32,10 @@ public abstract class IO {
         controlsButtons.put(Controls.intakeFWD, secondary::getAButton);
 //        controlsButtons.put(Controls.intakeREVS, secondary::getXButton);
 
-//        controlsButtons.put(Controls.fire, () -> secondary.getRightTriggerAxis() > .75);
-//        controlsButtons.put(Controls.SpeakerScore, () -> secondary.getLeftTriggerAxis() > .75);
-        controlsButtons.put(Controls.fire, secondary::getRightTriggerButton);
-        controlsButtons.put(Controls.SpeakerScore, secondary::getLeftTriggerButton);
+        controlsButtons.put(Controls.fire, () -> secondary.getRightTriggerAxis() > .75);
+        controlsButtons.put(Controls.SpeakerScore, () -> secondary.getLeftTriggerAxis() > .75);
+//        controlsButtons.put(Controls.fire, secondary::getRightTriggerButton);
+//        controlsButtons.put(Controls.SpeakerScore, secondary::getLeftTriggerButton);
 
         controlsButtons.put(Controls.AmpScore, secondary::getRightBumper);
 

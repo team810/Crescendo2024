@@ -60,7 +60,7 @@ public class DriveCommand extends Command {
 			theta = -theta;
 		}
 
-		if (true)
+		if (notAligning)
 		{
 			theta = IO.getJoystickValue(Controls.drive_theta).get();
 			theta = thetaDeadband.apply(theta);

@@ -160,8 +160,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 
-//		currentRectangle = (AlignmentRectangle) AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
-//		currentZone = (ShooterRectangle) ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(getPose());
+		currentRectangle = (AlignmentRectangle) AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
+		currentZone = (ShooterRectangle) ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(getPose());
 
 		if (RobotState.isDisabled())
 		{
