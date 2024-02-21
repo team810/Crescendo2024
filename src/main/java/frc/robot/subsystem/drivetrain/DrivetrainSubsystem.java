@@ -160,8 +160,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 
-		currentRectangle = (AlignmentRectangle) AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
-		currentZone = (ShooterRectangle) ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(getPose());
+//		currentRectangle = (AlignmentRectangle) AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
+//		currentZone = (ShooterRectangle) ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(getPose());
 
 		if (RobotState.isDisabled())
 		{
@@ -226,7 +226,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		odometry.update(getRotation(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
 
 		Logger.recordOutput("Drivetrain/currentStates", frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
-		Logger.recordOutput("Drivetrain/states", frontLeftState, frontRightState, backLeftState, backRightState);
+		Logger.recordOutput("Drivetrain/states", states);
 		Logger.recordOutput("Drivetrain/gyro", getRotation().getDegrees());
 		Logger.recordOutput("Drivetrain/targetAngle", this.targetAngle);
 		Logger.recordOutput("RobotPose", getPose());

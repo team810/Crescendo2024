@@ -39,17 +39,19 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooterMode = ShooterMode.off;
 
-        SmartDashboard.putNumber("TopSpeedTest", targetTopTestRPM);
-        SmartDashboard.putNumber("BottomSpeedTest", targetBottomTestRPM);
+        SmartDashboard.putNumber("TopSpeedTest", 2000);
+        SmartDashboard.putNumber("BottomSpeedTest", 2000);
 
         setSpeakerState(new ShooterState(0,0, MechanismState.stored));
+        targetTopTestRPM = 2000;
+        targetBottomTestRPM = 2000;
     }
 
     @Override
     public void periodic() {
 
-        targetTopTestRPM = SmartDashboard.getNumber("TopSpeedTest", targetTopTestRPM);
-        targetBottomTestRPM = SmartDashboard.getNumber("BottomSpeedTest", targetBottomTestRPM);
+//        targetTopTestRPM = SmartDashboard.getNumber("TopSpeedTest", targetTopTestRPM);
+//        targetBottomTestRPM = SmartDashboard.getNumber("BottomSpeedTest", targetBottomTestRPM);
 
         if (RobotState.isEnabled())
         {
@@ -61,6 +63,7 @@ public class ShooterSubsystem extends SubsystemBase {
                 }
                 case Amp -> {
                     topTargetSpeed = 2000;
+                    System.out.println("yo");
                     bottomTargetSpeed = 2000;
                 }
                 case Speaker -> {
@@ -84,8 +87,8 @@ public class ShooterSubsystem extends SubsystemBase {
         shooter.setTopTargetRPM(topTargetSpeed);
         shooter.setBottomTargetRPM(bottomTargetSpeed);
 
-        Logger.recordOutput("Shooter/Top/TargetSpeed", topTargetSpeed);
-        Logger.recordOutput("Shooter/Bottom/TargetSpeed", bottomTargetSpeed);
+        Logger.recordOutput("Shooter/Top/TargetSpeedSub", topTargetSpeed);
+        Logger.recordOutput("Shooter/Bottom/TargetSpeedSub", bottomTargetSpeed);
         Logger.recordOutput("Shooter/Mode/ShooterMode", shooterMode);
 
         shooter.update();

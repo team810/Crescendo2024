@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.revrobotics.REVPhysicsSim;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -29,7 +28,7 @@ public class Robot extends LoggedRobot
         Logger.start();
 
         robotContainer = new RobotContainer();
-        CameraServer.startAutomaticCapture();
+        CommandScheduler.getInstance().setPeriod(.03);
     }
 
     @Override

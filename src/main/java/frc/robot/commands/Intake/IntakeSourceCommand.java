@@ -12,7 +12,6 @@ import frc.robot.subsystem.shooter.ShooterSubsystem;
 public class IntakeSourceCommand extends Command {
 
     public IntakeSourceCommand() {
-
         addRequirements(ShooterSubsystem.getInstance(), IntakeSubsystem.getInstance(), DeflectorSubsystem.getInstance());
     }
 

@@ -1,9 +1,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,11 +11,9 @@ import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.Intake.IntakeManualCommand;
-import frc.robot.commands.TBoneCommand;
 import frc.robot.commands.Intake.IntakeFwdCommand;
-import frc.robot.commands.Intake.IntakeRevCommand;
 import frc.robot.commands.Intake.IntakeSourceCommand;
+import frc.robot.commands.TBoneCommand;
 import frc.robot.commands.score.AmpScoreCommand;
 import frc.robot.commands.score.FireCommand;
 import frc.robot.commands.score.SpeakerScoreCommand;
@@ -26,9 +21,7 @@ import frc.robot.subsystem.climber.ClimberSubsystem;
 import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.intake.IntakeSubsystem;
-import frc.robot.subsystem.laser.LaserSubsystem;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
-import frc.robot.subsystem.vision.VisionSubsystem;
 
 public class RobotContainer {
 
@@ -40,11 +33,11 @@ public class RobotContainer {
 
         IO.Initialize();
 
-        VisionSubsystem.getInstance();
+//        VisionSubsystem.getInstance();
         ShooterSubsystem.getInstance();
         IntakeSubsystem.getInstance();
         ClimberSubsystem.getInstance();
-        LaserSubsystem.getInstance();
+//        LaserSubsystem.getInstance();
 
         DrivetrainSubsystem.getInstance().setDefaultCommand(new DriveCommand());
 
@@ -52,13 +45,12 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
         buttonConfig();
-
     }
 
     void buttonConfig()
     {
         new Trigger(() -> IO.getButtonValue(Controls.intakeFWD).get()).whileTrue(new IntakeFwdCommand());
-        new Trigger(() -> IO.getButtonValue(Controls.intakeREVS).get()).whileTrue(new IntakeRevCommand());
+//        new Trigger(() -> IO.getButtonValue(Controls.intakeREVS).get()).whileTrue(new IntakeRevCommand());
         new Trigger(() -> IO.getButtonValue(Controls.sourceIntake).get()).whileTrue(new IntakeSourceCommand());
 
         new Trigger(() -> IO.getButtonValue(Controls.fire).get()).whileTrue(new FireCommand());
@@ -74,12 +66,13 @@ public class RobotContainer {
         new Trigger(() -> IO.getButtonValue(Controls.toggleTBone).get()).toggleOnTrue(new TBoneCommand());
         new Trigger(() -> IO.getButtonValue(Controls.toggleDeflector).get()).onTrue(new InstantCommand(() -> DeflectorSubsystem.getInstance().toggleDeflectorState()));
 
-        new Trigger(() -> MathUtil.applyDeadband(IO.getJoystickValue(Controls.intakeManual).get(), .1) != 0).whileTrue(new IntakeManualCommand());
+//        new Trigger(() -> MathUtil.applyDeadband(IO.getJoystickValue(Controls.intakeManual).get(), .1) != 0).whileTrue(new IntakeManualCommand());
     }
 
     public Command getAutonomousCommand()
     {
-        DrivetrainSubsystem.getInstance().resetOdometry(new Pose2d(2,2, new Rotation2d()));
-        return autoChooser.getSelected();
+//        DrivetrainSubsystem.getInstance().resetOdometry(new Pose2d(2,2, new Rotation2d()));
+//        return autoChooser.getSelected();
+        return null;
     }
 }

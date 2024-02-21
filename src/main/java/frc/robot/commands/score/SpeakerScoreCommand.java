@@ -3,12 +3,10 @@ package frc.robot.commands.score;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.MechanismState;
 import frc.robot.subsystem.deflector.DeflectorSubsystem;
-import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.shooter.ShooterMode;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
 import frc.robot.subsystem.tbone.TBoneSubsystem;
 import frc.robot.util.Shooting.ShooterState;
-import frc.robot.util.Shooting.ShooterUtil;
 
 
 public class SpeakerScoreCommand extends Command {
@@ -18,17 +16,16 @@ public class SpeakerScoreCommand extends Command {
         addRequirements(
                 ShooterSubsystem.getInstance(),
                 DeflectorSubsystem.getInstance(),
-                DrivetrainSubsystem.getInstance(),
                 TBoneSubsystem.getInstance()
         );
     }
 
     @Override
     public void initialize() {
-        state = ShooterUtil.calculateTargetSpeeds(DrivetrainSubsystem.getInstance().getPose());
+        state = new ShooterState(0,0, MechanismState.deployed);
 
         ShooterSubsystem.getInstance().setSpeakerState(state);
-        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.Speaker);
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.test);
 
         DeflectorSubsystem.getInstance().setDeflectorState(state.getDeflectorState());
 
@@ -37,12 +34,14 @@ public class SpeakerScoreCommand extends Command {
 
     @Override
     public void execute() {
-        state = ShooterUtil.calculateTargetSpeeds(DrivetrainSubsystem.getInstance().getPose());
+//        state = ShooterUtil.calculateTargetSpeeds(DrivetrainSubsystem.getInstance().getPose());
+
+        state = new ShooterState(0,0, MechanismState.deployed);
 
         ShooterSubsystem.getInstance().setSpeakerState(state);
-        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.Speaker);
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.test);
 
-        DeflectorSubsystem.getInstance().setDeflectorState(state.getDeflectorState());
+//        DeflectorSubsystem.getInstance().setDeflectorState(state.getDeflectorState());
 
         TBoneSubsystem.getInstance().setState(MechanismState.stored);
     }

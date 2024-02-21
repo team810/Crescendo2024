@@ -38,7 +38,7 @@ public final class DrivetrainConstants {
 	 * Slow mode of the robot
 	 * @Unites MPS
 	 */
-	public static final double SLOW_SPEED = 1.0;
+	public static final double SLOW_SPEED = 2.0;
 	/**
 	 * Units Meters
 	 */

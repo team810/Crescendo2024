@@ -26,6 +26,7 @@ public class DriveCommand extends Command {
 
 	public DriveCommand() {
 		addRequirements(DrivetrainSubsystem.getInstance());
+		IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, 0);
 	}
 
 	@Override
@@ -45,13 +46,13 @@ public class DriveCommand extends Command {
 
 		if ((currentRectangle == AutoTurnMode.blueSpeaker) ||
 				(currentRectangle == AutoTurnMode.redSpeaker)) {
-			IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, .4);
+//			IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, .4);
 		}
 
 		if(Robot.isReal())
 		{
 			x = -IO.getJoystickValue(Controls.drive_x).get();
-			y = IO.getJoystickValue(Controls.drive_y).get();
+			y = -IO.getJoystickValue(Controls.drive_y).get();
 			theta = -theta;
 		}else{
 			x = -IO.getJoystickValue(Controls.drive_x).get();
@@ -59,7 +60,7 @@ public class DriveCommand extends Command {
 			theta = -theta;
 		}
 
-		if (notAligning)
+		if (true)
 		{
 			theta = IO.getJoystickValue(Controls.drive_theta).get();
 			theta = thetaDeadband.apply(theta);
