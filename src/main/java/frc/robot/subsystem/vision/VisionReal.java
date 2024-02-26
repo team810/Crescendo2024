@@ -23,9 +23,10 @@ public class VisionReal implements VisionIO {
     private AprilTagFieldLayout layout;
 
     public VisionReal() {
-        limelight = new PhotonCamera("limelight");
+        limelight = new PhotonCamera("cam");
         limelight.setLED(VisionLEDMode.kOff);
-        limelight.setPipelineIndex(0);
+
+
 
 //        result = null;
 
@@ -38,7 +39,7 @@ public class VisionReal implements VisionIO {
         }
 
         estimator = new PhotonPoseEstimator(layout,
-                PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+                PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY,
                 limelight,
                 VisionConstants.robotToCam);
 
@@ -46,6 +47,7 @@ public class VisionReal implements VisionIO {
 
     public void updatePoseEstimation() {
             poseEstimation = estimator.update();
+
     }
 
     public Pose2d getRobotPosition() {

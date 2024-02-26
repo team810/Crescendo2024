@@ -27,7 +27,7 @@ public class SpeakerScoreCommand extends Command {
         state = new ShooterState(0,0, MechanismState.deployed);
 
         ShooterSubsystem.getInstance().setSpeakerState(state);
-        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.Speaker);
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.test);
 
         DeflectorSubsystem.getInstance().setDeflectorState(state.getDeflectorState());
 
@@ -39,7 +39,7 @@ public class SpeakerScoreCommand extends Command {
         state = ShooterUtil.calculateTargetSpeeds(DrivetrainSubsystem.getInstance().getPose());
 
         ShooterSubsystem.getInstance().setSpeakerState(state);
-        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.Speaker);
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.test);
 
         DeflectorSubsystem.getInstance().setDeflectorState(state.getDeflectorState());
 

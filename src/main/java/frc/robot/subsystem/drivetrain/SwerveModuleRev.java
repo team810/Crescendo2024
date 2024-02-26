@@ -119,6 +119,6 @@ class SwerveModuleRev implements SwerveModuleIO {
 
 	@Override
 	public double getWheelPosition() {
-		return drive_encoder.getPosition();
+		return DrivetrainConstants.DISTANCE_PER_REVOLUTION_METERS * (drive_encoder.getPosition() / DrivetrainConstants.GEAR_REDUCTION_DRIVE);
 	}
 }

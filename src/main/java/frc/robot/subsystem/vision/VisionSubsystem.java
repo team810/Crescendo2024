@@ -4,7 +4,6 @@ package frc.robot.subsystem.vision;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
-import org.littletonrobotics.junction.Logger;
 
 public class VisionSubsystem extends SubsystemBase {
 
@@ -31,18 +30,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
         vision.updatePoseEstimation();
-
-        Logger.recordOutput("Vision/robotX",
-                vision.getRobotPosition().getX());
-        Logger.recordOutput("Vision/robotY",
-                vision.getRobotPosition().getY());
-        Logger.recordOutput("Vision/robotTheta",
-                vision.getRobotPosition().getRotation().getDegrees());
-        Logger.recordOutput("Vision/robotPose",
-                vision.getRobotPosition());
-
         if (!((vision.getRobotPosition().getX() == 0)
                 && (vision.getRobotPosition().getY() == 0))) {
             DrivetrainSubsystem.getInstance().resetOdometry(

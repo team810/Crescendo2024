@@ -22,6 +22,7 @@ import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.intake.IntakeSubsystem;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
+import frc.robot.subsystem.vision.VisionSubsystem;
 
 public class RobotContainer {
 
@@ -33,7 +34,7 @@ public class RobotContainer {
 
         IO.Initialize();
 
-//        VisionSubsystem.getInstance();
+        VisionSubsystem.getInstance();
         ShooterSubsystem.getInstance();
         IntakeSubsystem.getInstance();
         ClimberSubsystem.getInstance();

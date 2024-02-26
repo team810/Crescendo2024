@@ -11,9 +11,7 @@ public class ShooterUtil {
         zone = ((ShooterRectangle) (ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(robotPose))).getZone();
 
         switch (zone) {
-            case topSub -> {return new ShooterState(100,100, MechanismState.deployed);}
-            case midSub -> {return new ShooterState(200,200, MechanismState.deployed);}
-            case botSub -> {return new ShooterState(300,300, MechanismState.deployed);}
+            case topSub, botSub, midSub -> {return new ShooterState(4500,2000, MechanismState.deployed);}
             case topTape -> {return new ShooterState(400,400, MechanismState.stored);}
             case midTape -> {return new ShooterState(500,500, MechanismState.stored);}
             case podium -> {return new ShooterState(600,600, MechanismState.stored);}
