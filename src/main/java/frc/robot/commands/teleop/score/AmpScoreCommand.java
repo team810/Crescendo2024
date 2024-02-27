@@ -1,4 +1,4 @@
-package frc.robot.commands.score;
+package frc.robot.commands.teleop.score;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.MechanismState;

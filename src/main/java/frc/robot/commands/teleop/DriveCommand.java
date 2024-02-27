@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.teleop;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
