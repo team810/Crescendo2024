@@ -31,7 +31,7 @@ public abstract class IO {
         controlsButtons.put(Controls.rotateToTarget, primary::getAButton);
 
         controlsButtons.put(Controls.intakeFWD, secondary::getAButton);
-//        controlsButtons.put(Controls.intakeREVS, secondary::getXButton);
+        controlsButtons.put(Controls.intakeREVS, secondary::getYButton);
 
 //        controlsButtons.put(Controls.fire, () -> secondary.getRightTriggerAxis() > .75);
 //        controlsButtons.put(Controls.SpeakerScore, () -> secondary.getLeftTriggerAxis() > .75);

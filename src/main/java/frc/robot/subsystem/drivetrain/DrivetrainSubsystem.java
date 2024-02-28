@@ -135,16 +135,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
 				this::getRobotRelativeSpeeds,
 				this::setAutoSpeeds,
 				new HolonomicPathFollowerConfig(
-						new PIDConstants(1,0,0),
-						new PIDConstants(1,0,0),
-						4.6,
+						new PIDConstants(.5,0,0),
+						new PIDConstants(.5,0,0),
+						2,
 						0.4,
 						new ReplanningConfig()
 				),
 				() -> {
-					// Boolean supplier that controls when the path will be mirrored for the red alliance
-					// This will flip the path being followed to the red side of the field.
-					// THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
 
 					var alliance = DriverStation.getAlliance();
 					if (alliance.isPresent()) {
@@ -232,6 +230,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		Logger.recordOutput("RobotPose", getPose());
 		Logger.recordOutput("currentRectangle", currentRectangle.getName());
 		Logger.recordOutput("currentZone", currentZone.getName());
+
 		navx.update(0);
 	}
 

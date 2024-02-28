@@ -3,9 +3,14 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
@@ -17,9 +22,10 @@ import frc.robot.commands.auto.score.AutoShooterStop;
 import frc.robot.commands.auto.score.AutoSubwooferShoot;
 import frc.robot.commands.teleop.ClimbCommand;
 import frc.robot.commands.teleop.DriveCommand;
-import frc.robot.commands.teleop.intake.IntakeFwdCommand;
-import frc.robot.commands.teleop.intake.IntakeSourceCommand;
 import frc.robot.commands.teleop.TBoneCommand;
+import frc.robot.commands.teleop.intake.IntakeFwdCommand;
+import frc.robot.commands.teleop.intake.IntakeRevCommand;
+import frc.robot.commands.teleop.intake.IntakeSourceCommand;
 import frc.robot.commands.teleop.score.AmpScoreCommand;
 import frc.robot.commands.teleop.score.FireCommand;
 import frc.robot.commands.teleop.score.SpeakerScoreCommand;
@@ -37,6 +43,9 @@ public class RobotContainer {
     public RobotContainer() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
+        SuppliedValueWidget<Double> doubleSuppliedValueWidget = Shuffleboard.getTab("Competition").addDouble("Match Time", DriverStation::getMatchTime);
+
+
 
         IO.Initialize();
 
@@ -54,11 +63,12 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
         buttonConfig();
+
     }
 
     void buttonConfig() {
         new Trigger(() -> IO.getButtonValue(Controls.intakeFWD).get()).whileTrue(new IntakeFwdCommand());
-//        new Trigger(() -> IO.getButtonValue(Controls.intakeREVS).get()).whileTrue(new IntakeRevCommand());
+        new Trigger(() -> IO.getButtonValue(Controls.intakeREVS).get()).whileTrue(new IntakeRevCommand());
         new Trigger(() -> IO.getButtonValue(Controls.sourceIntake).get()).whileTrue(new IntakeSourceCommand());
 
         new Trigger(() -> IO.getButtonValue(Controls.fire).get()).whileTrue(new FireCommand());
@@ -96,7 +106,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
 //        DrivetrainSubsystem.getInstance().resetOdometry(new Pose2d(2,2, new Rotation2d()));
-//        return autoChooser.getSelected();
-        return AutoBuilder.buildAuto("Center");
+        return autoChooser.getSelected();
+//        return AutoBuilder.buildAuto("Center");
     }
 }

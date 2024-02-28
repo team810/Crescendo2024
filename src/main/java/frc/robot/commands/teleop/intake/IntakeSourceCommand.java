@@ -18,7 +18,7 @@ public class IntakeSourceCommand extends Command {
     @Override
     public void initialize() {
         DeflectorSubsystem.getInstance().setDeflectorState(MechanismState.deployed);
-        IntakeSubsystem.getInstance().setState(IntakeStates.rev);
+        IntakeSubsystem.getInstance().setState(IntakeStates.off);
         ShooterSubsystem.getInstance().setShooterMode(ShooterMode.SourceIntake);
     }
 

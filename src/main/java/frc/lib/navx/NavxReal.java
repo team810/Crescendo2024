@@ -13,6 +13,8 @@ public class NavxReal implements Navx{
 		navx = new AHRS(SerialPort.Port.kMXP);
 		navx.enableLogging(true);
 		System.out.println("Connected:" + navx.isConnected());
+//		navx.setAngleAdjustment(90);
+		navx.zeroYaw();
 
 
 	}

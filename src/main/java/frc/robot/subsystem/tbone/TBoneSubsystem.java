@@ -27,7 +27,7 @@ public class TBoneSubsystem extends SubsystemBase {
         {
             tBone = new TboneReal();
         }else{
-            tBone = new TBoneSim();
+            tBone = new TboneReal();
         }
 
         setState(MechanismState.stored);
@@ -38,14 +38,26 @@ public class TBoneSubsystem extends SubsystemBase {
 
         if (RobotState.isEnabled())
         {
-            tBone.setVoltage(
-                    MathUtil.clamp(
-                            controller.calculate(tBone.getEncoderPosition(), setpoint),-12,12
-                    )
-            );
+            if (state == MechanismState.stored)
+            {
+                tBone.setVoltage(
+                        MathUtil.clamp(
+                                controller.calculate(tBone.getEncoderPosition(), setpoint),-.5,.5
+                        )
+                );
+            } else if (state == MechanismState.deployed)
+            {
+                tBone.setVoltage(
+                        MathUtil.clamp(
+                                controller.calculate(tBone.getEncoderPosition(), setpoint),-6,6
+                        )
+                );
+            }
         }
 
         Logger.recordOutput("T-Bone/Setpoint", setpoint);
+        Logger.recordOutput("T-Bone/AtSetpoint", controller.atSetpoint());
+
         tBone.update();
     }
 

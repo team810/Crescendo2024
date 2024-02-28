@@ -1,0 +1,16 @@
+x (Meters),y (Meters),theta (Rad)
+
+Starting Pose 
+	TOP: .778,6.624,1.030 
+	MIDDLE: 1.380, 5.469, 0
+	BOTTOM: .8, 4.364, -1.030
+
+Game Peice Locations 
+	TOP: 2.9, 6.955, .5
+	MIDDLE: 2.9, 5.482, 0
+	PODUIM 2.618, 4.241, -.5
+Importent Loctations:
+	Under State: 5, 4, 0
+
+
+Start Keyword : Shoots Game Peice then intakes game Peice behind it 

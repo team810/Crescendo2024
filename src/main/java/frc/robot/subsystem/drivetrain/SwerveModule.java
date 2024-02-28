@@ -42,7 +42,7 @@ class SwerveModule {
             steerController.setD(DrivetrainConstants.STEER_CONTROLLER_REAL.kD);
 
             steerController.enableContinuousInput(-Math.PI, Math.PI);
-            steerController.setTolerance(.01);
+            steerController.setTolerance(.005);
 
         } else if (Robot.isSimulation()) {
 
@@ -55,7 +55,7 @@ class SwerveModule {
             steerController.setD(DrivetrainConstants.DRIVE_CONTROLLER_SIM.kD);
 
             steerController.enableContinuousInput(-Math.PI, Math.PI);
-            steerController.setTolerance(.01);
+            steerController.setTolerance(.005);
         }else{
             throw new RuntimeException(
                     "The PID controls for both the drive controller " +
@@ -101,7 +101,6 @@ class SwerveModule {
                         MathUtil.angleModulus(state.angle.getRadians()))
         );
 
-        module.update();
         Logger.recordOutput("Drivetrain/" + details.module.name() +
                 "/TargetVelocity", speedOfMotorRPM);
         Logger.recordOutput("Drivetrain/" + details.module.name() +
@@ -114,10 +113,11 @@ class SwerveModule {
             steerController.reset();
 
             driveController.reset();
-
         }
+        module.update();
+        position.distanceMeters = module.getWheelPosition();
+        position.angle = module.getWheelAngle();
 
-        position = new SwerveModulePosition(module.getWheelPosition(),module.getWheelAngle());
 
     }
 
