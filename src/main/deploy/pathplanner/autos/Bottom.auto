@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.6867809251313576,
+      "y": 4.426761858008021
+    },
+    "rotation": -59.036243467926475
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,19 +14,25 @@
         {
           "type": "named",
           "data": {
-            "name": "Full Score"
+            "name": "Subwoofer Score"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "[S-B][T-B][S-B]"
+            "pathName": "[S-B][T-B]"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Full Score"
+            "name": "Podium Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[T-B][M-MM][T-M]"
           }
         }
       ]

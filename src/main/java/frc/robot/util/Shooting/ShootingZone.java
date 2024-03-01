@@ -1,11 +1,14 @@
 package frc.robot.util.Shooting;
 
 public enum ShootingZone {
-    topSub,
-    midSub,
-    botSub,
-    topTape,
-    midTape,
-    podium,
+//    topSub,
+//    midSub,
+//    botSub,
+
+    subwoofer,
+//    topTape,
+//    midTape,
+//    podium,
+    tape,
     none
 }
