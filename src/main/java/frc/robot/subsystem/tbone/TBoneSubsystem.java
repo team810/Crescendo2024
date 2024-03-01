@@ -27,7 +27,7 @@ public class TBoneSubsystem extends SubsystemBase {
         {
             tBone = new TboneReal();
         }else{
-            tBone = new TboneReal();
+            tBone = new TBoneSim();
         }
 
         setState(MechanismState.stored);

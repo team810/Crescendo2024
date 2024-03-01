@@ -1,6 +1,6 @@
 package frc.robot.subsystem.tbone;
 
-public class TBoneSim implements TBoneIO{
+public class TBoneSim implements TBoneIO {
     public TBoneSim()
     {
 

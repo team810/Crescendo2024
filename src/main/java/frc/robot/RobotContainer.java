@@ -19,7 +19,7 @@ import frc.robot.commands.auto.intake.AutoIntakeRev;
 import frc.robot.commands.auto.intake.AutoIntakeStop;
 import frc.robot.commands.auto.score.AutoShooterFire;
 import frc.robot.commands.auto.score.AutoShooterStop;
-import frc.robot.commands.auto.score.AutoSubwooferShoot;
+import frc.robot.commands.auto.score.AutoShootFromZone;
 import frc.robot.commands.teleop.ClimbCommand;
 import frc.robot.commands.teleop.DriveCommand;
 import frc.robot.commands.teleop.TBoneCommand;
@@ -33,8 +33,11 @@ import frc.robot.subsystem.climber.ClimberSubsystem;
 import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.intake.IntakeSubsystem;
+import frc.robot.subsystem.laser.LaserSubsystem;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
+import frc.robot.subsystem.tbone.TBoneSubsystem;
 import frc.robot.subsystem.vision.VisionSubsystem;
+import frc.robot.util.Shooting.ShootingZone;
 
 public class RobotContainer {
 
@@ -53,7 +56,8 @@ public class RobotContainer {
         ShooterSubsystem.getInstance();
         IntakeSubsystem.getInstance();
         ClimberSubsystem.getInstance();
-//        LaserSubsystem.getInstance();
+        TBoneSubsystem.getInstance();
+        LaserSubsystem.getInstance();
 
         DrivetrainSubsystem.getInstance().setDefaultCommand(new DriveCommand());
 
@@ -91,17 +95,24 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake In", new AutoIntakeIn());
         NamedCommands.registerCommand("Intake Stop", new AutoIntakeStop());
         NamedCommands.registerCommand("Intake Out", new AutoIntakeRev());
-        NamedCommands.registerCommand("Subwoofer Shot", new AutoSubwooferShoot());
+        NamedCommands.registerCommand("Subwoofer Shot", new AutoShootFromZone(ShootingZone.midSub));
         NamedCommands.registerCommand("Shooter Stop", new AutoShooterStop());
         NamedCommands.registerCommand("Shooter Fire", new AutoShooterFire());
-        NamedCommands.registerCommand("Full Score",
-                new SequentialCommandGroup(
-                        new AutoSubwooferShoot(),
-                        new WaitCommand(1.5),
-                        new AutoShooterFire(),
-                        new WaitCommand(0.25),
-                        new AutoShooterStop()
-                ));
+        NamedCommands.registerCommand("Subwoofer Score", makeScoreCommand(ShootingZone.midSub));
+        NamedCommands.registerCommand("Mid Tape Score", makeScoreCommand(ShootingZone.midTape));
+        NamedCommands.registerCommand("Top Tape Score", makeScoreCommand(ShootingZone.topTape));
+        NamedCommands.registerCommand("Podium Score", makeScoreCommand(ShootingZone.podium));
+    }
+
+    public SequentialCommandGroup makeScoreCommand(ShootingZone zone) {
+        return new SequentialCommandGroup(
+                new AutoIntakeStop(),
+                new AutoShootFromZone(zone),
+                new WaitCommand(1.5),
+                new AutoShooterFire(),
+                new WaitCommand(0.25),
+                new AutoShooterStop()
+        );
     }
 
     public Command getAutonomousCommand() {
