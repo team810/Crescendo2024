@@ -44,8 +44,8 @@ class SwerveModuleRev implements SwerveModuleIO {
 		steer.enableVoltageCompensation(12.0);
 
 
-		drive.setIdleMode(CANSparkMax.IdleMode.kCoast);
-		steer.setIdleMode(CANSparkMax.IdleMode.kCoast);
+		drive.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		steer.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
 		drive_encoder = drive.getEncoder();
 

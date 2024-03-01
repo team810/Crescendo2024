@@ -1,6 +1,7 @@
 package frc.robot.subsystem.vision;
 
 
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
@@ -31,8 +32,8 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         vision.updatePoseEstimation();
-        if (!((vision.getRobotPosition().getX() == 0)
-                && (vision.getRobotPosition().getY() == 0))) {
+        if ((((vision.getRobotPosition().getX() != 0)) && (RobotState.isTeleop()))
+                && (vision.getRobotPosition().getY() != 0)) {
             DrivetrainSubsystem.getInstance().resetOdometry(
                     vision.getRobotPosition()
             );

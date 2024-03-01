@@ -39,7 +39,7 @@ public class VisionReal implements VisionIO {
         }
 
         estimator = new PhotonPoseEstimator(layout,
-                PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY,
+                PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                 limelight,
                 VisionConstants.robotToCam);
 
@@ -55,7 +55,7 @@ public class VisionReal implements VisionIO {
             return new Pose2d(
                     new Translation2d(poseEstimation.get().estimatedPose.getX(),
                             poseEstimation.get().estimatedPose.getY()),
-                    new Rotation2d(poseEstimation.get().estimatedPose.
+                    new Rotation2d(-poseEstimation.get().estimatedPose.
                             getRotation().getAngle())
             );
         }  else {

@@ -6,9 +6,9 @@ import edu.wpi.first.math.geometry.Translation3d;
 
 public class VisionConstants {
 
-    public static final double cameraX = -0.0254 * 4.3135;
-    public static final double cameraY = - 0.0254 * 3.75;
-    public static final double cameraZ = 0.0254 * 57.25;
+    public static final double cameraX = 0; // 0.0254 * 4.3135
+    public static final double cameraY = 0; //0.0254 * 3.75
+    public static final double cameraZ = 0;
     public static final Translation3d cameraPos = new Translation3d(cameraX, cameraY, cameraZ);
 
     public static final double cameraRoll = 0;

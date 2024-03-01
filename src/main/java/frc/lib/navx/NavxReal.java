@@ -16,11 +16,10 @@ public class NavxReal implements Navx{
 //		navx.setAngleAdjustment(90);
 		navx.zeroYaw();
 
-
 	}
 	@Override
 	public Rotation2d getRotation2d() {
-		return new Rotation2d(Math.toRadians(-navx.getYaw()));
+		return new Rotation2d(Math.toRadians(navx.getYaw()));
 	}
 
 	@Override

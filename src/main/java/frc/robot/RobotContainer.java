@@ -17,9 +17,9 @@ import frc.robot.IO.IO;
 import frc.robot.commands.auto.intake.AutoIntakeIn;
 import frc.robot.commands.auto.intake.AutoIntakeRev;
 import frc.robot.commands.auto.intake.AutoIntakeStop;
+import frc.robot.commands.auto.score.AutoShootFromZone;
 import frc.robot.commands.auto.score.AutoShooterFire;
 import frc.robot.commands.auto.score.AutoShooterStop;
-import frc.robot.commands.auto.score.AutoShootFromZone;
 import frc.robot.commands.teleop.ClimbCommand;
 import frc.robot.commands.teleop.DriveCommand;
 import frc.robot.commands.teleop.TBoneCommand;
@@ -33,7 +33,6 @@ import frc.robot.subsystem.climber.ClimberSubsystem;
 import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.intake.IntakeSubsystem;
-import frc.robot.subsystem.laser.LaserSubsystem;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
 import frc.robot.subsystem.tbone.TBoneSubsystem;
 import frc.robot.subsystem.vision.VisionSubsystem;
@@ -57,7 +56,7 @@ public class RobotContainer {
         IntakeSubsystem.getInstance();
         ClimberSubsystem.getInstance();
         TBoneSubsystem.getInstance();
-        LaserSubsystem.getInstance();
+//        LaserSubsystem.getInstance();
 
         DrivetrainSubsystem.getInstance().setDefaultCommand(new DriveCommand());
 

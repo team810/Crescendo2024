@@ -36,6 +36,11 @@ public class DeflectorSubsystem extends SubsystemBase {
 
     public void setDeflectorState(MechanismState deflectorState) {
         this.deflectorState = deflectorState;
+        if (deflectorState == MechanismState.deployed) {
+            deflector.setState(DoubleSolenoid.Value.kForward);
+        } else if (deflectorState == MechanismState.stored) {
+            deflector.setState(DoubleSolenoid.Value.kReverse);
+        }
     }
 
     public void toggleDeflectorState()
