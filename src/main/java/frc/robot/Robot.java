@@ -1,9 +1,17 @@
 package frc.robot;
 
 import com.revrobotics.REVPhysicsSim;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.MechanismState;
+import frc.robot.subsystem.deflector.DeflectorSubsystem;
+import frc.robot.subsystem.intake.IntakeStates;
+import frc.robot.subsystem.intake.IntakeSubsystem;
+import frc.robot.subsystem.shooter.ShooterMode;
+import frc.robot.subsystem.shooter.ShooterSubsystem;
+import frc.robot.subsystem.tbone.TBoneSubsystem;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -29,6 +37,8 @@ public class Robot extends LoggedRobot
 
         robotContainer = new RobotContainer();
         CommandScheduler.getInstance().setPeriod(.03);
+        CameraServer.startAutomaticCapture();
+        CameraServer.startAutomaticCapture();
     }
 
     @Override
@@ -70,6 +80,11 @@ public class Robot extends LoggedRobot
         {
             autonomousCommand.cancel();
         }
+
+        ShooterSubsystem.getInstance().setShooterMode(ShooterMode.off);
+        IntakeSubsystem.getInstance().setState(IntakeStates.off);
+        TBoneSubsystem.getInstance().setState(MechanismState.stored);
+        DeflectorSubsystem.getInstance().setDeflectorState(MechanismState.stored);
     }
     
     @Override

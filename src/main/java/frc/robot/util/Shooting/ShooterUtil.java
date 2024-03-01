@@ -19,14 +19,8 @@ public class ShooterUtil {
             case topSub, botSub, midSub -> {
                 return new ShooterState(4500, 2000, MechanismState.deployed);
             }
-            case topTape -> {
-                return new ShooterState(400, 400, MechanismState.stored);
-            }
-            case midTape -> {
-                return new ShooterState(500, 500, MechanismState.stored);
-            }
-            case podium -> {
-                return new ShooterState(600, 600, MechanismState.stored);
+            case topTape, podium, midTape -> {
+                return new ShooterState(2500, 2500, MechanismState.stored);
             }
             default -> {
                 return new ShooterState(3000, 3000, MechanismState.stored);

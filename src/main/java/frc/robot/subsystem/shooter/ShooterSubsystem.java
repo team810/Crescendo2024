@@ -50,8 +50,8 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-//        targetTopTestRPM = SmartDashboard.getNumber("TopSpeedTest", targetTopTestRPM);
-//        targetBottomTestRPM = SmartDashboard.getNumber("BottomSpeedTest", targetBottomTestRPM);
+        targetTopTestRPM = SmartDashboard.getNumber("TopSpeedTest", targetTopTestRPM);
+        targetBottomTestRPM = SmartDashboard.getNumber("BottomSpeedTest", targetBottomTestRPM);
 
         if (RobotState.isEnabled())
         {
@@ -70,8 +70,8 @@ public class ShooterSubsystem extends SubsystemBase {
                     bottomTargetSpeed = getSpeakerState().getBottomRPM();
                 }
                 case test -> {
-                    topTargetSpeed = 4500;
-                    bottomTargetSpeed = 2000;
+                    topTargetSpeed = targetTopTestRPM;
+                    bottomTargetSpeed = targetBottomTestRPM;
                 }
                 case off -> {
                     topTargetSpeed = 0;

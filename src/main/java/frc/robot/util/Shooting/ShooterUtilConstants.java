@@ -21,15 +21,15 @@ public class ShooterUtilConstants {
 
     public static final ShooterRectangle BLUE_TOP_TAPE =
             new ShooterRectangle("BLUE TAPE TOP", ShootingZone.topTape,
-                    2.50, 3.20, 6.35, 7.40);
+                    2.0, 3.20, 6.35, 7.40);
 
     public static final ShooterRectangle BLUE_MID_TAPE =
             new ShooterRectangle("BLUE TAPE MID", ShootingZone.midTape,
-                    2.50, 3.20, 4.85, 6.35);
+                    2.0, 3.20, 4.85, 6.35);
 
     public static final ShooterRectangle BLUE_PODIUM =
             new ShooterRectangle("BLUE PODIUM", ShootingZone.podium,
-                    2.50, 3.20, 3.60, 4.85);
+                    2.0, 3.20, 3.60, 4.85);
 
     public static final ShooterRectangle RED_TOP_SUB =
             new ShooterRectangle("RED SUB TOP", ShootingZone.topSub,
@@ -45,15 +45,15 @@ public class ShooterUtilConstants {
 
     public static final ShooterRectangle RED_TOP_TAPE =
             new ShooterRectangle("RED TAPE TOP", ShootingZone.topTape,
-                    13.30, 14.00, 6.35, 7.40);
+                    13.30, 14.5, 6.35, 7.40);
 
     public static final ShooterRectangle RED_MID_TAPE =
             new ShooterRectangle("RED TAPE MID", ShootingZone.midTape,
-                    13.30, 14.00, 4.85, 6.35);
+                    13.30, 14.5, 4.85, 6.35);
 
     public static final ShooterRectangle RED_PODIUM =
             new ShooterRectangle("RED PODIUM", ShootingZone.podium,
-                    13.30, 14.00, 3.60, 4.85);
+                    13.30, 14.5, 3.60, 4.85);
 
     public static final ShooterRectangle NO_ZONE =
             new ShooterRectangle("NO SHOOTER ZONE", ShootingZone.none,

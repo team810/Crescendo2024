@@ -13,4 +13,4 @@ Importent Loctations:
 	Under State: 5, 4, 0
 
 
-Start Keyword : Shoots Game Peice then intakes game Peice behind it 
+Start Keyword : Shoots Game Peice then intakes game Piece behind it
