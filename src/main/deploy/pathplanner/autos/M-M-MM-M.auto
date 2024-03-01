@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Subwoofer Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[S-M][T-M]"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Mid Tape Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[T-M][M-MM][T-M]"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Mid Tape Score"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
