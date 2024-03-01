@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6867809251313576,
-      "y": 4.426761858008021
+      "x": 0.7235939135555408,
+      "y": 6.635541163459008
     },
-    "rotation": -59.036243467926475
+    "rotation": 61.11341823308932
   },
   "command": {
     "type": "sequential",
@@ -20,19 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "[S-B][T-B]"
+            "pathName": "[S-T][T-T][S-T]"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Podium Score"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "[T-B][M-MM][T-M]"
+            "name": "Subwoofer Score"
           }
         }
       ]

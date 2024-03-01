@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3033984812364248,
-      "y": 5.567964499157698
+      "x": 0.6499679367071746,
+      "y": 4.417558610901975
     },
-    "rotation": 0
+    "rotation": -59.237280465761025
   },
   "command": {
     "type": "sequential",
@@ -20,25 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "[S-M][T-M]"
+            "pathName": "[S-B][T-B][S-B]"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Tape Score"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "[T-M][M-MM][T-M]"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Tape Score"
+            "name": "Subwoofer Score"
           }
         }
       ]

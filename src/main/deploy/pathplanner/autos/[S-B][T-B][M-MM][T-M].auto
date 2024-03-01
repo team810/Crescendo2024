@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3033984812364248,
-      "y": 5.567964499157698
+      "x": 0.6867809251313576,
+      "y": 4.426761858008021
     },
-    "rotation": 0
+    "rotation": -59.036243467926475
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "[S-M][T-M]"
+            "pathName": "[S-B][T-B]"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "[T-M][M-MM][T-M]"
+            "pathName": "[T-B][M-MM][T-M]"
           }
         },
         {
