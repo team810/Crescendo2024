@@ -26,7 +26,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Top Tape Score"
+            "name": "Tape Score"
           }
         },
         {
@@ -38,7 +38,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Mid Tape Score"
+            "name": "Tape Score"
           }
         }
       ]
