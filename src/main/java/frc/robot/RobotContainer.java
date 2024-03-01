@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -94,13 +95,14 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake In", new AutoIntakeIn());
         NamedCommands.registerCommand("Intake Stop", new AutoIntakeStop());
         NamedCommands.registerCommand("Intake Out", new AutoIntakeRev());
-        NamedCommands.registerCommand("Subwoofer Shot", new AutoShootFromZone(ShootingZone.midSub));
         NamedCommands.registerCommand("Shooter Stop", new AutoShooterStop());
         NamedCommands.registerCommand("Shooter Fire", new AutoShooterFire());
-        NamedCommands.registerCommand("Subwoofer Score", makeScoreCommand(ShootingZone.midSub));
-        NamedCommands.registerCommand("Mid Tape Score", makeScoreCommand(ShootingZone.midTape));
-        NamedCommands.registerCommand("Top Tape Score", makeScoreCommand(ShootingZone.topTape));
-        NamedCommands.registerCommand("Podium Score", makeScoreCommand(ShootingZone.podium));
+//        NamedCommands.registerCommand("Subwoofer Score", makeScoreCommand(ShootingZone.midSub));
+//        NamedCommands.registerCommand("Mid Tape Score", makeScoreCommand(ShootingZone.midTape));
+//        NamedCommands.registerCommand("Top Tape Score", makeScoreCommand(ShootingZone.topTape));
+//        NamedCommands.registerCommand("Podium Score", makeScoreCommand(ShootingZone.podium));
+        NamedCommands.registerCommand("Subwoofer Score", makeScoreCommand(ShootingZone.subwoofer));
+        NamedCommands.registerCommand("Tape Score", makeScoreCommand(ShootingZone.tape));
     }
 
     public SequentialCommandGroup makeScoreCommand(ShootingZone zone) {
