@@ -29,8 +29,6 @@ public class SpeakerScoreCommand extends Command {
         ShooterSubsystem.getInstance().setSpeakerState(state);
         ShooterSubsystem.getInstance().setShooterMode(ShooterMode.Speaker);
 
-        DeflectorSubsystem.getInstance().setDeflectorState(state.getDeflectorState());
-
         TBoneSubsystem.getInstance().setState(MechanismState.stored);
     }
 
@@ -40,8 +38,6 @@ public class SpeakerScoreCommand extends Command {
 
         ShooterSubsystem.getInstance().setSpeakerState(state);
         ShooterSubsystem.getInstance().setShooterMode(ShooterMode.Speaker);
-
-        DeflectorSubsystem.getInstance().setDeflectorState(state.getDeflectorState());
 
         TBoneSubsystem.getInstance().setState(MechanismState.stored);
 
@@ -53,6 +49,5 @@ public class SpeakerScoreCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         ShooterSubsystem.getInstance().setShooterMode(ShooterMode.off);
-        DeflectorSubsystem.getInstance().setDeflectorState(MechanismState.stored);
     }
 }

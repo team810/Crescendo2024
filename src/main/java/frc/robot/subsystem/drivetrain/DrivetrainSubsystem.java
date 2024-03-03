@@ -138,7 +138,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 				this::setAutoSpeeds,
 				new HolonomicPathFollowerConfig(
 						new PIDConstants(.5,0,0),
-						new PIDConstants(.5,0,0),
+						new PIDConstants(1,0,0),
 						2,
 						0.4,
 						new ReplanningConfig()

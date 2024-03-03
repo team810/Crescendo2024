@@ -4,7 +4,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,6 +33,7 @@ import frc.robot.subsystem.climber.ClimberSubsystem;
 import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.intake.IntakeSubsystem;
+import frc.robot.subsystem.laser.LaserState;
 import frc.robot.subsystem.laser.LaserSubsystem;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
 import frc.robot.subsystem.tbone.TBoneSubsystem;
@@ -47,7 +47,6 @@ public class RobotContainer {
     public RobotContainer() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
-        SuppliedValueWidget<Double> doubleSuppliedValueWidget = Shuffleboard.getTab("Competition").addDouble("Match Time", DriverStation::getMatchTime);
 
 
 
@@ -63,6 +62,9 @@ public class RobotContainer {
         DrivetrainSubsystem.getInstance().setDefaultCommand(new DriveCommand());
 
         registerCommands();
+
+        Shuffleboard.getTab("Competition").addDouble("Match Time", DriverStation::getMatchTime);
+        Shuffleboard.getTab("Competition").addBoolean("Game Piece Detected", () -> (LaserSubsystem.getInstance().getLaserState() == LaserState.Detected));
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -120,5 +122,6 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
+//        return makeScoreCommand(ShootingZone.subwoofer);
     }
 }
