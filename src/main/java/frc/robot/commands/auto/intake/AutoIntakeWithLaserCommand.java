@@ -1,4 +1,4 @@
-package frc.robot.commands.teleop.intake;
+package frc.robot.commands.auto.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystem.intake.IntakeStates;
@@ -7,14 +7,20 @@ import frc.robot.subsystem.laser.LaserState;
 import frc.robot.subsystem.laser.LaserSubsystem;
 
 
-public class IntakeFwdCommand extends Command {
+public class AutoIntakeWithLaserCommand extends Command {
 
-    public IntakeFwdCommand() {
+    public AutoIntakeWithLaserCommand() {
 
-        addRequirements(IntakeSubsystem.getInstance());
+        addRequirements(IntakeSubsystem.getInstance(), LaserSubsystem.getInstance());
     }
+
     @Override
     public void initialize() {
+        IntakeSubsystem.getInstance().setState(IntakeStates.off);
+    }
+
+    @Override
+    public void execute() {
         IntakeSubsystem.getInstance().setState(IntakeStates.fwd);
     }
 

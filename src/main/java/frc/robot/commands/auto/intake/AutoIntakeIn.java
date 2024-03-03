@@ -17,4 +17,11 @@ public class AutoIntakeIn extends Command {
     public void initialize() {
         IntakeSubsystem.getInstance().setState(IntakeStates.fwd);
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
+
 }

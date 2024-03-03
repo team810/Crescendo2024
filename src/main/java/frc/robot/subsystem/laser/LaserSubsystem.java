@@ -11,7 +11,7 @@ public class LaserSubsystem extends SubsystemBase {
     private static LaserSubsystem INSTANCE;
 
     private final LaserCan sensor;
-    double distance; // Distance Measurement form sensor in mm
+    double distance = 0; // Distance Measurement form sensor in mm
 
     private LaserState state;
 
@@ -24,6 +24,7 @@ public class LaserSubsystem extends SubsystemBase {
         }else{
             distance = 0;
         }
+
         if (MathUtil.isNear(LaserConstants.EXPECTED_DISTANCE, distance, LaserConstants.TOLERANCE))
         {
             state = LaserState.Detected;

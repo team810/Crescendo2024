@@ -3,6 +3,7 @@ package frc.robot.subsystem.intake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import org.littletonrobotics.junction.Logger;
 
 public class IntakeSubsystem extends SubsystemBase {
 
@@ -49,6 +50,7 @@ public class IntakeSubsystem extends SubsystemBase {
             }
         }
         intake.update();
+        Logger.recordOutput("Intake State", state.toString());
 
     }
 

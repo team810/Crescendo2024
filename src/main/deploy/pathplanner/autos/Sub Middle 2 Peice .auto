@@ -12,14 +12,20 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Subwoofer Score"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "straight"
+            "pathName": "Sub Middle 2 Peice"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "2 Peice Auto",
   "choreoAuto": false
 }

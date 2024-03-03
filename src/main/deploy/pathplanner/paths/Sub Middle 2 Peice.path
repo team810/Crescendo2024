@@ -11,7 +11,7 @@
         "x": 2.3135410510283467,
         "y": 5.554595446393091
       },
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": null
     },
     {
@@ -22,54 +22,6 @@
       "prevControl": {
         "x": 1.581294248657716,
         "y": 5.554595446393091
-      },
-      "nextControl": {
-        "x": 3.7385399144652904,
-        "y": 5.554595446393091
-      },
-      "isLocked": true,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 6.739476007968511,
-        "y": 4.137427121349362
-      },
-      "prevControl": {
-        "x": 3.2438713701888817,
-        "y": 4.251158557295732
-      },
-      "nextControl": {
-        "x": 7.5185075145088005,
-        "y": 4.112080899145421
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.31067318823703,
-        "y": 4.137427121349362
-      },
-      "prevControl": {
-        "x": 8.326778766250952,
-        "y": 4.138278081179362
-      },
-      "nextControl": {
-        "x": 4.05682101529139,
-        "y": 3.9126691326076597
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.8897903122623596,
-        "y": 5.554595446393091
-      },
-      "prevControl": {
-        "x": 3.1322901986060545,
-        "y": 5.453553827083219
       },
       "nextControl": null,
       "isLocked": false,
@@ -91,8 +43,8 @@
     },
     {
       "name": "Intake Midline",
-      "minWaypointRelativePos": 2.35,
-      "maxWaypointRelativePos": 2.75,
+      "minWaypointRelativePos": 1.5,
+      "maxWaypointRelativePos": 1.5,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 2.0,
@@ -133,59 +85,8 @@
       }
     },
     {
-      "name": "Intake Midline",
-      "waypointRelativePos": 1.85,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake With Laser"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Rev Shooter",
-      "waypointRelativePos": 3.5,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Rev Shooter Tape"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Fire",
-      "waypointRelativePos": 4.0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Shooter Fire"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
       "name": "Stop Shooting",
-      "waypointRelativePos": 1.45,
+      "waypointRelativePos": 1,
       "command": {
         "type": "sequential",
         "data": {
@@ -219,7 +120,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "2 Peice Autos",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

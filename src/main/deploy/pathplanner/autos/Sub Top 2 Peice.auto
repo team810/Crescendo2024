@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7426559019275645,
+      "y": 6.63574077300873
+    },
+    "rotation": -120.63388044376798
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Subwoofer Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Sub Top 2 Peice "
+          }
+        }
+      ]
+    }
+  },
+  "folder": "2 Peice Auto",
+  "choreoAuto": false
+}

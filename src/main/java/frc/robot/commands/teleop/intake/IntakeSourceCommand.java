@@ -5,6 +5,8 @@ import frc.lib.MechanismState;
 import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.intake.IntakeStates;
 import frc.robot.subsystem.intake.IntakeSubsystem;
+import frc.robot.subsystem.laser.LaserState;
+import frc.robot.subsystem.laser.LaserSubsystem;
 import frc.robot.subsystem.shooter.ShooterMode;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
 
@@ -18,8 +20,13 @@ public class IntakeSourceCommand extends Command {
     @Override
     public void initialize() {
         DeflectorSubsystem.getInstance().setDeflectorState(MechanismState.deployed);
-        IntakeSubsystem.getInstance().setState(IntakeStates.off);
+        IntakeSubsystem.getInstance().setState(IntakeStates.rev);
         ShooterSubsystem.getInstance().setShooterMode(ShooterMode.SourceIntake);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return LaserSubsystem.getInstance().getLaserState() == LaserState.Detected;
     }
 
     @Override

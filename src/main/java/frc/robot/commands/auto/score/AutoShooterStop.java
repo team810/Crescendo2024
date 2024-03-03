@@ -6,7 +6,6 @@ import frc.robot.subsystem.intake.IntakeSubsystem;
 import frc.robot.subsystem.shooter.ShooterMode;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
 import frc.robot.util.Shooting.ShooterUtil;
-import frc.robot.util.Shooting.ShooterUtilConstants;
 import frc.robot.util.Shooting.ShootingZone;
 
 
@@ -28,4 +27,11 @@ public class AutoShooterStop extends Command {
 
       IntakeSubsystem.getInstance().setState(IntakeStates.off);
    }
+
+   @Override
+   public boolean isFinished() {
+      return true;
+   }
+
+
 }

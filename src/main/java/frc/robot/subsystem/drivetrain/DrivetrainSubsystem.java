@@ -225,7 +225,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		Logger.recordOutput("Drivetrain/currentStates", frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
 		Logger.recordOutput("Drivetrain/states", states);
-		Logger.recordOutput("Drivetrain/gyro", getRotation().getDegrees());
+		Logger.recordOutput("Drivetrain/gyro", getRotation().getRadians());
 		Logger.recordOutput("Drivetrain/targetAngle", this.targetAngle);
 		Logger.recordOutput("RobotPose", getPose());
 		Logger.recordOutput("currentRectangle", currentRectangle.getName());
@@ -255,7 +255,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	}
 	public Rotation2d getRotation()
 	{
-		return navx.getRotation2d();
+		return navx.getRotation2d().unaryMinus();
 	}
 
 	public void zeroGyro()

@@ -38,7 +38,6 @@ public class Robot extends LoggedRobot
         robotContainer = new RobotContainer();
         CommandScheduler.getInstance().setPeriod(.03);
         CameraServer.startAutomaticCapture();
-        CameraServer.startAutomaticCapture();
     }
 
     @Override
