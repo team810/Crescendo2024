@@ -34,6 +34,7 @@ import frc.robot.subsystem.climber.ClimberSubsystem;
 import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.intake.IntakeSubsystem;
+import frc.robot.subsystem.laser.LaserSubsystem;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
 import frc.robot.subsystem.tbone.TBoneSubsystem;
 import frc.robot.subsystem.vision.VisionSubsystem;
@@ -57,7 +58,7 @@ public class RobotContainer {
         IntakeSubsystem.getInstance();
         ClimberSubsystem.getInstance();
         TBoneSubsystem.getInstance();
-//        LaserSubsystem.getInstance();
+        LaserSubsystem.getInstance();
 
         DrivetrainSubsystem.getInstance().setDefaultCommand(new DriveCommand());
 
@@ -119,6 +120,5 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
-
     }
 }

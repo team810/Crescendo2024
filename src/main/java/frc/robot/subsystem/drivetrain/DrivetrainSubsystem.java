@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.navx.Navx;
 import frc.lib.navx.NavxReal;
 import frc.lib.navx.NavxSim;
+import frc.robot.IO.Controls;
+import frc.robot.IO.IO;
 import frc.robot.Robot;
 import frc.robot.util.AutoTurn.AutoTurnConstants;
 import frc.robot.util.Rectangles.AlignmentRectangle;
@@ -158,8 +160,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 
-		currentRectangle = (AlignmentRectangle) AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
-		currentZone = (ShooterRectangle) ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(getPose());
+		if (IO.getButtonValue(Controls.rotateToTarget).get() || IO.getButtonValue(Controls.SpeakerScore).get())
+		{
+			currentRectangle = (AlignmentRectangle) AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
+			currentZone = (ShooterRectangle) ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(getPose());
+		}
 
 		if (RobotState.isDisabled())
 		{
