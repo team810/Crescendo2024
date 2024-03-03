@@ -22,6 +22,24 @@
           "data": {
             "pathName": "Sub Top 2 Peice "
           }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooter Stop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Stop"
+          }
         }
       ]
     }

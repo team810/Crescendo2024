@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7426559019275645,
-        "y": 6.63574077300873
+        "x": 0.7679163067550328,
+        "y": 4.4683980388119595
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.252916079442422,
-        "y": 6.974230197696803
+        "x": 1.1922911078564982,
+        "y": 4.180429423778822
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.8995824430256072,
-        "y": 6.787303201973539
+        "x": 2.5310925637123116,
+        "y": 4.286523124054189
       },
       "prevControl": {
-        "x": 0.8995824430256086,
-        "y": 6.787303201973539
-      },
-      "nextControl": {
-        "x": 2.6537963981851442,
-        "y": 6.787303201973539
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.66749874978064,
-        "y": 6.787303201973539
-      },
-      "prevControl": {
-        "x": 2.6423316448072733,
-        "y": 6.787303201973539
+        "x": 1.5310925637123116,
+        "y": 4.286523124054189
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,15 +31,15 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": -141.17,
-      "rotateFast": true
+      "rotationDegrees": 147.0,
+      "rotateFast": false
     }
   ],
   "constraintZones": [
     {
-      "name": "Intake Speeds",
-      "minWaypointRelativePos": 1.1,
-      "maxWaypointRelativePos": 1.7,
+      "name": "Intake Slow Down",
+      "minWaypointRelativePos": 0.7,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
@@ -67,7 +51,7 @@
   "eventMarkers": [
     {
       "name": "Shooting",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -90,21 +74,21 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -141.17,
+    "rotation": 147.84770485871775,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "2 Peice Autos",
   "previewStartingState": {
-    "rotation": -121.67748285824241,
+    "rotation": 120.82193558529309,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

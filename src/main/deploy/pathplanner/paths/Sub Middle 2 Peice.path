@@ -83,29 +83,6 @@
           ]
         }
       }
-    },
-    {
-      "name": "Stop Shooting",
-      "waypointRelativePos": 1,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake Stop"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "Shooter Stop"
-              }
-            }
-          ]
-        }
-      }
     }
   ],
   "globalConstraints": {
