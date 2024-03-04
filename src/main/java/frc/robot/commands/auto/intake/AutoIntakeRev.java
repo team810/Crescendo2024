@@ -17,4 +17,10 @@ public class AutoIntakeRev extends Command {
     public void initialize() {
         IntakeSubsystem.getInstance().setState(IntakeStates.rev);
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
 }

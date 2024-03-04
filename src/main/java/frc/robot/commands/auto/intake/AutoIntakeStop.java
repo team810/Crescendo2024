@@ -17,4 +17,10 @@ public class AutoIntakeStop extends Command {
    public void initialize() {
       IntakeSubsystem.getInstance().setState(IntakeStates.off);
    }
+
+   @Override
+   public boolean isFinished() {
+      return true;
+   }
+
 }

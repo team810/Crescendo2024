@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": 38.83000000000001,
+      "rotationDegrees": -135.75859956658417,
       "rotateFast": true
     }
   ],
@@ -97,13 +97,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 38.83000000000001,
+    "rotation": -144.7524249416537,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "2 Peice Autos",
   "previewStartingState": {
-    "rotation": 58.31999999999999,
+    "rotation": -120.15454791791619,
     "velocity": 0
   },
   "useDefaultConstraints": false

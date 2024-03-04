@@ -133,7 +133,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		AutoBuilder.configureHolonomic(
 				this::getPose,
-				this::resetOdometry,
+				this::resetOdometryAuto,
 				this::getRobotRelativeSpeeds,
 				this::setAutoSpeeds,
 				new HolonomicPathFollowerConfig(
@@ -244,6 +244,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		return kinematics.toChassisSpeeds(frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
 	}
 
+	private void resetOdometryAuto(Pose2d newPose)
+	{
+		frontLeftPosition = frontLeft.getModulePosition();
+		frontRightPosition = frontRight.getModulePosition();
+		backLeftPosition = backLeft.getModulePosition();
+		backRightPosition = backRight.getModulePosition();
+		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
+	}
 
 	public void resetOdometry(Pose2d newPose)
 	{
@@ -251,7 +259,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
 		backRightPosition = backRight.getModulePosition();
-
+		newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d());
 		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
 	}
 
