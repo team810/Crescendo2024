@@ -28,7 +28,11 @@ public abstract class IO {
         controlsButtons.put(Controls.slowMode, primary::getRightBumper);
         controlsButtons.put(Controls.normalMode, () -> (.75 < primary.getRightTriggerAxis()));
 //        controlsButtons.put(Controls.normalMode, primary::getRightTriggerButton);
-        controlsButtons.put(Controls.rotateToTarget, primary::getAButton);
+//        controlsButtons.put(Controls.rotateToTarget, primary::getAButton);
+
+        controlsButtons.put(Controls.autoAlignAmp, primary::getBButton);
+        controlsButtons.put(Controls.autoAlignPodium, primary::getAButton);
+        controlsButtons.put(Controls.autoAlignPodium, primary::getXButton);
 
         controlsButtons.put(Controls.intakeFWD, secondary::getAButton);
         controlsButtons.put(Controls.intakeREVS, secondary::getYButton);

@@ -120,6 +120,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 			thetaController.setI(THETA_CONTROLLER_SIM.kI);
 			thetaController.setD(THETA_CONTROLLER_SIM.kD);
 		}
+
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 		thetaController.setTolerance(.01);
 
@@ -158,8 +159,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 
-		currentRectangle = (AlignmentRectangle) AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
-		currentZone = (ShooterRectangle) ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(getPose());
+//		currentRectangle = (AlignmentRectangle) AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
+//		currentZone = (ShooterRectangle) ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(getPose());
 
 		if (RobotState.isDisabled())
 		{
@@ -228,8 +229,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		Logger.recordOutput("Drivetrain/gyro", getRotation().getDegrees());
 		Logger.recordOutput("Drivetrain/targetAngle", this.targetAngle);
 		Logger.recordOutput("RobotPose", getPose());
-		Logger.recordOutput("currentRectangle", currentRectangle.getName());
-		Logger.recordOutput("currentZone", currentZone.getName());
+//		Logger.recordOutput("currentRectangle", currentRectangle.getName());
+//		Logger.recordOutput("currentZone", currentZone.getName());
 
 		navx.update(0);
 	}

@@ -7,7 +7,11 @@ public enum Controls {
     reset_gyro,
     slowMode,
     normalMode,
-    rotateToTarget,
+//    rotateToTarget,
+
+    autoAlignPodium,
+    autoAlignAmp,
+    autoAlignSource,
 
     intakeFWD,
     intakeREVS,

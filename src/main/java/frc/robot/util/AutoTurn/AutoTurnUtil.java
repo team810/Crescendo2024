@@ -3,7 +3,10 @@ package frc.robot.util.AutoTurn;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.util.Rectangles.AlignmentRectangle;
+
+import java.sql.Driver;
 
 public class AutoTurnUtil {
 
@@ -32,6 +35,30 @@ public class AutoTurnUtil {
         }
 
         return new Rotation2d(Math.toRadians(90));
+    }
+
+    public static Rotation2d getSourceAngle() {
+
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+            return new Rotation2d(Math.toRadians(120));
+        } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            return new Rotation2d(Math.toRadians(60));
+        }
+
+        return new Rotation2d(90);
+    }
+
+    public static Rotation2d getAmpAngle() {
+        return new Rotation2d(Math.toRadians(90));
+    }
+
+    public static Rotation2d getPodiumAngle() {
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+            return new Rotation2d(Math.toRadians(30));
+        } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            return new Rotation2d(Math.toRadians(150));
+        }
+        return new Rotation2d(90);
     }
 }
 
