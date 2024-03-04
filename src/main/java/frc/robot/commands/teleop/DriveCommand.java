@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.Deadband;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
-import frc.robot.Robot;
 import frc.robot.subsystem.drivetrain.DrivetrainConstants;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.drivetrain.SpeedMode;
@@ -53,16 +52,9 @@ public class DriveCommand extends Command {
 							|| IO.getButtonValue(Controls.autoAlignPodium).get()
 							|| IO.getButtonValue(Controls.autoAlignSource).get();
 
-		if(Robot.isReal())
-		{
-			x = -IO.getJoystickValue(Controls.drive_x).get();
-			y = -IO.getJoystickValue(Controls.drive_y).get();
-			theta = -theta;
-		}else{
-			x = -IO.getJoystickValue(Controls.drive_x).get();
-			y = -IO.getJoystickValue(Controls.drive_y).get();
-			theta = -theta;
-		}
+		x = IO.getJoystickValue(Controls.drive_x).get();
+		y = IO.getJoystickValue(Controls.drive_y).get();
+		theta = theta;
 
 		if (!aligning)
 		{

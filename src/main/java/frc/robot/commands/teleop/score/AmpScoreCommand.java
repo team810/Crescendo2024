@@ -21,14 +21,12 @@ public class AmpScoreCommand extends Command {
     @Override
     public void initialize() {
         TBoneSubsystem.getInstance().setState(MechanismState.deployed);
-        DeflectorSubsystem.getInstance().setDeflectorState(MechanismState.stored);
         ShooterSubsystem.getInstance().setShooterMode(ShooterMode.Amp);
     }
 
     @Override
     public void end(boolean interrupted) {
         TBoneSubsystem.getInstance().setState(MechanismState.stored);
-        DeflectorSubsystem.getInstance().setDeflectorState(MechanismState.stored);
         ShooterSubsystem.getInstance().setShooterMode(ShooterMode.off);
     }
 }

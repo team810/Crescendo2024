@@ -33,11 +33,11 @@ public class Robot extends LoggedRobot
         } else {
             Logger.addDataReceiver(new NT4Publisher());
         }
+
+
         Logger.start();
 
         robotContainer = new RobotContainer();
-        CommandScheduler.getInstance().setPeriod(.03);
-        CameraServer.startAutomaticCapture();
         CameraServer.startAutomaticCapture();
     }
 

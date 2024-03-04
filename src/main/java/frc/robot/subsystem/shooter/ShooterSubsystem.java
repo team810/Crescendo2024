@@ -2,7 +2,6 @@ package frc.robot.subsystem.shooter;
 
 
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.MechanismState;
 import frc.robot.Robot;
@@ -39,8 +38,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooterMode = ShooterMode.off;
 
-        SmartDashboard.putNumber("TopSpeedTest", 2000);
-        SmartDashboard.putNumber("BottomSpeedTest", 2000);
+//        SmartDashboard.putNumber("TopSpeedTest", 2000);
+//        SmartDashboard.putNumber("BottomSpeedTest", 2000);
 
         setSpeakerState(new ShooterState(0,0, MechanismState.stored));
         targetTopTestRPM = 2000;
@@ -50,8 +49,8 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        targetTopTestRPM = SmartDashboard.getNumber("TopSpeedTest", targetTopTestRPM);
-        targetBottomTestRPM = SmartDashboard.getNumber("BottomSpeedTest", targetBottomTestRPM);
+//        targetTopTestRPM = SmartDashboard.getNumber("TopSpeedTest", targetTopTestRPM);
+//        targetBottomTestRPM = SmartDashboard.getNumber("BottomSpeedTest", targetBottomTestRPM);
 
         if (RobotState.isEnabled())
         {

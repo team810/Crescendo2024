@@ -1,11 +1,9 @@
 package frc.robot;
 
-import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,7 +16,8 @@ import frc.robot.IO.IO;
 import frc.robot.commands.auto.intake.AutoIntakeIn;
 import frc.robot.commands.auto.intake.AutoIntakeRev;
 import frc.robot.commands.auto.intake.AutoIntakeStop;
-import frc.robot.commands.auto.score.AutoShootFromZone;
+import frc.robot.commands.auto.intake.AutoIntakeWithLaserCommand;
+import frc.robot.commands.auto.score.AutoRevShooter;
 import frc.robot.commands.auto.score.AutoShooterFire;
 import frc.robot.commands.auto.score.AutoShooterStop;
 import frc.robot.commands.teleop.ClimbCommand;
@@ -34,6 +33,8 @@ import frc.robot.subsystem.climber.ClimberSubsystem;
 import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.intake.IntakeSubsystem;
+import frc.robot.subsystem.laser.LaserState;
+import frc.robot.subsystem.laser.LaserSubsystem;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
 import frc.robot.subsystem.tbone.TBoneSubsystem;
 import frc.robot.subsystem.vision.VisionSubsystem;
@@ -46,7 +47,6 @@ public class RobotContainer {
     public RobotContainer() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
-        SuppliedValueWidget<Double> doubleSuppliedValueWidget = Shuffleboard.getTab("Competition").addDouble("Match Time", DriverStation::getMatchTime);
 
 
 
@@ -57,11 +57,14 @@ public class RobotContainer {
         IntakeSubsystem.getInstance();
         ClimberSubsystem.getInstance();
         TBoneSubsystem.getInstance();
-//        LaserSubsystem.getInstance();
+        LaserSubsystem.getInstance();
 
         DrivetrainSubsystem.getInstance().setDefaultCommand(new DriveCommand());
 
         registerCommands();
+
+        Shuffleboard.getTab("Competition").addDouble("Match Time", DriverStation::getMatchTime);
+        Shuffleboard.getTab("Competition").addBoolean("Game Piece Detected", () -> (LaserSubsystem.getInstance().getLaserState() == LaserState.Detected));
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -92,33 +95,33 @@ public class RobotContainer {
     }
 
     public void registerCommands() {
+        NamedCommands.registerCommand("Intake With Laser", new AutoIntakeWithLaserCommand());
         NamedCommands.registerCommand("Intake In", new AutoIntakeIn());
-        NamedCommands.registerCommand("Intake Stop", new AutoIntakeStop());
         NamedCommands.registerCommand("Intake Out", new AutoIntakeRev());
+        NamedCommands.registerCommand("Intake Stop", new AutoIntakeStop());
+
         NamedCommands.registerCommand("Shooter Stop", new AutoShooterStop());
         NamedCommands.registerCommand("Shooter Fire", new AutoShooterFire());
-//        NamedCommands.registerCommand("Subwoofer Score", makeScoreCommand(ShootingZone.midSub));
-//        NamedCommands.registerCommand("Mid Tape Score", makeScoreCommand(ShootingZone.midTape));
-//        NamedCommands.registerCommand("Top Tape Score", makeScoreCommand(ShootingZone.topTape));
-//        NamedCommands.registerCommand("Podium Score", makeScoreCommand(ShootingZone.podium));
+
+        NamedCommands.registerCommand("Rev Shooter Tape", new AutoRevShooter(ShootingZone.tape));
+        NamedCommands.registerCommand("Rev Shooter Subwoofer", new AutoRevShooter(ShootingZone.tape));
+
         NamedCommands.registerCommand("Subwoofer Score", makeScoreCommand(ShootingZone.subwoofer));
         NamedCommands.registerCommand("Tape Score", makeScoreCommand(ShootingZone.tape));
     }
 
     public SequentialCommandGroup makeScoreCommand(ShootingZone zone) {
         return new SequentialCommandGroup(
-                new AutoIntakeStop(),
-                new AutoShootFromZone(zone),
-                new WaitCommand(1.5),
+                new AutoRevShooter(zone),
+                new WaitCommand(1.25),
                 new AutoShooterFire(),
-                new WaitCommand(0.25),
+                new WaitCommand(.5),
                 new AutoShooterStop()
         );
     }
 
     public Command getAutonomousCommand() {
-//        DrivetrainSubsystem.getInstance().resetOdometry(new Pose2d(2,2, new Rotation2d()));
         return autoChooser.getSelected();
-//        return AutoBuilder.buildAuto("Center");
+//        return makeScoreCommand(ShootingZone.subwoofer);
     }
 }
