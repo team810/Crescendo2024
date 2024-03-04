@@ -29,11 +29,11 @@ public class Robot extends LoggedRobot
         Logger.recordMetadata("ProjectName", "Crescendo"); // Set a metadata value
         if (isReal()) {
             Logger.addDataReceiver(new NT4Publisher());
-
+            Logger.addDataReceiver(new WPILOGWriter());
         } else {
             Logger.addDataReceiver(new NT4Publisher());
         }
-        Logger.addDataReceiver(new WPILOGWriter());
+
 
         Logger.start();
 

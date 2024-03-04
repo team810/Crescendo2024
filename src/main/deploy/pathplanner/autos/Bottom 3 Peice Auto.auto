@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3135410510283454,
-      "y": 5.554595446393091
+      "x": 0.7679163067550328,
+      "y": 4.4683980388119595
     },
-    "rotation": -179.67943835073424
+    "rotation": 123.88695946405167
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Sub Middle 2 Peice"
+            "pathName": "Sub Bottom 2 Peice "
           }
         },
         {
@@ -42,14 +42,26 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake With Laser"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Middle Third Peice "
+            "pathName": "Bottom Third Peice"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooter Fire"
           }
         }
       ]
     }
   },
-  "folder": "Three Peice Auto",
+  "folder": "3 Peice Auto",
   "choreoAuto": false
 }

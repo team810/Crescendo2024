@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6867809251313576,
-      "y": 4.426761858008021
+      "x": 1.3135410510283454,
+      "y": 5.554595446393091
     },
-    "rotation": -59.036243467926475
+    "rotation": -179.67943835073424
   },
   "command": {
     "type": "sequential",
@@ -20,30 +20,42 @@
         {
           "type": "path",
           "data": {
-            "pathName": "[S-B][T-B]"
+            "pathName": "Sub Middle 2 Peice"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Tape Score"
+            "name": "Intake Stop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooter Stop"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "[T-B][M-MM][T-M]"
+            "pathName": "Middle Third Peice "
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Tape Score"
+            "name": "Shooter Fire"
           }
         }
       ]
     }
   },
-  "folder": "Anagh",
+  "folder": "3 Peice Auto",
   "choreoAuto": false
 }
