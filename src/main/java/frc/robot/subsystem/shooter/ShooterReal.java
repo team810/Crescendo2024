@@ -2,7 +2,6 @@ package frc.robot.subsystem.shooter;
 
 import com.revrobotics.*;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterReal implements ShooterIO {
@@ -45,40 +44,44 @@ public class ShooterReal implements ShooterIO {
         topController = topMotor.getPIDController();
         bottomController = bottomMotor.getPIDController();
 
+//
+//        SmartDashboard.putNumber("Top/kP", 0.00006);
+//        SmartDashboard.putNumber("Top/kI", TopI);
+//        SmartDashboard.putNumber("Top/kD", TopD);
+//        SmartDashboard.putNumber("Top/kFF", 0.000185);
+//
+//        SmartDashboard.putNumber("Bottom/kP", 0.00006);
+//        SmartDashboard.putNumber("Bottom/kI", BottomI);
+//        SmartDashboard.putNumber("Bottom/kD", BottomD);
+//        SmartDashboard.putNumber("Bottom/kFF", 0.000185);
 
-        SmartDashboard.putNumber("Top/kP", 0.00006);
-        SmartDashboard.putNumber("Top/kI", TopI);
-        SmartDashboard.putNumber("Top/kD", TopD);
-        SmartDashboard.putNumber("Top/kFF", 0.000185);
+        topController.setP(0.00006);
+        topController.setI(0);
+        topController.setD(0);
+        topController.setFF(0.000185);
 
-        SmartDashboard.putNumber("Bottom/kP", BottomP);
-        SmartDashboard.putNumber("Bottom/kI", BottomI);
-        SmartDashboard.putNumber("Bottom/kD", BottomD);
-        SmartDashboard.putNumber("Bottom/kFF", BottomFF);
+        bottomController.setP(0.00006);
+        bottomController.setI(0);
+        bottomController.setD(0);
+        bottomController.setFF(0.000185);
+
+
     }
 
     @Override
     public void update()
     {
-        TopP = SmartDashboard.getNumber("Top/kP",0);
-        TopI = SmartDashboard.getNumber("Top/kI",0);
-        TopD = SmartDashboard.getNumber("Top/kD", 0);
-        TopFF = SmartDashboard.getNumber("Top/kFF", 0);
+//        TopP = SmartDashboard.getNumber("Top/kP",0);
+//        TopI = SmartDashboard.getNumber("Top/kI",0);
+//        TopD = SmartDashboard.getNumber("Top/kD", 0);
+//        TopFF = SmartDashboard.getNumber("Top/kFF", 0);
+//
+//        BottomP = SmartDashboard.getNumber("Bottom/kP",0);
+//        BottomI = SmartDashboard.getNumber("Bottom/kI",0);
+//        BottomD = SmartDashboard.getNumber("Bottom/kD", 0);
+//        BottomFF = SmartDashboard.getNumber("Bottom/kFF", 0);
 
-        BottomP = SmartDashboard.getNumber("Bottom/kP",0);
-        BottomI = SmartDashboard.getNumber("Bottom/kI",0);
-        BottomD = SmartDashboard.getNumber("Bottom/kD", 0);
-        BottomFF = SmartDashboard.getNumber("Bottom/kFF", 0);
 
-        topController.setP(TopP);
-        topController.setI(TopI);
-        topController.setD(TopD);
-        topController.setFF(TopFF);
-
-        bottomController.setP(BottomP);
-        bottomController.setI(BottomI);
-        bottomController.setD(BottomD);
-        bottomController.setFF(BottomFF);
 
         Logger.recordOutput("Shooter/Top/CurrentDraw", topMotor.getOutputCurrent());
         Logger.recordOutput("Shooter/Top/Temperature", topMotor.getMotorTemperature());

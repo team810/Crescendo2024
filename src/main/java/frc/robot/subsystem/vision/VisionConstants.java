@@ -6,13 +6,13 @@ import edu.wpi.first.math.geometry.Translation3d;
 
 public class VisionConstants {
 
-    public static final double cameraX = 0;
-    public static final double cameraY = 0;
-    public static final double cameraZ = 0.64;
+    public static final double cameraX = 0; // 0.0254 * 4.3135
+    public static final double cameraY = 0; //0.0254 * 3.75
+    public static final double cameraZ = 0;
     public static final Translation3d cameraPos = new Translation3d(cameraX, cameraY, cameraZ);
 
     public static final double cameraRoll = 0;
-    public static final double cameraPitch = -0.0174533 * 30;
+    public static final double cameraPitch = -0.0174533 * 23;
     public static final double cameraYaw = Math.PI;
     public static final Rotation3d cameraRot = new Rotation3d(cameraRoll, cameraPitch, cameraYaw);
 

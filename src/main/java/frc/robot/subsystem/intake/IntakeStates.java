@@ -5,4 +5,5 @@ public enum IntakeStates {
     rev,
     off,
     fire,
+    manual,
 }

@@ -55,6 +55,8 @@ class SwerveModuleRev implements SwerveModuleIO {
 		configuration.MagnetSensor.AbsoluteSensorRange =
 				AbsoluteSensorRangeValue.Unsigned_0To1;
 
+		drive_encoder.setPosition(0);
+
 		driveVoltage = 0;
 		steerVoltage = 0;
 	}
@@ -77,6 +79,9 @@ class SwerveModuleRev implements SwerveModuleIO {
 				"/SteerAmpDraw", drive.getOutputCurrent());
 		Logger.recordOutput("Drivetrain/"+ details.module.name() +
 				"/SteerTemperature", steer.getMotorTemperature());
+
+		Logger.recordOutput("Drivetrain/" + details.module.name() + "/Revolutions", (drive_encoder.getPosition() / DrivetrainConstants.GEAR_REDUCTION_DRIVE) * (.102 * Math.PI));
+
 	}
 
     @Override
@@ -119,6 +124,6 @@ class SwerveModuleRev implements SwerveModuleIO {
 
 	@Override
 	public double getWheelPosition() {
-		return drive_encoder.getPosition();
+		return (drive_encoder.getPosition() / DrivetrainConstants.GEAR_REDUCTION_DRIVE) * (.102 * Math.PI);
 	}
 }

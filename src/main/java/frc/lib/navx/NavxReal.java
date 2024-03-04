@@ -11,10 +11,15 @@ public class NavxReal implements Navx{
 	public NavxReal()
 	{
 		navx = new AHRS(SerialPort.Port.kMXP);
+		navx.enableLogging(true);
+		System.out.println("Connected:" + navx.isConnected());
+		navx.zeroYaw();
+
+
 	}
 	@Override
 	public Rotation2d getRotation2d() {
-		return new Rotation2d(Math.toRadians(-navx.getYaw()));
+		return new Rotation2d(Math.toRadians(navx.getYaw()));
 	}
 
 	@Override

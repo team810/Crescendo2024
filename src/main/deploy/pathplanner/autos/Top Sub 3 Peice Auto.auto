@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7426559019275645,
+      "y": 6.63574077300873
+    },
+    "rotation": -119.57783868126133
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Subwoofer Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Sub Top 2 Peice "
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Stop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooter Stop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Top Third Peice"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooter Fire"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "3 Peice Auto",
+  "choreoAuto": false
+}

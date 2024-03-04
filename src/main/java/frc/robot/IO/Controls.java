@@ -1,7 +1,6 @@
 package frc.robot.IO;
 
 public enum Controls {
-    // Drivetrain stuff
     drive_x,
     drive_y,
     drive_theta,
@@ -24,4 +23,10 @@ public enum Controls {
     toggleTBone,
 
     toggleDeflector,
+
+    AmpScore,
+    SpeakerScore,
+
+    intakeManual
+
 }

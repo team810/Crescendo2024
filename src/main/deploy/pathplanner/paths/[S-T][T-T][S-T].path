@@ -1,0 +1,114 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7235939135555408,
+        "y": 6.635541163459008
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7235939135555403,
+        "y": 6.635541163459008
+      },
+      "isLocked": false,
+      "linkedName": "start"
+    },
+    {
+      "anchor": {
+        "x": 2.9047634776883906,
+        "y": 7.0128742948068865
+      },
+      "prevControl": {
+        "x": 0.9047634776883906,
+        "y": 7.0128742948068865
+      },
+      "nextControl": {
+        "x": 3.4140498869127356,
+        "y": 7.0128742948068865
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.7235939135555408,
+        "y": 6.64
+      },
+      "prevControl": {
+        "x": 0.4636335128148793,
+        "y": 6.644537625673694
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake In",
+      "waypointRelativePos": 0.65,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake In"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Intake Stop",
+      "waypointRelativePos": 1.5,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Stop"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 61.12205942428535,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Anagh",
+  "previewStartingState": {
+    "rotation": 60.255118703057825,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,107 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.6867809251313576,
+        "y": 4.426761858008021
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.4106835119499841,
+        "y": 4.012615738235961
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.6470725587191093,
+        "y": 4.113851456402465
+      },
+      "prevControl": {
+        "x": 1.6470725587191093,
+        "y": 4.113851456402465
+      },
+      "nextControl": {
+        "x": 3.1470725587191093,
+        "y": 4.113851456402465
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.5,
+        "y": 4.113851456402465
+      },
+      "prevControl": {
+        "x": 2.730081177651144,
+        "y": 4.1046482092964185
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.1,
+      "rotationDegrees": 0.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.6,
+      "rotationDegrees": 0.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "intake",
+      "waypointRelativePos": 0.65,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake In"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -27.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Anagh",
+  "previewStartingState": {
+    "rotation": -59.905758523554994,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

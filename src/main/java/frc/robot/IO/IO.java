@@ -1,5 +1,6 @@
 package frc.robot.IO;
 
+import edu.wpi.first.wpilibj.StadiaController;
 import edu.wpi.first.wpilibj.XboxController;
 
 import java.util.HashMap;
@@ -10,8 +11,8 @@ public abstract class IO {
     private static final XboxController primary = new XboxController(0);
     //    private static final StadiaController primary = new StadiaController(0);
 
-    private static final XboxController secondary = new XboxController(1);
-//    private static final StadiaController secondary = new StadiaController(1);
+//    private static final XboxController secondary = new XboxController(1);
+    private static final StadiaController secondary = new StadiaController(1);
 
 
     private static final HashMap<Controls,Supplier<Double>> controlsJoystick = new HashMap<>();
@@ -32,18 +33,24 @@ public abstract class IO {
         controlsButtons.put(Controls.intakeFWD, secondary::getAButton);
         controlsButtons.put(Controls.intakeREVS, secondary::getYButton);
 
-        controlsButtons.put(Controls.fire, () -> secondary.getRightTriggerAxis() > .65);
-        controlsButtons.put(Controls.rev, () -> secondary.getLeftTriggerAxis() > .75);
+//        controlsButtons.put(Controls.fire, () -> secondary.getRightTriggerAxis() > .75);
+//        controlsButtons.put(Controls.SpeakerScore, () -> secondary.getLeftTriggerAxis() > .75);
+        controlsButtons.put(Controls.fire, secondary::getRightTriggerButton);
+        controlsButtons.put(Controls.SpeakerScore, secondary::getLeftTriggerButton);
 
-        controlsButtons.put(Controls.climb, secondary::getLeftBumper);
+        controlsButtons.put(Controls.AmpScore, secondary::getRightBumper);
+
+        controlsButtons.put(Controls.climb, () -> (secondary.getPOV() == 90));
         controlsButtons.put(Controls.releaseClimber, () -> (secondary.getPOV() == 0));
         controlsButtons.put(Controls.pinClimber, () -> (secondary.getPOV() == 180));
 
-        controlsButtons.put(Controls.toggleDeflector, secondary::getRightStickButton);
+        controlsButtons.put(Controls.toggleDeflector, secondary::getLeftStickButton);
 
         controlsButtons.put(Controls.sourceIntake, secondary::getXButton);
 
-        controlsButtons.put(Controls.toggleTBone, secondary::getRightBumper);
+        controlsButtons.put(Controls.toggleTBone, secondary::getRightStickButton);
+
+//        controlsJoystick.put(Controls.intakeManual, secondary::getLeftY);
     }
 
     public static Supplier<Double> getJoystickValue(Controls control)
@@ -60,7 +67,7 @@ public abstract class IO {
         return primary;
     }
 
-    public static XboxController getSecondary() {
-        return secondary;
-    }
+//    public static XboxController getSecondary() {
+//        return secondary;
+//    }
 }

@@ -1,9 +1,17 @@
 {
-  "robotWidth": 0.76,
-  "robotLength": 0.76,
+  "robotWidth": 0.83,
+  "robotLength": 0.83,
   "holonomicMode": true,
-  "pathFolders": [],
-  "autoFolders": [],
+  "pathFolders": [
+    "2 Peice ",
+    "Anagh",
+    "3 Peice"
+  ],
+  "autoFolders": [
+    "2 Peice Auto",
+    "Anagh",
+    "3 Peice Auto"
+  ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,

@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.navx.Navx;
 import frc.lib.navx.NavxReal;
 import frc.lib.navx.NavxSim;
+import frc.robot.IO.Controls;
+import frc.robot.IO.IO;
 import frc.robot.Robot;
 import frc.robot.util.AutoTurn.AutoTurnConstants;
 import frc.robot.util.Rectangles.AlignmentRectangle;
@@ -131,20 +133,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		AutoBuilder.configureHolonomic(
 				this::getPose,
-				this::resetOdometry,
+				this::resetOdometryAuto,
 				this::getRobotRelativeSpeeds,
 				this::setAutoSpeeds,
 				new HolonomicPathFollowerConfig(
+						new PIDConstants(.5,0,0),
 						new PIDConstants(1,0,0),
-						new PIDConstants(1,0,0),
-						4.6,
+						2,
 						0.4,
 						new ReplanningConfig()
 				),
 				() -> {
-					// Boolean supplier that controls when the path will be mirrored for the red alliance
-					// This will flip the path being followed to the red side of the field.
-					// THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
 
 					var alliance = DriverStation.getAlliance();
 					if (alliance.isPresent()) {
@@ -160,8 +160,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 
-		currentRectangle = (AlignmentRectangle) AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
-		currentZone = (ShooterRectangle) ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(getPose());
+		if (IO.getButtonValue(Controls.rotateToTarget).get() || IO.getButtonValue(Controls.SpeakerScore).get())
+		{
+			currentRectangle = (AlignmentRectangle) AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
+			currentZone = (ShooterRectangle) ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(getPose());
+		}
 
 		if (RobotState.isDisabled())
 		{
@@ -226,12 +229,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		odometry.update(getRotation(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
 
 		Logger.recordOutput("Drivetrain/currentStates", frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
-		Logger.recordOutput("Drivetrain/states", frontLeftState, frontRightState, backLeftState, backRightState);
-		Logger.recordOutput("Drivetrain/gyro", getRotation().getDegrees());
+		Logger.recordOutput("Drivetrain/states", states);
+		Logger.recordOutput("Drivetrain/gyro", getRotation().getRadians());
 		Logger.recordOutput("Drivetrain/targetAngle", this.targetAngle);
 		Logger.recordOutput("RobotPose", getPose());
 		Logger.recordOutput("currentRectangle", currentRectangle.getName());
 		Logger.recordOutput("currentZone", currentZone.getName());
+
 		navx.update(0);
 	}
 
@@ -240,6 +244,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		return kinematics.toChassisSpeeds(frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
 	}
 
+	private void resetOdometryAuto(Pose2d newPose)
+	{
+		frontLeftPosition = frontLeft.getModulePosition();
+		frontRightPosition = frontRight.getModulePosition();
+		backLeftPosition = backLeft.getModulePosition();
+		backRightPosition = backRight.getModulePosition();
+		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
+	}
 
 	public void resetOdometry(Pose2d newPose)
 	{
@@ -247,7 +259,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
 		backRightPosition = backRight.getModulePosition();
-
+		newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d());
 		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
 	}
 
@@ -256,7 +268,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	}
 	public Rotation2d getRotation()
 	{
-		return navx.getRotation2d();
+		return navx.getRotation2d().unaryMinus();
 	}
 
 	public void zeroGyro()

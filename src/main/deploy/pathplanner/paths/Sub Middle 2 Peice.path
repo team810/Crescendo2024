@@ -1,0 +1,106 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.3135410510283454,
+        "y": 5.554595446393091
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.3135410510283467,
+        "y": 5.554595446393091
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.5812942486577075,
+        "y": 5.554595446393091
+      },
+      "prevControl": {
+        "x": 1.581294248657716,
+        "y": 5.554595446393091
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Intake",
+      "minWaypointRelativePos": 0.6,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    },
+    {
+      "name": "Intake Midline",
+      "minWaypointRelativePos": 1.5,
+      "maxWaypointRelativePos": 1.5,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "Shooting",
+      "waypointRelativePos": 0.2,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "parallel",
+              "data": {
+                "commands": [
+                  {
+                    "type": "named",
+                    "data": {
+                      "name": "Intake In"
+                    }
+                  },
+                  {
+                    "type": "named",
+                    "data": {
+                      "name": "Rev Shooter Tape"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.6,
+    "maxAcceleration": 3.6,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "2 Peice ",
+  "previewStartingState": {
+    "rotation": 179.01307590124188,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

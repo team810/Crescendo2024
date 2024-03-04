@@ -30,32 +30,34 @@ public class TBoneSubsystem extends SubsystemBase {
             tBone = new TBoneSim();
         }
 
-        state = MechanismState.stored;
+        setState(MechanismState.stored);
     }
 
     @Override
     public void periodic() {
 
-        switch (getState())
-        {
-            case deployed -> {
-                setpoint = TboneConstants.DEPLOY_SETPOINT;
-            }
-            case stored -> {
-                setpoint = TboneConstants.STORED_SETPOINT;
-            }
-        }
-
         if (RobotState.isEnabled())
         {
-            tBone.setVoltage(
-                    MathUtil.clamp(
-                            controller.calculate(tBone.getEncoderPosition(), setpoint),-12,12
-                    )
-            );
+            if (state == MechanismState.stored)
+            {
+                tBone.setVoltage(
+                        MathUtil.clamp(
+                                controller.calculate(tBone.getEncoderPosition(), setpoint),-.5,.5
+                        )
+                );
+            } else if (state == MechanismState.deployed)
+            {
+                tBone.setVoltage(
+                        MathUtil.clamp(
+                                controller.calculate(tBone.getEncoderPosition(), setpoint),-6,6
+                        )
+                );
+            }
         }
 
         Logger.recordOutput("T-Bone/Setpoint", setpoint);
+        Logger.recordOutput("T-Bone/AtSetpoint", controller.atSetpoint());
+
         tBone.update();
     }
 
@@ -65,12 +67,23 @@ public class TBoneSubsystem extends SubsystemBase {
 
     public void setState(MechanismState state) {
         this.state = state;
+        switch (getState())
+        {
+            case deployed -> {
+                setpoint = TboneConstants.DEPLOY_SETPOINT;
+            }
+            case stored -> {
+                setpoint = TboneConstants.STORED_SETPOINT;
+            }
+        }
     }
 
     public void toggleState() {
         if (this.state == MechanismState.deployed) {
-            this.state = MechanismState.stored;
-        } else { this.state = MechanismState.deployed; }
+            setState(MechanismState.stored);
+        } else {
+            setState(MechanismState.deployed);
+        }
     }
 }
 

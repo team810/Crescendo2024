@@ -5,6 +5,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import frc.lib.Conversions;
 
 public final class DrivetrainConstants {
 
@@ -38,7 +39,7 @@ public final class DrivetrainConstants {
 	 * Slow mode of the robot
 	 * @Unites MPS
 	 */
-	public static final double SLOW_SPEED = 1.0;
+	public static final double SLOW_SPEED = 2.0;
 	/**
 	 * Units Meters
 	 */
@@ -49,10 +50,10 @@ public final class DrivetrainConstants {
 	public static final double WHEEL_DIAMETER  = .1016;
 
 	/**
-	 * The distance traveled for ever rotation of the wheel. PI * Wheel Diameter
+	 * The distance traveled for ever rotation of the wheel. PI * Wheel Diameter in inches
 	 */
 	public static final double DISTANCE_PER_REVOLUTION = Math.PI * WHEEL_DIAMETER;
-
+	public static final double DISTANCE_PER_REVOLUTION_METERS = Conversions.toMeters(DISTANCE_PER_REVOLUTION /12);
 
 	/**
 	 * This is the drive motor gear reduction for the module
@@ -63,10 +64,10 @@ public final class DrivetrainConstants {
 	public static final PIDConstants STEER_CONTROLLER_SIM = new PIDConstants(4,1,0.1);
 
 	public static final PIDConstants DRIVE_CONTROLLER_REAL = new PIDConstants(0.00009,.001,0);
-	public static final PIDConstants STEER_CONTROLLER_REAL = new PIDConstants(.5,0,0);
+	public static final PIDConstants STEER_CONTROLLER_REAL = new PIDConstants(.5,.01,0);
 
-	public static final PIDConstants THETA_CONTROLLER_SIM = new PIDConstants(0.2,0,0);
-	public static final PIDConstants THETA_CONTROLLER_REAL = new PIDConstants(4,0.5,0);
+	public static final PIDConstants THETA_CONTROLLER_SIM = new PIDConstants(4,0,0);
+	public static final PIDConstants THETA_CONTROLLER_REAL = new PIDConstants(0.45,0.01,0);
 	/**
 	 * The measurement of the front Left wheel to the front right wheel or the back left wheel to the back right wheel
 	 * @Unites Meters

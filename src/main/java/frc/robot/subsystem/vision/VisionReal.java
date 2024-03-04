@@ -23,9 +23,11 @@ public class VisionReal implements VisionIO {
     private AprilTagFieldLayout layout;
 
     public VisionReal() {
-        limelight = new PhotonCamera("limelight");
+        limelight = new PhotonCamera("cam");
+        
         limelight.setLED(VisionLEDMode.kOff);
-        limelight.setPipelineIndex(0);
+
+
 
 //        result = null;
 
@@ -46,6 +48,7 @@ public class VisionReal implements VisionIO {
 
     public void updatePoseEstimation() {
             poseEstimation = estimator.update();
+
     }
 
     public Pose2d getRobotPosition() {
@@ -53,7 +56,7 @@ public class VisionReal implements VisionIO {
             return new Pose2d(
                     new Translation2d(poseEstimation.get().estimatedPose.getX(),
                             poseEstimation.get().estimatedPose.getY()),
-                    new Rotation2d(poseEstimation.get().estimatedPose.
+                    new Rotation2d(-poseEstimation.get().estimatedPose.
                             getRotation().getAngle())
             );
         }  else {
