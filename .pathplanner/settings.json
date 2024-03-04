@@ -3,14 +3,14 @@
   "robotLength": 0.83,
   "holonomicMode": true,
   "pathFolders": [
-    "2 Peice ",
-    "Anagh",
-    "3 Peice"
+    "2 Piece ",
+    "3 Piece",
+    "Anagh"
   ],
   "autoFolders": [
-    "2 Peice Auto",
-    "Anagh",
-    "3 Peice Auto"
+    "2 Piece Auto",
+    "3 Piece Auto",
+    "Anagh"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
