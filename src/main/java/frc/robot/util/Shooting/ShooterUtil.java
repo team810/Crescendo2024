@@ -20,7 +20,7 @@ public class ShooterUtil {
                 return new ShooterState(4500, 2000, MechanismState.deployed);
             }
             case tape , none -> {
-                return new ShooterState(2600, 2600, MechanismState.stored);
+                return new ShooterState(3000, 2600, MechanismState.stored);
             }
         }
         return null;

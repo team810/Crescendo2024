@@ -15,8 +15,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.navx.Navx;
 import frc.lib.navx.NavxReal;
 import frc.lib.navx.NavxSim;
-import frc.robot.IO.Controls;
-import frc.robot.IO.IO;
 import frc.robot.Robot;
 import frc.robot.util.AutoTurn.AutoTurnConstants;
 import frc.robot.util.Rectangles.AlignmentRectangle;
@@ -139,7 +137,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 				this::setAutoSpeeds,
 				new HolonomicPathFollowerConfig(
 						new PIDConstants(.5,0,0),
-						new PIDConstants(1,0,0),
+						new PIDConstants(.15,0,0),
 						2,
 						0.4,
 						new ReplanningConfig()
@@ -248,6 +246,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
 		backRightPosition = backRight.getModulePosition();
+		navx.setAngle(newPose.getRotation().getRotations());
 		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
 	}
 
@@ -338,6 +337,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	}
 
 	public void setAutoSpeeds(ChassisSpeeds autoSpeeds) {
+		autoSpeeds.vyMetersPerSecond = -1 * autoSpeeds.vyMetersPerSecond;
+		autoSpeeds.vxMetersPerSecond = -1 * autoSpeeds.vxMetersPerSecond;
 		this.autoSpeeds = autoSpeeds;
 	}
 

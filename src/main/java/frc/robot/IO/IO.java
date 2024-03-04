@@ -32,7 +32,7 @@ public abstract class IO {
 
         controlsButtons.put(Controls.autoAlignAmp, primary::getBButton);
         controlsButtons.put(Controls.autoAlignPodium, primary::getAButton);
-        controlsButtons.put(Controls.autoAlignPodium, primary::getXButton);
+        controlsButtons.put(Controls.autoAlignSource, primary::getXButton);
 
         controlsButtons.put(Controls.intakeFWD, secondary::getAButton);
         controlsButtons.put(Controls.intakeREVS, secondary::getYButton);

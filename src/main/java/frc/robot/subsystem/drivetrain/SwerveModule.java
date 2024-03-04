@@ -144,6 +144,9 @@ class SwerveModule {
 
     public SwerveModulePosition getModulePosition()
     {
+        if (Robot.isReal()) {
+            position.distanceMeters = -position.distanceMeters;
+        }
         return position;
     }
 

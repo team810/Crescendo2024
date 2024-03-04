@@ -7,6 +7,9 @@ public interface Navx {
 	public void zeroYaw();
 	public void setOffset(double offset);
 
+	void setAngle(double angle);
+
 	public default void setRate(double rate) {};
 	public default void update(double delta) {};
+
 }

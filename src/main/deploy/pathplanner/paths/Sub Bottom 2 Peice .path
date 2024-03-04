@@ -1,0 +1,94 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7679163067550328,
+        "y": 4.4683980388119595
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.1922911078564982,
+        "y": 4.180429423778822
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.5310925637123116,
+        "y": 4.286523124054189
+      },
+      "prevControl": {
+        "x": 1.5310925637123116,
+        "y": 4.286523124054189
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 147.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Intake Slow Down",
+      "minWaypointRelativePos": 0.7,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "Shooting",
+      "waypointRelativePos": 0.6,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake In"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Rev Shooter Tape"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 147.85,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "2 Piece ",
+  "previewStartingState": {
+    "rotation": 120.82,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

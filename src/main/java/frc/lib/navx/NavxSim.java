@@ -36,6 +36,11 @@ public class NavxSim implements Navx {
 		rot.plus(new Rotation2d(offset));
 	}
 
+	@Override
+	public void setAngle(double angle) {
+
+	}
+
 	public double getRate() {
 		return rate;
 	}
