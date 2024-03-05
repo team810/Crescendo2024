@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "Testing Paths",
   "previewStartingState": {
-    "rotation": 90.0,
+    "rotation": 45.0,
     "velocity": 0
   },
   "useDefaultConstraints": true
