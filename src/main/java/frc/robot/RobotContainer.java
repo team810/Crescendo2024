@@ -48,8 +48,6 @@ public class RobotContainer {
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
-
-
         IO.Initialize();
 
         VisionSubsystem.getInstance();

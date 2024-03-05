@@ -87,8 +87,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 			navx = new NavxReal();
 		}
 
-		navx.setOffset(-Math.PI/2);
-
 		frontLeftPosition = frontLeft.getModulePosition();
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
@@ -337,8 +335,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	}
 
 	public void setAutoSpeeds(ChassisSpeeds autoSpeeds) {
-		autoSpeeds.vyMetersPerSecond = -1 * autoSpeeds.vyMetersPerSecond;
-		autoSpeeds.vxMetersPerSecond = -1 * autoSpeeds.vxMetersPerSecond;
+		if (Robot.isReal())
+		{
+			autoSpeeds.vyMetersPerSecond = -1 * autoSpeeds.vyMetersPerSecond;
+			autoSpeeds.vxMetersPerSecond = -1 * autoSpeeds.vxMetersPerSecond;
+		}
 		this.autoSpeeds = autoSpeeds;
 	}
 
