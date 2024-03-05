@@ -39,7 +39,7 @@ public class NavxReal implements Navx{
 
 	public void setAngle(double angle) {
 		navx.reset();
-		navx.setAngleAdjustment(angle);
+//		navx.setAngleAdjustment(angle);
 	}
 
 }

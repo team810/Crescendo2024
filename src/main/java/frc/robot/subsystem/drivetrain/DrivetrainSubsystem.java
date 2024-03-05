@@ -135,7 +135,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 				this::setAutoSpeeds,
 				new HolonomicPathFollowerConfig(
 						new PIDConstants(.5,0,0),
-						new PIDConstants(.15,0,0),
+						new PIDConstants(.4,0,0),
 						2,
 						0.4,
 						new ReplanningConfig()
@@ -151,6 +151,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 				},
 				this
 		);
+
 		setAutoSpeeds(new ChassisSpeeds());
 	}
 
@@ -244,7 +245,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
 		backRightPosition = backRight.getModulePosition();
-		navx.setAngle(newPose.getRotation().getRotations());
+//		navx.setAngle(newPose.getRotation().getRotations());
 		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
 	}
 
