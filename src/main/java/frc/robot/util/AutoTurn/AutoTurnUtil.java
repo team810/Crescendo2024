@@ -47,7 +47,7 @@ public class AutoTurnUtil {
     }
 
     public static Rotation2d getAmpAngle() {
-        return new Rotation2d(Math.toRadians(90));
+        return new Rotation2d(Math.toRadians(-90));
     }
 
     public static Rotation2d getPodiumAngle() {
