@@ -3,9 +3,7 @@
   "robotLength": 0.83,
   "holonomicMode": true,
   "pathFolders": [
-    "2 Piece ",
-    "Anagh",
-    "Testing Paths"
+    "2 Piece "
   ],
   "autoFolders": [
     "2 Piece Auto"

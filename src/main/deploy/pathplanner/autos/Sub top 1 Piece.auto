@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7675277817281454,
+      "y": 6.614056032016235
+    },
+    "rotation": 59.85
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Subwoofer Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Sub Top 1 Peice "
+          }
+        }
+      ]
+    }
+  },
+  "folder": "2 Piece Auto",
+  "choreoAuto": false
+}

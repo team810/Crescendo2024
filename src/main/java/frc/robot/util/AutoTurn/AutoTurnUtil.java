@@ -6,8 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.util.Rectangles.AlignmentRectangle;
 
-import java.sql.Driver;
-
 public class AutoTurnUtil {
 
     static AutoTurnMode type;
@@ -40,9 +38,9 @@ public class AutoTurnUtil {
     public static Rotation2d getSourceAngle() {
 
         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-            return new Rotation2d(Math.toRadians(120));
-        } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
             return new Rotation2d(Math.toRadians(60));
+        } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            return new Rotation2d(Math.toRadians(120));
         }
 
         return new Rotation2d(90);
@@ -54,9 +52,9 @@ public class AutoTurnUtil {
 
     public static Rotation2d getPodiumAngle() {
         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-            return new Rotation2d(Math.toRadians(30));
+            return new Rotation2d(Math.toRadians(-150));
         } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-            return new Rotation2d(Math.toRadians(150));
+            return new Rotation2d(Math.toRadians(-30));
         }
         return new Rotation2d(90);
     }
