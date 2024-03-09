@@ -45,6 +45,7 @@ public abstract class IO {
         controlsButtons.put(Controls.AmpScore, secondary::getRightBumper);
 
         controlsButtons.put(Controls.climb, () -> (secondary.getPOV() == 90));
+        controlsButtons.put(Controls.invertClimb, () -> (secondary.getPOV() == 270));
         controlsButtons.put(Controls.releaseClimber, () -> (secondary.getPOV() == 0));
         controlsButtons.put(Controls.pinClimber, () -> (secondary.getPOV() == 180));
 

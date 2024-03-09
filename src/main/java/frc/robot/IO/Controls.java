@@ -23,6 +23,7 @@ public enum Controls {
     releaseClimber,
     pinClimber,
     climb,
+    invertClimb,
 
     toggleTBone,
 

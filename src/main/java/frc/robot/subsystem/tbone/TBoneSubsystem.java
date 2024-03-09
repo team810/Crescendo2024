@@ -29,7 +29,7 @@ public class TBoneSubsystem extends SubsystemBase {
         }else{
             tBone = new TBoneSim();
         }
-
+        controller.setTolerance(0);
         setState(MechanismState.stored);
     }
 

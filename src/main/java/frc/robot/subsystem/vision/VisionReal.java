@@ -29,6 +29,8 @@ public class VisionReal implements VisionIO {
 
 
 
+
+
 //        result = null;
 
         try {
@@ -47,21 +49,30 @@ public class VisionReal implements VisionIO {
     }
 
     public void updatePoseEstimation() {
-            poseEstimation = estimator.update();
 
+        if (limelight.isConnected())
+        {
+            poseEstimation = estimator.update();
+        }
     }
 
     public Pose2d getRobotPosition() {
-        if (poseEstimation.isPresent()) {
-            return new Pose2d(
-                    new Translation2d(poseEstimation.get().estimatedPose.getX(),
-                            poseEstimation.get().estimatedPose.getY()),
-                    new Rotation2d(-poseEstimation.get().estimatedPose.
-                            getRotation().getAngle())
-            );
-        }  else {
-            return new Pose2d(new Translation2d(0, 0),
-                    new Rotation2d(0));
+        if (limelight.isConnected())
+        {
+            if (poseEstimation.isPresent()) {
+                return new Pose2d(
+                        new Translation2d(poseEstimation.get().estimatedPose.getX(),
+                                poseEstimation.get().estimatedPose.getY()),
+                        new Rotation2d(-poseEstimation.get().estimatedPose.
+                                getRotation().getAngle())
+                );
+            }  else {
+                return new Pose2d(new Translation2d(0, 0),
+                        new Rotation2d(0));
+            }
+        }else{
+            return new Pose2d(0,0, new Rotation2d());
         }
+
     }
 }

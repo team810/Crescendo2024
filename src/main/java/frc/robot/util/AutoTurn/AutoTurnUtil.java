@@ -52,9 +52,9 @@ public class AutoTurnUtil {
 
     public static Rotation2d getPodiumAngle() {
         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-            return new Rotation2d(Math.toRadians(-150));
+            return new Rotation2d(Math.toRadians(-31));
         } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-            return new Rotation2d(Math.toRadians(-30));
+            return new Rotation2d(Math.toRadians(31));
         }
         return new Rotation2d(90);
     }
