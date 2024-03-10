@@ -22,6 +22,7 @@ import frc.robot.commands.auto.score.AutoShooterFire;
 import frc.robot.commands.auto.score.AutoShooterStop;
 import frc.robot.commands.teleop.ClimbCommand;
 import frc.robot.commands.teleop.DriveCommand;
+import frc.robot.commands.teleop.InvertClimbCommand;
 import frc.robot.commands.teleop.TBoneCommand;
 import frc.robot.commands.teleop.intake.IntakeFwdCommand;
 import frc.robot.commands.teleop.intake.IntakeRevCommand;
@@ -85,6 +86,7 @@ public class RobotContainer {
         new Trigger(() -> IO.getButtonValue(Controls.releaseClimber).get()).toggleOnTrue(new InstantCommand(() -> ClimberSubsystem.getInstance().releaseClimber()));
         new Trigger(() -> IO.getButtonValue(Controls.pinClimber).get()).toggleOnTrue(new InstantCommand(() -> ClimberSubsystem.getInstance().pinClimber()));
         new Trigger(() -> IO.getButtonValue(Controls.climb).get()).whileTrue(new ClimbCommand());
+        new Trigger(() -> IO.getButtonValue(Controls.invertClimb).get()).whileTrue(new InvertClimbCommand());
 
         new Trigger(() -> IO.getButtonValue(Controls.toggleTBone).get()).toggleOnTrue(new TBoneCommand());
         new Trigger(() -> IO.getButtonValue(Controls.toggleDeflector).get()).onTrue(new InstantCommand(() -> DeflectorSubsystem.getInstance().toggleDeflectorState()));

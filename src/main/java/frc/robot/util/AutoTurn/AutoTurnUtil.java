@@ -38,9 +38,9 @@ public class AutoTurnUtil {
     public static Rotation2d getSourceAngle() {
 
         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-            return new Rotation2d(Math.toRadians(60));
-        } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
             return new Rotation2d(Math.toRadians(120));
+        } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            return new Rotation2d(Math.toRadians(-120));
         }
 
         return new Rotation2d(90);
