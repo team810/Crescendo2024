@@ -69,7 +69,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 	private ChassisSpeeds autoSpeeds;
 
-
 	private DrivetrainSubsystem() {
 
 		SwerveModuleDetails frontLeftDetails = new SwerveModuleDetails(FRONT_LEFT_MODULE_DRIVE_MOTOR, FRONT_LEFT_MODULE_STEER_MOTOR, FRONT_LEFT_MODULE_STEER_ENCODER, FRONT_LEFT_MODULE_STEER_OFFSET, SwerveModuleEnum.frontLeft);
@@ -135,10 +134,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
 				this::resetOdometryAuto,
 				this::getRobotRelativeSpeeds,
 				this::setAutoSpeeds,
+//				new HolonomicPathFollowerConfig(
+//						new PIDConstants(60,0,0),
+//						new PIDConstants(20,0,0),
+//						4.6,
+//						0.4,
+//						new ReplanningConfig()
+//				),
 				new HolonomicPathFollowerConfig(
 						new PIDConstants(.5,0,0),
 						new PIDConstants(.4,0,0),
-						2,
+						4.6,
 						0.4,
 						new ReplanningConfig()
 				),
@@ -268,7 +274,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	}
 	public Rotation2d getRotation()
 	{
-		return navx.getRotation2d().unaryMinus();
+		return navx.getRotation2d();
 	}
 
 	public void zeroGyro()
