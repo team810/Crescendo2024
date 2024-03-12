@@ -13,8 +13,6 @@ import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.IO.Controls;
-import frc.robot.IO.IO;
 import frc.robot.Robot;
 import frc.robot.util.AutoTurn.AutoTurnConstants;
 import frc.robot.util.Rectangles.AlignmentRectangle;
@@ -137,7 +135,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 //				),
 				new HolonomicPathFollowerConfig(
 						new PIDConstants(.5,0,0),
-						new PIDConstants(.4,0,0),
+						new PIDConstants(.2,0,0),
 						4.6,
 						0.4,
 						new ReplanningConfig()
@@ -159,11 +157,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-
-		if (IO.getButtonValue(Controls.SpeakerScore).get()) {
-			currentRectangle = (AlignmentRectangle) AutoTurnConstants.RECTANGLE_SET.findRectangle(getPose());
-			currentZone = (ShooterRectangle) ShooterUtilConstants.SHOOTING_ZONE_SET.findRectangle(getPose());
-		}
 
 		if (RobotState.isDisabled())
 		{

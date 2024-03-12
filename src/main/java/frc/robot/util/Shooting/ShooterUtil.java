@@ -17,7 +17,7 @@ public class ShooterUtil {
     public static ShooterState getStateAtRectangle(ShootingZone rectangle) {
         switch (rectangle) {
             case subwoofer -> {
-                return new ShooterState(4500, 2000, MechanismState.deployed);
+                return new ShooterState(3500, 3500, MechanismState.deployed);
             }
             case tape , none -> {
                 return new ShooterState(4000, 2000, MechanismState.stored);

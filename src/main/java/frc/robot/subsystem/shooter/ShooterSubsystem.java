@@ -61,14 +61,16 @@ public class ShooterSubsystem extends SubsystemBase {
                     bottomTargetSpeed = -2000;
                 }
                 case Amp -> {
-                    topTargetSpeed = 1850;
-                    bottomTargetSpeed = 1850;
+                    topTargetSpeed = 4000;
+                    bottomTargetSpeed = 2000;
                 }
-                case Speaker -> {
-                    topTargetSpeed = getSpeakerState().getTopRPM();
-                    bottomTargetSpeed = getSpeakerState().getBottomRPM();
-//                    topTargetSpeed = targetTopTestRPM;
-//                    bottomTargetSpeed = targetBottomTestRPM;
+                case Tape -> {
+                    topTargetSpeed = 4000;
+                    bottomTargetSpeed = 2000;
+                }
+                case Subwoofer -> {
+                    topTargetSpeed = 3500;
+                    bottomTargetSpeed = 3500;
                 }
                 case test -> {
                     topTargetSpeed = targetTopTestRPM;

@@ -3,7 +3,8 @@ package frc.robot.subsystem.shooter;
 public enum ShooterMode {
     SourceIntake,
     Amp,
-    Speaker,
+    Tape,
+    Subwoofer,
     test,
     off,
 }

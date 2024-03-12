@@ -40,7 +40,8 @@ public abstract class IO {
 //        controlsButtons.put(Controls.fire, () -> secondary.getRightTriggerAxis() > .75);
 //        controlsButtons.put(Controls.SpeakerScore, () -> secondary.getLeftTriggerAxis() > .75);
         controlsButtons.put(Controls.fire, secondary::getRightTriggerButton);
-        controlsButtons.put(Controls.SpeakerScore, secondary::getLeftTriggerButton);
+        controlsButtons.put(Controls.revSpeaker, secondary::getLeftBumper);
+        controlsButtons.put(Controls.revTape, secondary::getLeftTriggerButton);
 
         controlsButtons.put(Controls.AmpScore, secondary::getRightBumper);
 

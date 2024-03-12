@@ -30,7 +30,8 @@ public enum Controls {
     toggleDeflector,
 
     AmpScore,
-    SpeakerScore,
+    revTape,
+    revSpeaker,
 
     intakeManual
 
