@@ -1,6 +1,7 @@
 package frc.robot.subsystem.drivetrain;
 
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -12,9 +13,6 @@ import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.navx.Navx;
-import frc.lib.navx.NavxReal;
-import frc.lib.navx.NavxSim;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
 import frc.robot.Robot;
@@ -55,7 +53,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	private final SwerveDriveKinematics kinematics;
 	private final SwerveDriveOdometry odometry;
 
-	private final Navx navx;
+	private final Pigeon2 gyro;
 
 	private SpeedMode speedMode;
 
@@ -81,12 +79,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		backLeft = new SwerveModule(backLeftDetails);
 		backRight = new SwerveModule(backRightDetails);
 
-		if (Robot.isSimulation())
-		{
-			navx = new NavxSim();
-		}else{
-			navx = new NavxReal();
-		}
+		gyro = new Pigeon2(21);
+
 
 		frontLeftPosition = frontLeft.getModulePosition();
 		frontRightPosition = frontRight.getModulePosition();
@@ -103,7 +97,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		targetSpeeds = new ChassisSpeeds();
 
 		kinematics = KINEMATICS;
-		odometry = new SwerveDriveOdometry(kinematics, navx.getRotation2d(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
+		odometry = new SwerveDriveOdometry(kinematics, getRotation(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
 		mode = DrivetrainMode.teleop;
 
 		setSpeedMode(SpeedMode.normal);
@@ -212,15 +206,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		currentSpeeds = targetSpeeds;
 
-		if (Robot.isSimulation())
-		{
-			// gyro update
-			double gyroRate = currentSpeeds.omegaRadiansPerSecond;
-			navx.setRate(gyroRate);
-
-			navx.update(Robot.defaultPeriodSecs);
-		}
-
 		frontLeft.periodic();
 		frontRight.periodic();
 		backLeft.periodic();
@@ -235,13 +220,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		Logger.recordOutput("Drivetrain/currentStates", frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
 		Logger.recordOutput("Drivetrain/states", states);
-		Logger.recordOutput("Drivetrain/gyro", getRotation().getRadians());
+		Logger.recordOutput("Drivetrain/gyro", getRotation());
 		Logger.recordOutput("Drivetrain/targetAngle", this.targetAngle);
 		Logger.recordOutput("RobotPose", getPose());
-//		Logger.recordOutput("currentRectangle", currentRectangle.getName());
-//		Logger.recordOutput("currentZone", currentZone.getName());
 
-		navx.update(0);
+
 	}
 
 	private ChassisSpeeds getRobotRelativeSpeeds()
@@ -274,12 +257,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	}
 	public Rotation2d getRotation()
 	{
-		return navx.getRotation2d();
+		return gyro.getRotation2d();
 	}
 
 	public void zeroGyro()
 	{
-		navx.zeroYaw();
+		gyro.reset();
 	}
 	public void setMode(DrivetrainMode mode) {
 		this.mode = mode;
@@ -304,9 +287,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		return odometry.getPoseMeters();
 	}
 
-	public Navx getNavx() {
-		return navx;
-	}
 
 	public PIDController getThetaController() { return thetaController; }
 	public AlignmentRectangle getCurrentRectangle() { return currentRectangle; }
