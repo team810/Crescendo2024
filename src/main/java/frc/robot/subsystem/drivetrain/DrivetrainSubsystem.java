@@ -114,6 +114,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		);
 
 
+
+
 		driveController.setTolerance(new Pose2d(.05,.05, new Rotation2d(.01)));
 		driveController.setEnabled(true);
 
@@ -150,6 +152,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 				targetSpeeds = new ChassisSpeeds(0,0,0);
 			}
         }
+
 
 		states = kinematics.toSwerveModuleStates(
 				ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds, getRotation())
@@ -249,11 +252,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 	public void setSpeedMode(SpeedMode speedMode) {
 		this.speedMode = speedMode;
-
-		frontLeft.setSpeedMode(this.speedMode);
-		frontRight.setSpeedMode(this.speedMode);
-		backLeft.setSpeedMode(this.speedMode);
-		backRight.setSpeedMode(this.speedMode);
 	}
 
 	public SpeedMode getSpeedMode() {

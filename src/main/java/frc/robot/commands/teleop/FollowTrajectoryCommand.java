@@ -25,6 +25,7 @@ public class FollowTrajectoryCommand extends Command {
     @Override
     public void initialize() {
         DrivetrainSubsystem.getInstance().resetOdometry(trajectory.getInitialPose());
+
         timer.start();
     }
 
@@ -56,7 +57,6 @@ public class FollowTrajectoryCommand extends Command {
 
     @Override
     public boolean isFinished() {
-
         return trajectory.getTotalTime() < timer.get() && DrivetrainSubsystem.getInstance().getDriveControllerAtSetpoint();
     }
 }

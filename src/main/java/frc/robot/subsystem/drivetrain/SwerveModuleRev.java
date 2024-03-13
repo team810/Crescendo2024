@@ -4,9 +4,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
+import com.revrobotics.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.Logger;
@@ -22,9 +20,10 @@ class SwerveModuleRev implements SwerveModuleIO {
 	private double driveVoltage;
 	private double steerVoltage;
 
+	private double referenceVelocity;
+
 	public SwerveModuleRev(SwerveModuleDetails details)
 	{
-
 		drive = new CANSparkMax(details.driveID, CANSparkBase.MotorType.kBrushless);
 		steer = new CANSparkMax(details.steerID, CANSparkBase.MotorType.kBrushless);
 
@@ -59,29 +58,41 @@ class SwerveModuleRev implements SwerveModuleIO {
 
 		driveVoltage = 0;
 		steerVoltage = 0;
+
+		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus0, 10);
+		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus1, 50);
+		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus2, 200);
+		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus3, 1000);
+		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus4, 1000);
+		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus5, 1000);
+		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus6, 1000);
+
+		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus0, 10);
+		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus1, 20);
+		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus2, 20);
+		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus3, 1000);
+		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus4, 1000);
+		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus5, 1000);
+		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus6, 1000);
+
+		drive.getPIDController().setP(0);
+		drive.getPIDController().setI(0);
+		drive.getPIDController().setD(0);
+		drive.getPIDController().setFF(0);
+
+		drive.setVoltage(0);
 	}
 	@Override
 	public void update() {
-		Logger.recordOutput("Drivetrain/" + details.module.name() +
-				"/WheelVelocity", getWheelVelocity());
-		Logger.recordOutput("Drivetrain/" + details.module.name() +
-				"/DriveVoltage", driveVoltage);
-		Logger.recordOutput("Drivetrain/"+ details.module.name() +
-				"/DriveAmpDraw", drive.getOutputCurrent());
-		Logger.recordOutput("Drivetrain/"+ details.module.name() +
-				"/DriveTemperature", drive.getMotorTemperature());
-
-		Logger.recordOutput("Drivetrain/" + details.module.name() +
-				"/SteerVoltage", steerVoltage);
-		Logger.recordOutput("Drivetrain/" + details.module.name() +
-				"/WheelAngle", getWheelAngle().getRadians());
-		Logger.recordOutput("Drivetrain/"+ details.module.name() +
-				"/SteerAmpDraw", drive.getOutputCurrent());
-		Logger.recordOutput("Drivetrain/"+ details.module.name() +
-				"/SteerTemperature", steer.getMotorTemperature());
-
+		Logger.recordOutput("Drivetrain/" + details.module.name() + "/WheelVelocity", getWheelVelocity());
+		Logger.recordOutput("Drivetrain/" + details.module.name() + "/DriveVoltage", driveVoltage);
+		Logger.recordOutput("Drivetrain/"+ details.module.name() + "/DriveAmpDraw", drive.getOutputCurrent());
+		Logger.recordOutput("Drivetrain/"+ details.module.name() + "/DriveTemperature", drive.getMotorTemperature());
+		Logger.recordOutput("Drivetrain/" + details.module.name() + "/SteerVoltage", steerVoltage);
+		Logger.recordOutput("Drivetrain/" + details.module.name() + "/WheelAngle", getWheelAngle().getRadians());
+		Logger.recordOutput("Drivetrain/"+ details.module.name() + "/SteerAmpDraw", drive.getOutputCurrent());
+		Logger.recordOutput("Drivetrain/"+ details.module.name() + "/SteerTemperature", steer.getMotorTemperature());
 		Logger.recordOutput("Drivetrain/" + details.module.name() + "/Revolutions", (drive_encoder.getPosition() / DrivetrainConstants.GEAR_REDUCTION_DRIVE) * (.102 * Math.PI));
-
 	}
 
     @Override
@@ -94,10 +105,15 @@ class SwerveModuleRev implements SwerveModuleIO {
 		drive.setIdleMode(mode);
     }
 
-    @Override
+	@Override
+	public void setWheelTargetVelocity(double targetVelocity) {
+		referenceVelocity = targetVelocity;
+		drive.getPIDController().setReference(referenceVelocity, CANSparkBase.ControlType.kSmartVelocity);
+	}
+
+	@Override
 	public void setDriveVoltage(double voltage) {
 		driveVoltage = MathUtil.clamp(voltage, -1, 1);
-
 		drive.set(driveVoltage);
 	}
 
@@ -126,4 +142,5 @@ class SwerveModuleRev implements SwerveModuleIO {
 	public double getWheelPosition() {
 		return (drive_encoder.getPosition() / DrivetrainConstants.GEAR_REDUCTION_DRIVE) * (.102 * Math.PI);
 	}
+
 }
