@@ -9,7 +9,6 @@ import frc.robot.IO.IO;
 import frc.robot.subsystem.drivetrain.DrivetrainConstants;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.drivetrain.SpeedMode;
-import frc.robot.util.AutoTurn.AutoTurnMode;
 import frc.robot.util.AutoTurn.AutoTurnUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -36,17 +35,6 @@ public class DriveCommand extends Command {
 
 		double currentAngle = 0;
 		double setpointAngle = 0;
-
-//		AutoTurnMode currentRectangle =
-//				DrivetrainSubsystem.getInstance().getCurrentRectangle().getType();
-
-//		boolean notAligning = (!(IO.getButtonValue(Controls.rotateToTarget).get())) ||
-//				(currentRectangle == AutoTurnMode.noRectangle);
-
-//		if ((currentRectangle == AutoTurnMode.blueSpeaker) ||
-//				(currentRectangle == AutoTurnMode.redSpeaker)) {
-////			IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, .4);
-//		}
 
 		boolean aligning = IO.getButtonValue(Controls.autoAlignAmp).get()
 							|| IO.getButtonValue(Controls.autoAlignPodium).get()
@@ -119,7 +107,7 @@ public class DriveCommand extends Command {
 			y = MathUtil.clamp(y, -DrivetrainConstants.SLOW_SPEED, DrivetrainConstants.SLOW_SPEED);
 		}
 
-		DrivetrainSubsystem.getInstance().setTargetSpeeds(
+		DrivetrainSubsystem.getInstance().setTelopSpeeds(
 				x,
 				y,
 				theta

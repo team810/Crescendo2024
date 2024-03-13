@@ -9,7 +9,6 @@ import frc.lib.Conversions;
 
 public final class DrivetrainConstants {
 
-	//FIXME CAN ID FOR DRIVER
 	public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 3;
 	public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 4;
 	public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 17;
@@ -48,6 +47,7 @@ public final class DrivetrainConstants {
 	 * Units Rad per second
 	 */
 	public static final double WHEEL_DIAMETER  = .1016;
+	public static final double MAX_AUTO_SPEED = 3.0;
 
 	/**
 	 * The distance traveled for ever rotation of the wheel. PI * Wheel Diameter in inches
