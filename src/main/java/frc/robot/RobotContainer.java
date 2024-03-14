@@ -20,15 +20,13 @@ import frc.robot.commands.auto.intake.AutoIntakeWithLaserCommand;
 import frc.robot.commands.auto.score.AutoRevShooter;
 import frc.robot.commands.auto.score.AutoShooterFire;
 import frc.robot.commands.auto.score.AutoShooterStop;
-import frc.robot.commands.teleop.ClimbCommand;
-import frc.robot.commands.teleop.DriveCommand;
-import frc.robot.commands.teleop.TBoneCommand;
+import frc.robot.commands.teleop.*;
 import frc.robot.commands.teleop.intake.IntakeFwdCommand;
 import frc.robot.commands.teleop.intake.IntakeRevCommand;
 import frc.robot.commands.teleop.intake.IntakeSourceCommand;
 import frc.robot.commands.teleop.score.AmpScoreCommand;
 import frc.robot.commands.teleop.score.FireCommand;
-import frc.robot.commands.teleop.score.SpeakerScoreCommand;
+import frc.robot.commands.teleop.score.RevSpeakerCommand;
 import frc.robot.subsystem.climber.ClimberSubsystem;
 import frc.robot.subsystem.deflector.DeflectorSubsystem;
 import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
@@ -37,7 +35,6 @@ import frc.robot.subsystem.laser.LaserState;
 import frc.robot.subsystem.laser.LaserSubsystem;
 import frc.robot.subsystem.shooter.ShooterSubsystem;
 import frc.robot.subsystem.tbone.TBoneSubsystem;
-import frc.robot.subsystem.vision.VisionSubsystem;
 import frc.robot.util.Shooting.ShootingZone;
 
 public class RobotContainer {
@@ -48,11 +45,9 @@ public class RobotContainer {
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
-
-
         IO.Initialize();
 
-        VisionSubsystem.getInstance();
+//        VisionSubsystem.getInstance();
         ShooterSubsystem.getInstance();
         IntakeSubsystem.getInstance();
         ClimberSubsystem.getInstance();
@@ -82,11 +77,13 @@ public class RobotContainer {
 //        new Trigger(() -> IO.getButtonValue(Controls.SpeakerScore).get()).whileTrue(new RevShooterTestCommand());
 
         new Trigger(() -> IO.getButtonValue(Controls.AmpScore).get()).whileTrue(new AmpScoreCommand());
-        new Trigger(() -> IO.getButtonValue(Controls.SpeakerScore).get()).whileTrue(new SpeakerScoreCommand());
+        new Trigger(() -> IO.getButtonValue(Controls.revSpeaker).get()).whileTrue(new RevSpeakerCommand());
+        new Trigger(() -> IO.getButtonValue(Controls.revTape).get()).whileTrue(new RevTapeCommand());
 
         new Trigger(() -> IO.getButtonValue(Controls.releaseClimber).get()).toggleOnTrue(new InstantCommand(() -> ClimberSubsystem.getInstance().releaseClimber()));
         new Trigger(() -> IO.getButtonValue(Controls.pinClimber).get()).toggleOnTrue(new InstantCommand(() -> ClimberSubsystem.getInstance().pinClimber()));
         new Trigger(() -> IO.getButtonValue(Controls.climb).get()).whileTrue(new ClimbCommand());
+        new Trigger(() -> IO.getButtonValue(Controls.invertClimb).get()).whileTrue(new InvertClimbCommand());
 
         new Trigger(() -> IO.getButtonValue(Controls.toggleTBone).get()).toggleOnTrue(new TBoneCommand());
         new Trigger(() -> IO.getButtonValue(Controls.toggleDeflector).get()).onTrue(new InstantCommand(() -> DeflectorSubsystem.getInstance().toggleDeflectorState()));

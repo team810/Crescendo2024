@@ -19,7 +19,7 @@ public class NavxSim implements Navx {
 	}
 	@Override
 	public Rotation2d getRotation2d() {
-		return new Rotation2d(-rot.getRadians());
+		return new Rotation2d(rot.getRadians());
 	}
 
 	@Override
@@ -34,6 +34,11 @@ public class NavxSim implements Navx {
 	@Override
 	public void setOffset(double offset) {
 		rot.plus(new Rotation2d(offset));
+	}
+
+	@Override
+	public void setAngle(double angle) {
+
 	}
 
 	public double getRate() {

@@ -15,7 +15,6 @@ import frc.robot.subsystem.tbone.TBoneSubsystem;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class Robot extends LoggedRobot
 {
@@ -26,10 +25,11 @@ public class Robot extends LoggedRobot
     @Override
     public void robotInit()
     {
+
         Logger.recordMetadata("ProjectName", "Crescendo"); // Set a metadata value
         if (isReal()) {
             Logger.addDataReceiver(new NT4Publisher());
-            Logger.addDataReceiver(new WPILOGWriter());
+//            Logger.addDataReceiver(new WPILOGWriter());
         } else {
             Logger.addDataReceiver(new NT4Publisher());
         }

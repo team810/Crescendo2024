@@ -89,20 +89,22 @@ class SwerveModule {
     void periodic(){
         module.setState(state);
 
-        double speedOfMotorRPM =
-                (state.speedMetersPerSecond / DrivetrainConstants.DISTANCE_PER_REVOLUTION)
-                        * 60 * DrivetrainConstants.GEAR_REDUCTION_DRIVE;
+//        double speedOfMotorRPM =
+//                (state.speedMetersPerSecond / DrivetrainConstants.DISTANCE_PER_REVOLUTION)
+//                        * 60 * DrivetrainConstants.GEAR_REDUCTION_DRIVE;
+//
+//        module.setDriveVoltage(
+//                driveController.calculate(module.getWheelVelocity(), speedOfMotorRPM)
+//        );
+        module.setDriveVoltage(state.speedMetersPerSecond / DrivetrainConstants.NORMAL_SPEED);
 
-        module.setDriveVoltage(
-                driveController.calculate(module.getWheelVelocity(), speedOfMotorRPM)
-        );
         module.setSteerVoltage(
                 steerController.calculate(module.getWheelAngle().getRadians(),
                         MathUtil.angleModulus(state.angle.getRadians()))
         );
 
-        Logger.recordOutput("Drivetrain/" + details.module.name() +
-                "/TargetVelocity", speedOfMotorRPM);
+//        Logger.recordOutput("Drivetrain/" + details.module.name() +
+//                "/TargetVelocity", speedOfMotorRPM);
         Logger.recordOutput("Drivetrain/" + details.module.name() +
                 "/TargetAngle", state.angle.getRadians());
         Logger.recordOutput("Drivetrain/" + details.module.name() +
@@ -144,6 +146,9 @@ class SwerveModule {
 
     public SwerveModulePosition getModulePosition()
     {
+        if (Robot.isReal()) {
+            position.distanceMeters = -position.distanceMeters;
+        }
         return position;
     }
 

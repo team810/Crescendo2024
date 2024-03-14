@@ -34,8 +34,11 @@ public class ClimberSubsystem extends SubsystemBase {
 
         switch (state)
         {
-            case on -> {
+            case down -> {
                 climber.setVoltage(ClimberConstants.CLIMBER_SPEED * 12);
+            }
+            case up -> {
+                climber.setVoltage(-ClimberConstants.CLIMBER_SPEED * 12);
             }
             case off -> {
                 climber.setVoltage(0);

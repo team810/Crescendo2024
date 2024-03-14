@@ -36,4 +36,10 @@ public class NavxReal implements Navx{
 	public void update(double delta) {
 		Logger.recordOutput("rawGyro", navx.getAngle());
 	}
+
+	public void setAngle(double angle) {
+		navx.reset();
+//		navx.setAngleAdjustment(angle);
+	}
+
 }

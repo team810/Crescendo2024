@@ -5,7 +5,7 @@
       "x": 1.3135410510283454,
       "y": 5.554595446393091
     },
-    "rotation": 178.2060045533317
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -26,6 +26,6 @@
       ]
     }
   },
-  "folder": "2 Peice Auto",
+  "folder": "2 Piece Auto",
   "choreoAuto": false
 }

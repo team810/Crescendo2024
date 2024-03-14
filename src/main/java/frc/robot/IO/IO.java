@@ -28,7 +28,11 @@ public abstract class IO {
         controlsButtons.put(Controls.slowMode, primary::getRightBumper);
         controlsButtons.put(Controls.normalMode, () -> (.75 < primary.getRightTriggerAxis()));
 //        controlsButtons.put(Controls.normalMode, primary::getRightTriggerButton);
-        controlsButtons.put(Controls.rotateToTarget, primary::getAButton);
+//        controlsButtons.put(Controls.rotateToTarget, primary::getAButton);
+
+        controlsButtons.put(Controls.autoAlignAmp, primary::getBButton);
+        controlsButtons.put(Controls.autoAlignPodium, primary::getAButton);
+        controlsButtons.put(Controls.autoAlignSource, primary::getXButton);
 
         controlsButtons.put(Controls.intakeFWD, secondary::getAButton);
         controlsButtons.put(Controls.intakeREVS, secondary::getYButton);
@@ -36,11 +40,13 @@ public abstract class IO {
 //        controlsButtons.put(Controls.fire, () -> secondary.getRightTriggerAxis() > .75);
 //        controlsButtons.put(Controls.SpeakerScore, () -> secondary.getLeftTriggerAxis() > .75);
         controlsButtons.put(Controls.fire, secondary::getRightTriggerButton);
-        controlsButtons.put(Controls.SpeakerScore, secondary::getLeftTriggerButton);
+        controlsButtons.put(Controls.revSpeaker, secondary::getLeftBumper);
+        controlsButtons.put(Controls.revTape, secondary::getLeftTriggerButton);
 
         controlsButtons.put(Controls.AmpScore, secondary::getRightBumper);
 
         controlsButtons.put(Controls.climb, () -> (secondary.getPOV() == 90));
+        controlsButtons.put(Controls.invertClimb, () -> (secondary.getPOV() == 270));
         controlsButtons.put(Controls.releaseClimber, () -> (secondary.getPOV() == 0));
         controlsButtons.put(Controls.pinClimber, () -> (secondary.getPOV() == 180));
 

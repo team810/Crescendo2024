@@ -14,7 +14,7 @@ public class ClimbCommand extends Command {
 
     @Override
     public void initialize() {
-        ClimberSubsystem.getInstance().setState(ClimberStates.on);
+        ClimberSubsystem.getInstance().setState(ClimberStates.down);
     }
 
 

@@ -37,22 +37,26 @@ public class DriveCommand extends Command {
 		double currentAngle = 0;
 		double setpointAngle = 0;
 
-		AutoTurnMode currentRectangle =
-				DrivetrainSubsystem.getInstance().getCurrentRectangle().getType();
+//		AutoTurnMode currentRectangle =
+//				DrivetrainSubsystem.getInstance().getCurrentRectangle().getType();
 
-		boolean notAligning = (!(IO.getButtonValue(Controls.rotateToTarget).get())) ||
-				(currentRectangle == AutoTurnMode.noRectangle);
+//		boolean notAligning = (!(IO.getButtonValue(Controls.rotateToTarget).get())) ||
+//				(currentRectangle == AutoTurnMode.noRectangle);
 
-		if ((currentRectangle == AutoTurnMode.blueSpeaker) ||
-				(currentRectangle == AutoTurnMode.redSpeaker)) {
-//			IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, .4);
-		}
+//		if ((currentRectangle == AutoTurnMode.blueSpeaker) ||
+//				(currentRectangle == AutoTurnMode.redSpeaker)) {
+////			IO.getPrimary().setRumble(GenericHID.RumbleType.kBothRumble, .4);
+//		}
 
+		boolean aligning = IO.getButtonValue(Controls.autoAlignAmp).get()
+							|| IO.getButtonValue(Controls.autoAlignPodium).get()
+							|| IO.getButtonValue(Controls.autoAlignSource).get();
 
 		x = IO.getJoystickValue(Controls.drive_x).get();
 		y = IO.getJoystickValue(Controls.drive_y).get();
 		theta = theta;
-		if (notAligning)
+
+		if (!aligning)
 		{
 			theta = IO.getJoystickValue(Controls.drive_theta).get();
 			theta = thetaDeadband.apply(theta);
@@ -69,8 +73,18 @@ public class DriveCommand extends Command {
 
 		} else {
 			currentAngle = -MathUtil.angleModulus(DrivetrainSubsystem.getInstance().getRotation().getRadians());
-			setpointAngle = MathUtil.angleModulus(AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose())
-								.getRadians());
+//			setpointAngle = MathUtil.angleModulus(AutoTurnUtil.calculateTargetAngle(DrivetrainSubsystem.getInstance().getPose())
+//								.getRadians());
+
+			setpointAngle = 0;
+
+			if (IO.getButtonValue(Controls.autoAlignAmp).get()) {
+				setpointAngle = AutoTurnUtil.getAmpAngle().getRadians();
+			} else if (IO.getButtonValue(Controls.autoAlignSource).get()) {
+				setpointAngle = AutoTurnUtil.getSourceAngle().getRadians();
+			} else if (IO.getButtonValue(Controls.autoAlignPodium).get()) {
+				setpointAngle = AutoTurnUtil.getPodiumAngle().getRadians();
+			}
 
 			Logger.recordOutput("Theta/Target", currentAngle);
 			Logger.recordOutput("Theta/Setpoint", setpointAngle);

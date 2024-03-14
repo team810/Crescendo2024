@@ -67,7 +67,7 @@ public final class DrivetrainConstants {
 	public static final PIDConstants STEER_CONTROLLER_REAL = new PIDConstants(.5,.01,0);
 
 	public static final PIDConstants THETA_CONTROLLER_SIM = new PIDConstants(4,0,0);
-	public static final PIDConstants THETA_CONTROLLER_REAL = new PIDConstants(0.45,0.01,0);
+	public static final PIDConstants THETA_CONTROLLER_REAL = new PIDConstants(0.8,0.0,0);
 	/**
 	 * The measurement of the front Left wheel to the front right wheel or the back left wheel to the back right wheel
 	 * @Unites Meters
