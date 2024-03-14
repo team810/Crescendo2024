@@ -239,7 +239,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	 */
 	public void setTelopSpeeds(double x, double y, double z)
 	{
-		targetSpeeds = new ChassisSpeeds(y,x,z);
+		telopSpeeds = new ChassisSpeeds(y,x,z);
 	}
 
 	public Pose2d getPose()
