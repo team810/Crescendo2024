@@ -60,7 +60,7 @@ class SwerveModuleRev implements SwerveModuleIO {
 		steerVoltage = 0;
 
 		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus0, 10);
-		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus1, 50);
+		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus1, 10);
 		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus2, 200);
 		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus3, 1000);
 		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus4, 1000);
@@ -68,7 +68,7 @@ class SwerveModuleRev implements SwerveModuleIO {
 		steer.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus6, 1000);
 
 		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus0, 10);
-		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus1, 20);
+		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus1, 10);
 		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus2, 20);
 		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus3, 1000);
 		drive.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus4, 1000);

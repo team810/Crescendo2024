@@ -71,7 +71,6 @@ public class Robot extends LoggedRobot
         {
             autonomousCommand.schedule();
         }
-        DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.trajectory);
     }
     
     @Override

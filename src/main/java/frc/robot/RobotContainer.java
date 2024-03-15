@@ -1,12 +1,14 @@
 package frc.robot;
 
 import com.choreo.lib.Choreo;
+import com.choreo.lib.ChoreoTrajectory;
+import com.choreo.lib.ChoreoTrajectoryState;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
@@ -71,13 +73,16 @@ public class RobotContainer {
 
 
     public Command getAutonomousCommand() {
+        DrivetrainSubsystem.getInstance().zeroGyro();
+        ChoreoTrajectory trajectory1 = Choreo.getTrajectory("go");
+
+        DrivetrainSubsystem.getInstance().setYaw(trajectory1.getInitialPose().getRotation().getDegrees());
+        ChoreoTrajectoryState state = trajectory1.sample(0);
+        DrivetrainSubsystem.getInstance().resetOdometry(trajectory1.getInitialPose());
+        DrivetrainSubsystem.getInstance().setTrajectoryState(new Trajectory.State(0,0,0,DrivetrainSubsystem.getInstance().getPose(), 0));
         return new SequentialCommandGroup(
-                new WaitCommand(1),
-                new FollowTrajectoryCommand(Choreo.getTrajectory("4 Peice Auto.1")),
-                new WaitCommand(1),
-                new FollowTrajectoryCommand(Choreo.getTrajectory("4 Peice Auto.2")),
-                new WaitCommand(1),
-                new FollowTrajectoryCommand(Choreo.getTrajectory("4 Peice Auto.3"))
+                new FollowTrajectoryCommand(trajectory1)
         );
+
     }
 }

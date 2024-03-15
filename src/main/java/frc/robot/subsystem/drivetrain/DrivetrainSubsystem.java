@@ -71,6 +71,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		backRight = new SwerveModule(backRightDetails);
 
 		gyro = new Pigeon2(21);
+		gyro.reset();
 
 		frontLeftPosition = frontLeft.getModulePosition();
 		frontRightPosition = frontRight.getModulePosition();
@@ -90,6 +91,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		odometry = new SwerveDriveOdometry(kinematics, getRotation(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
 		mode = DrivetrainMode.teleop;
 
+
 		setSpeedMode(SpeedMode.normal);
 
 		thetaController = new PIDController(0,0,0);
@@ -108,15 +110,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		thetaController.setTolerance(.01);
 
 		driveController = new HolonomicDriveController(
-				new PIDController(6.5,0,0),
-				new PIDController(6.5,0,0),
-				new ProfiledPIDController(1.2,0,0,new TrapezoidProfile.Constraints(Math.PI * 4,Math.PI * 2))
+				new PIDController(4.7,.08,1.2),
+				new PIDController(4.7,.08,1.2),
+				new ProfiledPIDController(6,.5,0,new TrapezoidProfile.Constraints(Math.PI * 4,Math.PI * 2))
 		);
 
-
-
-
-		driveController.setTolerance(new Pose2d(.05,.05, new Rotation2d(.01)));
+		driveController.setTolerance(new Pose2d(.1,.1, new Rotation2d(.01)));
 		driveController.setEnabled(true);
 
 		trajectoryState = new Trajectory.State();
@@ -143,6 +142,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
 						trajectoryState,
 						trajectoryState.poseMeters.getRotation()
 				);
+				if (Robot.isSimulation())
+				{
+					trajectorySpeeds.vxMetersPerSecond = trajectorySpeeds.vxMetersPerSecond * 1;
+					trajectorySpeeds.vyMetersPerSecond = trajectorySpeeds.vyMetersPerSecond * 1;
+					trajectorySpeeds.omegaRadiansPerSecond = trajectorySpeeds.omegaRadiansPerSecond * 1;
+				}else{
+					trajectorySpeeds.vxMetersPerSecond = trajectorySpeeds.vxMetersPerSecond * -1;
+					trajectorySpeeds.vyMetersPerSecond = trajectorySpeeds.vyMetersPerSecond * -1;
+					trajectorySpeeds.omegaRadiansPerSecond = trajectorySpeeds.omegaRadiansPerSecond * -1;
+				}
+
+
 				trajectorySpeeds.vxMetersPerSecond = MathUtil.clamp(trajectorySpeeds.vxMetersPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
 				trajectorySpeeds.vyMetersPerSecond = MathUtil.clamp(trajectorySpeeds.vyMetersPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
 				trajectorySpeeds.omegaRadiansPerSecond = MathUtil.clamp(trajectorySpeeds.omegaRadiansPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
@@ -193,6 +204,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		Logger.recordOutput("Drivetrain/gyro", getRotation());
 		Logger.recordOutput("RobotPose", getPose());
 		Logger.recordOutput("Drivetrain/mode", mode);
+		Logger.recordOutput("Drivetrain/TargetPose", trajectoryState.poseMeters);
+		Logger.recordOutput("Drivetrain/AtSetpoint", getDriveControllerAtSetpoint());
+
 
 		if (Robot.isSimulation())
 		{
@@ -212,7 +226,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
 		backRightPosition = backRight.getModulePosition();
-
+		newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d(0));
 		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
 	}
 
@@ -273,5 +287,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	public boolean getDriveControllerAtSetpoint()
 	{
 		return driveController.atReference();
+	}
+
+	public void setYaw(double yaw)
+	{
+		gyro.setYaw(yaw);
 	}
 }

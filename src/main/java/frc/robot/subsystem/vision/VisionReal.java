@@ -16,9 +16,7 @@ import java.util.Optional;
 public class VisionReal implements VisionIO {
 
     private final PhotonCamera limelight;
-
     private PhotonPoseEstimator estimator;
-
     private Optional<EstimatedRobotPose> poseEstimation;
     private AprilTagFieldLayout layout;
 
@@ -26,12 +24,6 @@ public class VisionReal implements VisionIO {
         limelight = new PhotonCamera("cam");
         
         limelight.setLED(VisionLEDMode.kOff);
-
-
-
-
-
-//        result = null;
 
         try {
             layout = AprilTagFieldLayout.loadFromResource(
@@ -45,6 +37,7 @@ public class VisionReal implements VisionIO {
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                 limelight,
                 VisionConstants.robotToCam);
+
 
     }
 

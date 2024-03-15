@@ -13,7 +13,6 @@ import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 public class FollowTrajectoryCommand extends Command {
     private final Timer timer;
     private final ChoreoTrajectory trajectory;
-
     private double previousVelocity = 0;
 
     public FollowTrajectoryCommand(ChoreoTrajectory trajectory)
@@ -24,8 +23,7 @@ public class FollowTrajectoryCommand extends Command {
     }
     @Override
     public void initialize() {
-        DrivetrainSubsystem.getInstance().resetOdometry(trajectory.getInitialPose());
-
+        DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.trajectory);
         timer.start();
     }
 
@@ -33,10 +31,10 @@ public class FollowTrajectoryCommand extends Command {
     public void execute() {
        ChoreoTrajectoryState state = trajectory.sample(timer.get());
        DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.trajectory);
+
        double velocity = Math.sqrt(
                Math.pow(state.velocityX,2) + Math.pow(state.velocityY, 2)
        );
-
        double acceleration = (velocity - previousVelocity)/ Robot.defaultPeriodSecs;
 
        Trajectory.State stateTrajectory = new Trajectory.State(
@@ -46,6 +44,7 @@ public class FollowTrajectoryCommand extends Command {
                state.getPose(),
                state.heading
        );
+
        DrivetrainSubsystem.getInstance().setTrajectoryState(stateTrajectory);
        previousVelocity = velocity;
     }
