@@ -112,11 +112,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		driveController = new HolonomicDriveController(
 				new PIDController(4.7,.08,1.2),
 				new PIDController(4.7,.08,1.2),
-				new ProfiledPIDController(6,.5,0,new TrapezoidProfile.Constraints(Math.PI * 4,Math.PI * 2))
+				new ProfiledPIDController(6,.5,0,new TrapezoidProfile.Constraints(Math.PI * 2,Math.PI))
 		);
 
 		driveController.setTolerance(new Pose2d(.1,.1, new Rotation2d(.01)));
-		driveController.setEnabled(true);
+		driveController.setEnabled(false);
 
 		trajectoryState = new Trajectory.State();
 
@@ -135,8 +135,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		{
             case teleop -> {
 				targetSpeeds = telopSpeeds;
+				driveController.setEnabled(false);
             }
             case trajectory -> {
+				driveController.setEnabled(true);
 				trajectorySpeeds = driveController.calculate(
 						getPose(),
 						trajectoryState,
@@ -153,23 +155,23 @@ public class DrivetrainSubsystem extends SubsystemBase {
 					trajectorySpeeds.omegaRadiansPerSecond = trajectorySpeeds.omegaRadiansPerSecond * -1;
 				}
 
-
 				trajectorySpeeds.vxMetersPerSecond = MathUtil.clamp(trajectorySpeeds.vxMetersPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
 				trajectorySpeeds.vyMetersPerSecond = MathUtil.clamp(trajectorySpeeds.vyMetersPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
 				trajectorySpeeds.omegaRadiansPerSecond = MathUtil.clamp(trajectorySpeeds.omegaRadiansPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+
 				targetSpeeds = trajectorySpeeds;
 			}
 			default -> {
+				driveController.setEnabled(false);
 				targetSpeeds = new ChassisSpeeds(0,0,0);
 			}
         }
-
 
 		states = kinematics.toSwerveModuleStates(
 				ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds, getRotation())
 		);
 
-		// This mess with the pid controllers, it makes the mid controllers go back and forth
+
 		states[0] = SwerveModuleState.optimize(states[0], frontLeft.getState().angle);
 		states[1] = SwerveModuleState.optimize(states[1], frontRight.getState().angle);
 		states[2] = SwerveModuleState.optimize(states[2], backLeft.getState().angle);
@@ -226,7 +228,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
 		backRightPosition = backRight.getModulePosition();
-		newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d(0));
 		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
 	}
 

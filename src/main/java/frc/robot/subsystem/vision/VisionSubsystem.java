@@ -23,7 +23,7 @@ public class VisionSubsystem extends SubsystemBase {
         if (Robot.isReal()) {
             vision = new VisionReal();
         } else if (Robot.isSimulation()) {
-            vision = new VisionSim();
+            vision = new VisionReal();
         } else {
             throw new RuntimeException("WHAT DID YOU DO");
         }

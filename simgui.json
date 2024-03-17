@@ -25,9 +25,6 @@
         "open": true
       },
       "photonvision": {
-        "cam": {
-          "open": true
-        },
         "open": true
       }
     }
