@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
+import frc.robot.autobuilder.AutosBuilder;
+import frc.robot.autobuilder.Paths;
 import frc.robot.commands.*;
 import frc.robot.commands.intake.IntakeFwdCommand;
 import frc.robot.commands.intake.IntakeRevCommand;
@@ -74,15 +76,16 @@ public class RobotContainer {
 
 
     public Command getAutonomousCommand() {
-        DrivetrainSubsystem.getInstance().zeroGyro();
-        ChoreoTrajectory trajectory1 = Choreo.getTrajectory("4 Piece Auto Sub Top");
-        DrivetrainSubsystem.getInstance().setYaw(trajectory1.getInitialPose().getRotation().getDegrees());
-        DrivetrainSubsystem.getInstance().resetOdometry(trajectory1.getInitialPose());
-        DrivetrainSubsystem.getInstance().setTrajectoryState(new Trajectory.State(0,0,0,DrivetrainSubsystem.getInstance().getPose(), 0));
+//        DrivetrainSubsystem.getInstance().zeroGyro();
+//        ChoreoTrajectory trajectory1 = Choreo.getTrajectory("4 Piece Auto Sub Top");
+//        DrivetrainSubsystem.getInstance().setYaw(trajectory1.getInitialPose().getRotation().getDegrees());
+//        DrivetrainSubsystem.getInstance().resetOdometry(trajectory1.getInitialPose());
+//        DrivetrainSubsystem.getInstance().setTrajectoryState(new Trajectory.State(0,0,0,DrivetrainSubsystem.getInstance().getPose(), 0));
+//
+//        return new SequentialCommandGroup(
+//                new ChoreoTrajectoryCommand(trajectory1)
+//        );
 
-        return new SequentialCommandGroup(
-                new ChoreoTrajectoryCommand(trajectory1)
-        );
-
+        return AutosBuilder.generateAutos(Paths.FourPieceAuto);
     }
 }

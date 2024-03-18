@@ -23,7 +23,7 @@ public class ChoreoTrajectoryCommand extends Command {
     }
     @Override
     public void initialize() {
-        DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.trajectory);
+        DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.teleop);
         timer.start();
     }
 

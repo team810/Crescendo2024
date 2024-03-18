@@ -109,11 +109,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 		thetaController.setTolerance(.01);
 
-		driveController = new HolonomicDriveController(
-				new PIDController(4.7,.08,1.2),
-				new PIDController(4.7,.08,1.2),
-				new ProfiledPIDController(6,.5,0,new TrapezoidProfile.Constraints(Math.PI * 2,Math.PI))
-		);
+		if (Robot.isReal())
+		{
+			driveController = new HolonomicDriveController(
+					new PIDController(4.7,.08,1.2),
+					new PIDController(4.7,.08,1.2),
+					new ProfiledPIDController(6.5,.5,0,new TrapezoidProfile.Constraints(Math.PI * 2,Math.PI ))
+			);
+		}else{
+			driveController = new HolonomicDriveController(
+					new PIDController(4.7,.08,1.2),
+					new PIDController(4.7,.08,1.2),
+					new ProfiledPIDController(6,.5,0,new TrapezoidProfile.Constraints(Math.PI * 2,Math.PI ))
+			);
+		}
 
 		driveController.setTolerance(new Pose2d(.1,.1, new Rotation2d(.01)));
 		driveController.setEnabled(false);
@@ -136,6 +145,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
             case teleop -> {
 				targetSpeeds = telopSpeeds;
 				driveController.setEnabled(false);
+
             }
             case trajectory -> {
 				driveController.setEnabled(true);
@@ -228,6 +238,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
 		backRightPosition = backRight.getModulePosition();
+		newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d());
+		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
+	}
+	public void resetOdometryAuto(Pose2d newPose)
+	{
+		frontLeftPosition = frontLeft.getModulePosition();
+		frontRightPosition = frontRight.getModulePosition();
+		backLeftPosition = backLeft.getModulePosition();
+		backRightPosition = backRight.getModulePosition();
+		newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d());
 		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
 	}
 
@@ -293,5 +313,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	public void setYaw(double yaw)
 	{
 		gyro.setYaw(yaw);
+	}
+
+	public void resetDriveController()
+	{
+		driveController.getXController().reset();
+		driveController.getYController().reset();
 	}
 }

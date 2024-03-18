@@ -21,8 +21,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private double targetTopTestRPM;
     private double targetBottomTestRPM;
 
-    private ShooterState speakerState;
-
     private ShooterSubsystem()
     {
         if (Robot.isReal())
@@ -41,7 +39,6 @@ public class ShooterSubsystem extends SubsystemBase {
 //        SmartDashboard.putNumber("TopSpeedTest", 2000);
 //        SmartDashboard.putNumber("BottomSpeedTest", 2000);
 
-        setSpeakerState(new ShooterState(0,0, MechanismState.stored));
         targetTopTestRPM = 2000;
         targetBottomTestRPM = 2000;
     }
@@ -108,14 +105,6 @@ public class ShooterSubsystem extends SubsystemBase {
             INSTANCE = new ShooterSubsystem();
         }
         return INSTANCE;
-    }
-
-    public ShooterState getSpeakerState() {
-        return speakerState;
-    }
-
-    public void setSpeakerState(ShooterState speakerState) {
-        this.speakerState = speakerState;
     }
 }
 
