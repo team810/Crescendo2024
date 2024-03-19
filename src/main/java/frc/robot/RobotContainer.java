@@ -1,13 +1,11 @@
 package frc.robot;
 
-import com.choreo.lib.Choreo;
-import com.choreo.lib.ChoreoTrajectory;
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.IO.Controls;
 import frc.robot.IO.IO;
@@ -31,6 +29,8 @@ import frc.robot.subsystem.tbone.TBoneSubsystem;
 import frc.robot.subsystem.vision.VisionSubsystem;
 
 public class RobotContainer {
+    private final ShuffleboardTab competitionTab;
+    private final SendableChooser<Paths> autoChooser = new SendableChooser<>();
 
     public RobotContainer() {
 
@@ -46,9 +46,17 @@ public class RobotContainer {
         LaserSubsystem.getInstance();
 
         DrivetrainSubsystem.getInstance().setDefaultCommand(new DriveCommand());
+        competitionTab = Shuffleboard.getTab("Competition");
 
-        Shuffleboard.getTab("Competition").addDouble("Match Time", DriverStation::getMatchTime);
-        Shuffleboard.getTab("Competition").addBoolean("Game Piece Detected", () -> (LaserSubsystem.getInstance().getLaserState() == LaserState.Detected));
+        competitionTab.addDouble("Match Time", DriverStation::getMatchTime);
+        competitionTab.addBoolean("Game Piece Detected", () -> (LaserSubsystem.getInstance().getLaserState() == LaserState.Detected));
+
+        autoChooser.addOption("4 Piece Autos", Paths.FourPieceAuto);
+        autoChooser.addOption("Score", Paths.Score);
+        autoChooser.addOption("2 Piece Bottom", Paths.TwoPieceBottom);
+        autoChooser.setDefaultOption("None", Paths.None);
+
+        competitionTab.add("Auto Chooser", autoChooser);
 
         buttonConfig();
     }
@@ -76,16 +84,6 @@ public class RobotContainer {
 
 
     public Command getAutonomousCommand() {
-//        DrivetrainSubsystem.getInstance().zeroGyro();
-//        ChoreoTrajectory trajectory1 = Choreo.getTrajectory("4 Piece Auto Sub Top");
-//        DrivetrainSubsystem.getInstance().setYaw(trajectory1.getInitialPose().getRotation().getDegrees());
-//        DrivetrainSubsystem.getInstance().resetOdometry(trajectory1.getInitialPose());
-//        DrivetrainSubsystem.getInstance().setTrajectoryState(new Trajectory.State(0,0,0,DrivetrainSubsystem.getInstance().getPose(), 0));
-//
-//        return new SequentialCommandGroup(
-//                new ChoreoTrajectoryCommand(trajectory1)
-//        );
-
-        return AutosBuilder.generateAutos(Paths.FourPieceAuto);
+        return AutosBuilder.generateAutos(autoChooser.getSelected());
     }
 }

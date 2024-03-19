@@ -47,11 +47,15 @@ public class ChoreoTrajectoryCommand extends Command {
 
        DrivetrainSubsystem.getInstance().setTrajectoryState(stateTrajectory);
        previousVelocity = velocity;
+
+       DrivetrainSubsystem.getInstance().drive();
     }
 
    @Override
    public void end(boolean interrupted) {
        DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.teleop);
+       DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.stop);
+       DrivetrainSubsystem.getInstance().drive();
    }
 
     @Override

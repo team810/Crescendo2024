@@ -79,10 +79,21 @@ public class AutosBuilder {
                         generateScoreTapeCommand()
                 );
             }
-            case Bottom2Piece -> {
+            case TwoPieceBottom -> {
+                ArrayList<ChoreoTrajectory> trajectories = Choreo.getTrajectoryGroup("Bottom2Piece");
                 return new SequentialCommandGroup(
-                        new InstantCommand(() -> start(new ChoreoTrajectory()))
+                        new InstantCommand(() -> start(trajectories.get(0))),
+                        generateScoreSubCommand(),
+                        generateIntakeWhileDriveCommand(trajectories.get(0)),
+                        generateScoreSubCommand(),
+                        generateIntakeWhileDriveCommand(trajectories.get(1))
+
+
                 );
+            }
+            case Score ->
+            {
+                return generateScoreSubCommand();
             }
             case None -> {
                 return new InstantCommand(() -> System.out.println("No auto selected"));
