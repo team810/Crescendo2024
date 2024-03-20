@@ -60,7 +60,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	private Trajectory.State trajectoryState;
 	private SwerveDrivePoseEstimator poseEstimator;
 
-
 	private DrivetrainSubsystem() {
 
 		SwerveModuleDetails frontLeftDetails = new SwerveModuleDetails(FRONT_LEFT_MODULE_DRIVE_MOTOR, FRONT_LEFT_MODULE_STEER_MOTOR, FRONT_LEFT_MODULE_STEER_ENCODER, FRONT_LEFT_MODULE_STEER_OFFSET, SwerveModuleEnum.frontLeft);
@@ -163,7 +162,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		Logger.recordOutput("Drivetrain/estimatedPose", poseEstimator.getEstimatedPosition());
 		Logger.recordOutput("Drivetrain/states", new SwerveModuleState[]{frontLeftState, frontRightState, backLeftState, backRightState});
 		Logger.recordOutput("Drivetrain/gyro", getRotation());
-		Logger.recordOutput("RobotPose", getPose());
+		Logger.recordOutput("Drivetrain/estimatedPose", poseEstimator.getEstimatedPosition());
+		Logger.recordOutput("Drivetrain/pose", getPose());
 		Logger.recordOutput("Drivetrain/mode", mode);
 		Logger.recordOutput("Drivetrain/TargetPose", trajectoryState.poseMeters);
 		Logger.recordOutput("Drivetrain/AtSetpoint", getDriveControllerAtSetpoint());
@@ -175,6 +175,78 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 	}
 
+	public void drive()
+	{
+		if (RobotState.isDisabled())
+		{
+			targetSpeeds = new ChassisSpeeds(0,0,0);
+		}
+
+		SwerveModuleState[] states;
+		switch (mode)
+		{
+			case teleop -> {
+				targetSpeeds = telopSpeeds;
+				driveController.setEnabled(false);
+
+			}
+			case trajectory -> {
+				driveController.setEnabled(true);
+				trajectorySpeeds = driveController.calculate(
+						getPose(),
+						trajectoryState,
+						trajectoryState.poseMeters.getRotation()
+				);
+				if (Robot.isSimulation())
+				{
+					trajectorySpeeds.vxMetersPerSecond = trajectorySpeeds.vxMetersPerSecond * 1;
+					trajectorySpeeds.vyMetersPerSecond = trajectorySpeeds.vyMetersPerSecond * 1;
+					trajectorySpeeds.omegaRadiansPerSecond = trajectorySpeeds.omegaRadiansPerSecond * 1;
+				}else{
+					trajectorySpeeds.vxMetersPerSecond = trajectorySpeeds.vxMetersPerSecond * -1;
+					trajectorySpeeds.vyMetersPerSecond = trajectorySpeeds.vyMetersPerSecond * -1;
+					trajectorySpeeds.omegaRadiansPerSecond = trajectorySpeeds.omegaRadiansPerSecond * -1;
+				}
+
+				trajectorySpeeds.vxMetersPerSecond = MathUtil.clamp(trajectorySpeeds.vxMetersPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+				trajectorySpeeds.vyMetersPerSecond = MathUtil.clamp(trajectorySpeeds.vyMetersPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+				trajectorySpeeds.omegaRadiansPerSecond = MathUtil.clamp(trajectorySpeeds.omegaRadiansPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+
+				targetSpeeds = trajectorySpeeds;
+			}
+			case stop ->
+			{
+				targetSpeeds = new ChassisSpeeds(0,0,0);
+				driveController.setEnabled(false);
+			}
+			default -> {
+				driveController.setEnabled(false);
+				targetSpeeds = new ChassisSpeeds(0,0,0);
+			}
+		}
+
+		states = kinematics.toSwerveModuleStates(
+				ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds, getRotation())
+		);
+
+
+		states[0] = SwerveModuleState.optimize(states[0], frontLeft.getState().angle);
+		states[1] = SwerveModuleState.optimize(states[1], frontRight.getState().angle);
+		states[2] = SwerveModuleState.optimize(states[2], backLeft.getState().angle);
+		states[3] = SwerveModuleState.optimize(states[3], backRight.getState().angle);
+
+		frontLeft.setState(states[0]);
+		frontRight.setState(states[1]);
+		backLeft.setState(states[2]);
+		backRight.setState(states[3]);
+
+		// Commented out for testing purposes
+		frontLeftState = states[0];
+		frontRightState = states[1];
+		backLeftState = states[2];
+		backRightState = states[3];
+	}
+
 	private ChassisSpeeds getRobotRelativeSpeeds()
 	{
 		return kinematics.toChassisSpeeds(frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
@@ -183,19 +255,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	public void addVisionMeasurement(EstimatedRobotPose estimatedPose)
 	{
 		poseEstimator.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
-
 	}
 
-	public void resetOdometry(Pose2d newPose)
-	{
-		frontLeftPosition = frontLeft.getModulePosition();
-		frontRightPosition = frontRight.getModulePosition();
-		backLeftPosition = backLeft.getModulePosition();
-		backRightPosition = backRight.getModulePosition();
-//		newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d());
-//		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
-//		addVisionMeasurement();
-	}
 	public void resetOdometryAuto(Pose2d newPose)
 	{
 		frontLeftPosition = frontLeft.getModulePosition();
@@ -274,77 +335,5 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	{
 		driveController.getXController().reset();
 		driveController.getYController().reset();
-	}
-
-	public void drive()
-	{
-		if (RobotState.isDisabled())
-		{
-			targetSpeeds = new ChassisSpeeds(0,0,0);
-		}
-
-		SwerveModuleState[] states;
-		switch (mode)
-		{
-			case teleop -> {
-				targetSpeeds = telopSpeeds;
-				driveController.setEnabled(false);
-
-			}
-			case trajectory -> {
-				driveController.setEnabled(true);
-				trajectorySpeeds = driveController.calculate(
-						getPose(),
-						trajectoryState,
-						trajectoryState.poseMeters.getRotation()
-				);
-				if (Robot.isSimulation())
-				{
-					trajectorySpeeds.vxMetersPerSecond = trajectorySpeeds.vxMetersPerSecond * 1;
-					trajectorySpeeds.vyMetersPerSecond = trajectorySpeeds.vyMetersPerSecond * 1;
-					trajectorySpeeds.omegaRadiansPerSecond = trajectorySpeeds.omegaRadiansPerSecond * 1;
-				}else{
-					trajectorySpeeds.vxMetersPerSecond = trajectorySpeeds.vxMetersPerSecond * -1;
-					trajectorySpeeds.vyMetersPerSecond = trajectorySpeeds.vyMetersPerSecond * -1;
-					trajectorySpeeds.omegaRadiansPerSecond = trajectorySpeeds.omegaRadiansPerSecond * -1;
-				}
-
-				trajectorySpeeds.vxMetersPerSecond = MathUtil.clamp(trajectorySpeeds.vxMetersPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-				trajectorySpeeds.vyMetersPerSecond = MathUtil.clamp(trajectorySpeeds.vyMetersPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-				trajectorySpeeds.omegaRadiansPerSecond = MathUtil.clamp(trajectorySpeeds.omegaRadiansPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-
-				targetSpeeds = trajectorySpeeds;
-			}
-			case stop ->
-			{
-				targetSpeeds = new ChassisSpeeds(0,0,0);
-				driveController.setEnabled(false);
-			}
-			default -> {
-				driveController.setEnabled(false);
-				targetSpeeds = new ChassisSpeeds(0,0,0);
-			}
-		}
-
-		states = kinematics.toSwerveModuleStates(
-				ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds, getRotation())
-		);
-
-
-		states[0] = SwerveModuleState.optimize(states[0], frontLeft.getState().angle);
-		states[1] = SwerveModuleState.optimize(states[1], frontRight.getState().angle);
-		states[2] = SwerveModuleState.optimize(states[2], backLeft.getState().angle);
-		states[3] = SwerveModuleState.optimize(states[3], backRight.getState().angle);
-
-		frontLeft.setState(states[0]);
-		frontRight.setState(states[1]);
-		backLeft.setState(states[2]);
-		backRight.setState(states[3]);
-
-		// Commented out for testing purposes
-		frontLeftState = states[0];
-		frontRightState = states[1];
-		backLeftState = states[2];
-		backRightState = states[3];
 	}
 }

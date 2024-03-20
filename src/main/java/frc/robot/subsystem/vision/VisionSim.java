@@ -2,12 +2,13 @@ package frc.robot.subsystem.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
-import org.photonvision.EstimatedRobotPose;
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import org.photonvision.PhotonCamera;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import java.io.IOException;
 
@@ -29,9 +30,9 @@ public class VisionSim implements VisionIO {
 
         cameraProperties = new SimCameraProperties();
 
-//        cameraProperties.setFPS(90);
+        cameraProperties.setFPS(70);
 
-//        cameraProperties.setCalibration(320, 280, Rotation2d.fromDegrees(180));
+        cameraProperties.setCalibration(1280, 720, Rotation2d.fromDegrees(90));
 
         cameraProperties.setCalibError(0.25, 0.08);
 
@@ -60,18 +61,13 @@ public class VisionSim implements VisionIO {
         systemSim.addAprilTags(layout);
     }
 
-//    @Override
-//    public void updatePoseEstimation() {
-//        systemSim.update(DrivetrainSubsystem.getInstance().getPose());
-//    }
-
     @Override
-    public void updatePoseEstimation(Pose2d prevEstimatedPose) {
-
+    public void update() {
+        systemSim.update(DrivetrainSubsystem.getInstance().getPose());
     }
 
     @Override
-    public EstimatedRobotPose getRobotPosition() {
-        return null;
+    public PhotonPipelineResult getPipelineResults() {
+        return limelight.getLatestResult();
     }
 }
