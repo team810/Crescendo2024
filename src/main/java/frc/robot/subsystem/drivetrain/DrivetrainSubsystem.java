@@ -2,23 +2,21 @@ package frc.robot.subsystem.drivetrain;
 
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.util.AutoTurn.AutoTurnConstants;
-import frc.robot.util.Rectangles.AlignmentRectangle;
-import frc.robot.util.Rectangles.ShooterRectangle;
-import frc.robot.util.Shooting.ShooterUtilConstants;
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.EstimatedRobotPose;
 
 import static frc.robot.subsystem.drivetrain.DrivetrainConstants.*;
 
@@ -39,9 +37,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	private SwerveModuleState backLeftState;
 	private SwerveModuleState backRightState;
 
-	private ChassisSpeeds currentSpeeds;
-
 	private ChassisSpeeds targetSpeeds;
+	private ChassisSpeeds telopSpeeds;
+	private ChassisSpeeds trajectorySpeeds;
 
 	private final SwerveModule frontLeft;
 	private final SwerveModule frontRight;
@@ -56,14 +54,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	private SpeedMode speedMode;
 
 	private final PIDController thetaController;
-	private double targetAngle; // Rads
-	private boolean rotateEnabled;
 
-	private AlignmentRectangle currentRectangle;
+	private final HolonomicDriveController driveController;
 
-	private ShooterRectangle currentZone;
+	private Trajectory.State trajectoryState;
+	private SwerveDrivePoseEstimator poseEstimator;
 
-	private ChassisSpeeds autoSpeeds;
 
 	private DrivetrainSubsystem() {
 
@@ -78,7 +74,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		backRight = new SwerveModule(backRightDetails);
 
 		gyro = new Pigeon2(21);
-
+		gyro.reset();
 
 		frontLeftPosition = frontLeft.getModulePosition();
 		frontRightPosition = frontRight.getModulePosition();
@@ -90,13 +86,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		backLeftState = new SwerveModuleState();
 		backRightState = new SwerveModuleState();
 
-		currentSpeeds = new ChassisSpeeds();
-
 		targetSpeeds = new ChassisSpeeds();
+		telopSpeeds = new ChassisSpeeds();
+		trajectorySpeeds = new ChassisSpeeds();
 
 		kinematics = KINEMATICS;
 		odometry = new SwerveDriveOdometry(kinematics, getRotation(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
 		mode = DrivetrainMode.teleop;
+
 
 		setSpeedMode(SpeedMode.normal);
 
@@ -115,89 +112,38 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 		thetaController.setTolerance(.01);
 
-		rotateEnabled = false;
-		targetAngle = 0;
+		if (Robot.isReal())
+		{
+			driveController = new HolonomicDriveController(
+					new PIDController(4.7,.08,1.2),
+					new PIDController(4.7,.08,1.2),
+					new ProfiledPIDController(6.5,.5,0,new TrapezoidProfile.Constraints(Math.PI * 2,Math.PI ))
+			);
+		}else{
+			driveController = new HolonomicDriveController(
+					new PIDController(4.7,.08,1.2),
+					new PIDController(4.7,.08,1.2),
+					new ProfiledPIDController(6,.5,0,new TrapezoidProfile.Constraints(Math.PI * 2,Math.PI ))
+			);
+		}
 
-		currentRectangle = AutoTurnConstants.NO_RECTANGLE;
-		currentZone = ShooterUtilConstants.NO_ZONE;
+		driveController.setTolerance(new Pose2d(.1,.1, new Rotation2d(.01)));
+		driveController.setEnabled(false);
 
-		AutoBuilder.configureHolonomic(
-				this::getPose,
-				this::resetOdometryAuto,
-				this::getRobotRelativeSpeeds,
-				this::setAutoSpeeds,
-//				new HolonomicPathFollowerConfig(
-//						new PIDConstants(60,0,0),
-//						new PIDConstants(20,0,0),
-//						4.6,
-//						0.4,
-//						new ReplanningConfig()
-//				),
-				new HolonomicPathFollowerConfig(
-						new PIDConstants(.5,0,0),
-						new PIDConstants(.2,0,0),
-						4.6,
-						0.4,
-						new ReplanningConfig()
-				),
-				() -> {
-
-
-					var alliance = DriverStation.getAlliance();
-					if (alliance.isPresent()) {
-						return alliance.get() == DriverStation.Alliance.Red;
-					}
-					return false;
-				},
-				this
-		);
-
-		setAutoSpeeds(new ChassisSpeeds());
+		trajectoryState = new Trajectory.State();
+		mode = DrivetrainMode.stop;
+		poseEstimator = new SwerveDrivePoseEstimator(KINEMATICS, getRotation(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, new Pose2d());
 	}
+
 
 	@Override
 	public void periodic() {
 
 		if (RobotState.isDisabled())
 		{
-			targetSpeeds = new ChassisSpeeds(0,0,0);
+			DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.stop);
+			drive();
 		}
-
-
-		SwerveModuleState[] states;
-		if (RobotState.isTeleop())
-		{
-			states = kinematics.toSwerveModuleStates(
-					ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds, getRotation())
-			);
-		} else if (RobotState.isAutonomous()) {
-			targetSpeeds = getAutoSpeeds();
-			states = kinematics.toSwerveModuleStates(targetSpeeds);
-		}else{
-			targetSpeeds = new ChassisSpeeds(0,0,0);
-			states = kinematics.toSwerveModuleStates(
-					ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds, getRotation())
-			);
-		}
-
-		// This mess with the pid controllers, it makes the mid controllers go back and forth
-		states[0] = SwerveModuleState.optimize(states[0], frontLeft.getState().angle);
-		states[1] = SwerveModuleState.optimize(states[1], frontRight.getState().angle);
-		states[2] = SwerveModuleState.optimize(states[2], backLeft.getState().angle);
-		states[3] = SwerveModuleState.optimize(states[3], backRight.getState().angle);
-
-		frontLeft.setState(states[0]);
-		frontRight.setState(states[1]);
-		backLeft.setState(states[2]);
-		backRight.setState(states[3]);
-
-		// Commented out for testing purposes
-		frontLeftState = states[0];
-		frontRightState = states[1];
-		backLeftState = states[2];
-		backRightState = states[3];
-
-		currentSpeeds = targetSpeeds;
 
 		frontLeft.periodic();
 		frontRight.periodic();
@@ -211,12 +157,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 		odometry.update(getRotation(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
 
-		Logger.recordOutput("Drivetrain/currentStates", frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
-		Logger.recordOutput("Drivetrain/states", states);
-		Logger.recordOutput("Drivetrain/gyro", getRotation());
-		Logger.recordOutput("Drivetrain/targetAngle", this.targetAngle);
-		Logger.recordOutput("RobotPose", getPose());
+		poseEstimator.update(getRotation(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
 
+		Logger.recordOutput("Drivetrain/currentStates", frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
+		Logger.recordOutput("Drivetrain/estimatedPose", poseEstimator.getEstimatedPosition());
+		Logger.recordOutput("Drivetrain/states", new SwerveModuleState[]{frontLeftState, frontRightState, backLeftState, backRightState});
+		Logger.recordOutput("Drivetrain/gyro", getRotation());
+		Logger.recordOutput("RobotPose", getPose());
+		Logger.recordOutput("Drivetrain/mode", mode);
+		Logger.recordOutput("Drivetrain/TargetPose", trajectoryState.poseMeters);
+		Logger.recordOutput("Drivetrain/AtSetpoint", getDriveControllerAtSetpoint());
+
+		if (Robot.isSimulation())
+		{
+			gyro.setYaw(getRotation().getDegrees() + (Math.toDegrees(targetSpeeds.omegaRadiansPerSecond) * Robot.defaultPeriodSecs));
+		}
 
 	}
 
@@ -225,17 +180,23 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		return kinematics.toChassisSpeeds(frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
 	}
 
-	private void resetOdometryAuto(Pose2d newPose)
+	public void addVisionMeasurement(EstimatedRobotPose estimatedPose)
+	{
+		poseEstimator.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
+
+	}
+
+	public void resetOdometry(Pose2d newPose)
 	{
 		frontLeftPosition = frontLeft.getModulePosition();
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
 		backRightPosition = backRight.getModulePosition();
-//		navx.setAngle(newPose.getRotation().getRotations());
-		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
+//		newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d());
+//		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
+//		addVisionMeasurement();
 	}
-
-	public void resetOdometry(Pose2d newPose)
+	public void resetOdometryAuto(Pose2d newPose)
 	{
 		frontLeftPosition = frontLeft.getModulePosition();
 		frontRightPosition = frontRight.getModulePosition();
@@ -252,7 +213,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	{
 		return gyro.getRotation2d();
 	}
-
 	public void zeroGyro()
 	{
 		gyro.reset();
@@ -260,19 +220,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	public void setMode(DrivetrainMode mode) {
 		this.mode = mode;
 	}
+
 	/**
 	 * @param x this is the x input
 	 * @param y this is the y input
 	 * @param z rotate input
 	 * This should get values that have already been altered and changed on a scale of -Max speed to Max speed
 	 */
-	public void setTargetSpeeds(double x, double y, double z)
+	public void setTelopSpeeds(double x, double y, double z)
 	{
-		targetSpeeds = new ChassisSpeeds(y,x,z);
-	}
-
-	public void setTargetSpeeds(ChassisSpeeds speeds) {
-		targetSpeeds = speeds;
+		telopSpeeds = new ChassisSpeeds(y,x,z);
 	}
 
 	public Pose2d getPose()
@@ -282,52 +239,112 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 
 	public PIDController getThetaController() { return thetaController; }
-	public AlignmentRectangle getCurrentRectangle() { return currentRectangle; }
-	public ShooterRectangle getCurrentZone() {
-		return currentZone;
-	}
 
 	public void setSpeedMode(SpeedMode speedMode) {
 		this.speedMode = speedMode;
-		frontLeft.setSpeedMode(this.speedMode);
-		frontRight.setSpeedMode(this.speedMode);
-		backLeft.setSpeedMode(this.speedMode);
-		backRight.setSpeedMode(this.speedMode);
 	}
 
 	public SpeedMode getSpeedMode() {
 		return speedMode;
 	}
 
-	public double getTargetAngle() {
-		return targetAngle;
-	}
-
 	public ChassisSpeeds getTargetSpeeds() {
 		return targetSpeeds;
 	}
 
-	public void setTargetAngle(double targetAngle) {
-		this.targetAngle = targetAngle;
-	}
-	public boolean isRotateEnabled() {
-		return rotateEnabled;
+	public Trajectory.State getTrajectoryState() {
+		return trajectoryState;
 	}
 
-	public void setRotateEnabled(boolean rotateEnabled) {
-		this.rotateEnabled = rotateEnabled;
+	public void setTrajectoryState(Trajectory.State trajectoryState) {
+		this.trajectoryState = trajectoryState;
 	}
 
-	public void setAutoSpeeds(ChassisSpeeds autoSpeeds) {
-		if (Robot.isReal())
+	public boolean getDriveControllerAtSetpoint()
+	{
+		return driveController.atReference();
+	}
+
+	public void setYaw(double yaw)
+	{
+		gyro.setYaw(yaw);
+	}
+
+	public void resetDriveController()
+	{
+		driveController.getXController().reset();
+		driveController.getYController().reset();
+	}
+
+	public void drive()
+	{
+		if (RobotState.isDisabled())
 		{
-			autoSpeeds.vyMetersPerSecond = -1 * autoSpeeds.vyMetersPerSecond;
-			autoSpeeds.vxMetersPerSecond = -1 * autoSpeeds.vxMetersPerSecond;
+			targetSpeeds = new ChassisSpeeds(0,0,0);
 		}
-		this.autoSpeeds = autoSpeeds;
-	}
 
-	public ChassisSpeeds getAutoSpeeds() {
-		return autoSpeeds;
+		SwerveModuleState[] states;
+		switch (mode)
+		{
+			case teleop -> {
+				targetSpeeds = telopSpeeds;
+				driveController.setEnabled(false);
+
+			}
+			case trajectory -> {
+				driveController.setEnabled(true);
+				trajectorySpeeds = driveController.calculate(
+						getPose(),
+						trajectoryState,
+						trajectoryState.poseMeters.getRotation()
+				);
+				if (Robot.isSimulation())
+				{
+					trajectorySpeeds.vxMetersPerSecond = trajectorySpeeds.vxMetersPerSecond * 1;
+					trajectorySpeeds.vyMetersPerSecond = trajectorySpeeds.vyMetersPerSecond * 1;
+					trajectorySpeeds.omegaRadiansPerSecond = trajectorySpeeds.omegaRadiansPerSecond * 1;
+				}else{
+					trajectorySpeeds.vxMetersPerSecond = trajectorySpeeds.vxMetersPerSecond * -1;
+					trajectorySpeeds.vyMetersPerSecond = trajectorySpeeds.vyMetersPerSecond * -1;
+					trajectorySpeeds.omegaRadiansPerSecond = trajectorySpeeds.omegaRadiansPerSecond * -1;
+				}
+
+				trajectorySpeeds.vxMetersPerSecond = MathUtil.clamp(trajectorySpeeds.vxMetersPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+				trajectorySpeeds.vyMetersPerSecond = MathUtil.clamp(trajectorySpeeds.vyMetersPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+				trajectorySpeeds.omegaRadiansPerSecond = MathUtil.clamp(trajectorySpeeds.omegaRadiansPerSecond, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+
+				targetSpeeds = trajectorySpeeds;
+			}
+			case stop ->
+			{
+				targetSpeeds = new ChassisSpeeds(0,0,0);
+				driveController.setEnabled(false);
+			}
+			default -> {
+				driveController.setEnabled(false);
+				targetSpeeds = new ChassisSpeeds(0,0,0);
+			}
+		}
+
+		states = kinematics.toSwerveModuleStates(
+				ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds, getRotation())
+		);
+
+
+		states[0] = SwerveModuleState.optimize(states[0], frontLeft.getState().angle);
+		states[1] = SwerveModuleState.optimize(states[1], frontRight.getState().angle);
+		states[2] = SwerveModuleState.optimize(states[2], backLeft.getState().angle);
+		states[3] = SwerveModuleState.optimize(states[3], backRight.getState().angle);
+
+		frontLeft.setState(states[0]);
+		frontRight.setState(states[1]);
+		backLeft.setState(states[2]);
+		backRight.setState(states[3]);
+
+		// Commented out for testing purposes
+		frontLeftState = states[0];
+		frontRightState = states[1];
+		backLeftState = states[2];
+		backRightState = states[3];
 	}
 }

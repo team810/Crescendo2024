@@ -86,9 +86,8 @@ class SwerveModuleSim implements SwerveModuleIO {
 
 	@Override
 	public void setDriveVoltage(double voltage) {
-		driveVoltage = MathUtil.clamp(voltage, -12, 12);
-		driveVoltage = MathUtil.applyDeadband((driveVoltage / 12), .001);
-		driveVoltage = driveVoltage * 12;
+
+		driveVoltage = voltage * 12;
 	}
 	@Override
 	public void setSteerVoltage(double voltage) {

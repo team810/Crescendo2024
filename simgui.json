@@ -1,7 +1,17 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "Pigeon 2 (v6)[21]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Competition/Auto Chooser": "String Chooser",
       "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/Deploy Bar": "Command",
       "/SmartDashboard/Fire!": "Command",
@@ -25,9 +35,6 @@
         "open": true
       },
       "photonvision": {
-        "cam": {
-          "open": true
-        },
         "open": true
       }
     }

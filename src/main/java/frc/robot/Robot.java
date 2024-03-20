@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.MechanismState;
 import frc.robot.subsystem.deflector.DeflectorSubsystem;
+import frc.robot.subsystem.drivetrain.DrivetrainMode;
+import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
 import frc.robot.subsystem.intake.IntakeStates;
 import frc.robot.subsystem.intake.IntakeSubsystem;
 import frc.robot.subsystem.shooter.ShooterMode;
@@ -39,6 +41,7 @@ public class Robot extends LoggedRobot
 
         robotContainer = new RobotContainer();
         CameraServer.startAutomaticCapture();
+        CommandScheduler.getInstance().setPeriod(.03);
     }
 
     @Override
@@ -85,6 +88,7 @@ public class Robot extends LoggedRobot
         IntakeSubsystem.getInstance().setState(IntakeStates.off);
         TBoneSubsystem.getInstance().setState(MechanismState.stored);
         DeflectorSubsystem.getInstance().setDeflectorState(MechanismState.stored);
+        DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.teleop);
     }
     
     @Override

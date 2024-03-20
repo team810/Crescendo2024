@@ -7,7 +7,6 @@ public enum Controls {
     reset_gyro,
     slowMode,
     normalMode,
-//    rotateToTarget,
 
     autoAlignPodium,
     autoAlignAmp,
@@ -18,7 +17,6 @@ public enum Controls {
     sourceIntake,
 
     fire,
-    rev,
 
     releaseClimber,
     pinClimber,

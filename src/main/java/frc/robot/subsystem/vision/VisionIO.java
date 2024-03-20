@@ -1,10 +1,11 @@
 package frc.robot.subsystem.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import org.photonvision.EstimatedRobotPose;
 
 public interface VisionIO {
 
-    void updatePoseEstimation();
+    void updatePoseEstimation(Pose2d prevEstimatedPose);
 
-    Pose2d getRobotPosition();
+    EstimatedRobotPose getRobotPosition();
 }

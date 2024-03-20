@@ -17,7 +17,6 @@ interface SwerveModuleIO {
 	double getWheelPosition();
 	/**This function needs to be called periodically to ensure that the sim is periodically updated and this function also logs data.*/
 	void update();
-
 	/**
 	 * This resets the wheel distence traveled
 	 */
@@ -28,4 +27,6 @@ interface SwerveModuleIO {
 	 * Sets the ideal mode of the drive motor the default is break
 	 */
 	default void setIdleMode(CANSparkMax.IdleMode mode) {};
+
+	default void setWheelTargetVelocity(double targetVelocity) {};
 }

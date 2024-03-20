@@ -12,31 +12,22 @@ import org.littletonrobotics.junction.Logger;
 
 class SwerveModule {
     private final SwerveModuleIO module;
-
-    private final PIDController driveController;
     private final PIDController steerController;
 
     private SwerveModuleState state;
     private SwerveModulePosition position;
 
-    private SpeedMode mode;
     private final SwerveModuleDetails details;
 
+    private final DriveControlMode driveControlMode;
     public SwerveModule(SwerveModuleDetails details)
     {
-        driveController = new PIDController(0,0,0, Robot.defaultPeriodSecs);
         steerController = new PIDController(0,0,0, Robot.defaultPeriodSecs);
 
-        driveController.setTolerance(10);
         steerController.setTolerance(0);
 
         if (Robot.isReal())
         {
-            driveController.setP(DrivetrainConstants.DRIVE_CONTROLLER_REAL.kP);
-            driveController.setP(DrivetrainConstants.DRIVE_CONTROLLER_REAL.kP);
-            driveController.setI(DrivetrainConstants.DRIVE_CONTROLLER_REAL.kI);
-            driveController.setD(DrivetrainConstants.DRIVE_CONTROLLER_REAL.kD);
-
             steerController.setP(DrivetrainConstants.STEER_CONTROLLER_REAL.kP);
             steerController.setI(DrivetrainConstants.STEER_CONTROLLER_REAL.kI);
             steerController.setD(DrivetrainConstants.STEER_CONTROLLER_REAL.kD);
@@ -44,11 +35,9 @@ class SwerveModule {
             steerController.enableContinuousInput(-Math.PI, Math.PI);
             steerController.setTolerance(.005);
 
-        } else if (Robot.isSimulation()) {
+            driveControlMode = DriveControlMode.Voltage;
 
-            driveController.setP(DrivetrainConstants.DRIVE_CONTROLLER_SIM.kP);
-            driveController.setI(DrivetrainConstants.DRIVE_CONTROLLER_SIM.kI);
-            driveController.setD(DrivetrainConstants.DRIVE_CONTROLLER_SIM.kD);
+        } else if (Robot.isSimulation()) {
 
             steerController.setP(DrivetrainConstants.STEER_CONTROLLER_SIM.kP);
             steerController.setI(DrivetrainConstants.STEER_CONTROLLER_SIM.kI);
@@ -56,6 +45,8 @@ class SwerveModule {
 
             steerController.enableContinuousInput(-Math.PI, Math.PI);
             steerController.setTolerance(.005);
+
+            driveControlMode = DriveControlMode.Voltage;
         }else{
             throw new RuntimeException(
                     "The PID controls for both the drive controller " +
@@ -89,38 +80,36 @@ class SwerveModule {
     void periodic(){
         module.setState(state);
 
-//        double speedOfMotorRPM =
-//                (state.speedMetersPerSecond / DrivetrainConstants.DISTANCE_PER_REVOLUTION)
-//                        * 60 * DrivetrainConstants.GEAR_REDUCTION_DRIVE;
-//
-//        module.setDriveVoltage(
-//                driveController.calculate(module.getWheelVelocity(), speedOfMotorRPM)
-//        );
-        module.setDriveVoltage(state.speedMetersPerSecond / DrivetrainConstants.NORMAL_SPEED);
 
+        if (driveControlMode == DriveControlMode.Velocity)
+        {
+            double speedOfMotorRPM =
+                    (state.speedMetersPerSecond / DrivetrainConstants.DISTANCE_PER_REVOLUTION)
+                            * 60 * DrivetrainConstants.GEAR_REDUCTION_DRIVE;
+            module.setWheelTargetVelocity(speedOfMotorRPM);
+            Logger.recordOutput("Drivetrain/" + details.module.name() + "/TargetVelocity", speedOfMotorRPM);
+        }else{
+            module.setDriveVoltage(state.speedMetersPerSecond / DrivetrainConstants.NORMAL_SPEED);
+        }
         module.setSteerVoltage(
                 steerController.calculate(module.getWheelAngle().getRadians(),
                         MathUtil.angleModulus(state.angle.getRadians()))
         );
 
-//        Logger.recordOutput("Drivetrain/" + details.module.name() +
-//                "/TargetVelocity", speedOfMotorRPM);
         Logger.recordOutput("Drivetrain/" + details.module.name() +
                 "/TargetAngle", state.angle.getRadians());
         Logger.recordOutput("Drivetrain/" + details.module.name() +
                 "/AtAngleSetpoint", steerController.atSetpoint());
 
-        if (RobotState.isDisabled())
-        {
-            steerController.reset();
 
-            driveController.reset();
-        }
         module.update();
         position.distanceMeters = module.getWheelPosition();
         position.angle = module.getWheelAngle();
 
-
+        if (RobotState.isDisabled())
+        {
+            steerController.reset();
+        }
     }
 
     void setState(SwerveModuleState state)
@@ -132,16 +121,6 @@ class SwerveModule {
     {
         module.resetPosition();
         position = new SwerveModulePosition();
-    }
-
-    void setSpeedMode(SpeedMode mode)
-    {
-        this.mode = mode;
-    }
-
-    SpeedMode getSpeedMode()
-    {
-        return mode;
     }
 
     public SwerveModulePosition getModulePosition()
@@ -159,5 +138,11 @@ class SwerveModule {
                 * DrivetrainConstants.DISTANCE_PER_REVOLUTION;
 
         return new SwerveModuleState(speedOfWheel, module.getWheelAngle());
+    }
+
+    enum DriveControlMode
+    {
+        Velocity,
+        Voltage
     }
 }
