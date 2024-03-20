@@ -47,7 +47,7 @@ public final class DrivetrainConstants {
 	 * Units Rad per second
 	 */
 	public static final double WHEEL_DIAMETER  = .1016;
-	public static final double MAX_AUTO_SPEED = 4;
+	public static final double MAX_AUTO_SPEED = 1.5;
 
 	/**
 	 * The distance traveled for ever rotation of the wheel. PI * Wheel Diameter in inches

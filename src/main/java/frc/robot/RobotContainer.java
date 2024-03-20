@@ -54,6 +54,8 @@ public class RobotContainer {
         autoChooser.addOption("4 Piece Autos", Paths.FourPieceAuto);
         autoChooser.addOption("Score", Paths.Score);
         autoChooser.addOption("2 Piece Bottom", Paths.TwoPieceBottom);
+        autoChooser.addOption("Testing", Paths.Testing);
+        autoChooser.addOption("Sub Middle", Paths.TwoPieceCenter);
         autoChooser.setDefaultOption("None", Paths.None);
 
         competitionTab.add("Auto Chooser", autoChooser);

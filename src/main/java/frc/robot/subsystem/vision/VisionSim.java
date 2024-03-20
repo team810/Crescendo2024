@@ -3,7 +3,7 @@ package frc.robot.subsystem.vision;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.subsystem.drivetrain.DrivetrainSubsystem;
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
@@ -60,13 +60,18 @@ public class VisionSim implements VisionIO {
         systemSim.addAprilTags(layout);
     }
 
+//    @Override
+//    public void updatePoseEstimation() {
+//        systemSim.update(DrivetrainSubsystem.getInstance().getPose());
+//    }
+
     @Override
-    public void updatePoseEstimation() {
-        systemSim.update(DrivetrainSubsystem.getInstance().getPose());
+    public void updatePoseEstimation(Pose2d prevEstimatedPose) {
+
     }
 
     @Override
-    public Pose2d getRobotPosition() {
-        return systemSim.getRobotPose().toPose2d();
+    public EstimatedRobotPose getRobotPosition() {
+        return null;
     }
 }

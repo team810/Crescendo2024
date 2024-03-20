@@ -3,14 +3,16 @@ package frc.robot.subsystem.vision;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.common.hardware.VisionLEDMode;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class VisionReal implements VisionIO {
@@ -41,30 +43,36 @@ public class VisionReal implements VisionIO {
 
     }
 
-    public void updatePoseEstimation() {
+    public void updatePoseEstimation(Pose2d prevEstimatedPose) {
 
-        if (limelight.isConnected())
-        {
-            poseEstimation = estimator.update();
-        }
+        estimator.setReferencePose(prevEstimatedPose);
+
+//        if (limelight.isConnected())
+//        {
+//            poseEstimation = estimator.update();
+//        }
     }
 
-    public Pose2d getRobotPosition() {
+    public EstimatedRobotPose getRobotPosition() {
+
         if (limelight.isConnected())
         {
+
+            poseEstimation = estimator.update();
             if (poseEstimation.isPresent()) {
-                return new Pose2d(
-                        new Translation2d(poseEstimation.get().estimatedPose.getX(),
-                                poseEstimation.get().estimatedPose.getY()),
-                        new Rotation2d(-poseEstimation.get().estimatedPose.
-                                getRotation().getAngle())
-                );
+//                System.out.println("ESTIMATING. . . ");
+                Logger.recordOutput("Vision/estimatedPose", poseEstimation.get().estimatedPose.toPose2d());
+                System.out.println("FOUND");
+                return poseEstimation.get();
             }  else {
-                return new Pose2d(new Translation2d(0, 0),
-                        new Rotation2d(0));
+                System.out.println("NO");
+                return new EstimatedRobotPose(new Pose3d(), -1, new ArrayList<PhotonTrackedTarget>(),
+                        PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR);
             }
         }else{
-            return new Pose2d(0,0, new Rotation2d());
+            System.out.println("WORSE");
+            return new EstimatedRobotPose(new Pose3d(), -1, new ArrayList<PhotonTrackedTarget>(),
+                    PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR);
         }
 
     }

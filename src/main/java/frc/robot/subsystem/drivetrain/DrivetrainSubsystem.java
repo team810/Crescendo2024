@@ -6,6 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.EstimatedRobotPose;
 
 import static frc.robot.subsystem.drivetrain.DrivetrainConstants.*;
 
@@ -56,6 +58,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	private final HolonomicDriveController driveController;
 
 	private Trajectory.State trajectoryState;
+	private SwerveDrivePoseEstimator poseEstimator;
 
 
 	private DrivetrainSubsystem() {
@@ -128,39 +131,42 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		driveController.setEnabled(false);
 
 		trajectoryState = new Trajectory.State();
-
+		mode = DrivetrainMode.stop;
+		poseEstimator = new SwerveDrivePoseEstimator(KINEMATICS, getRotation(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, new Pose2d());
 	}
+
 
 	@Override
 	public void periodic() {
 
 		if (RobotState.isDisabled())
 		{
-			frontLeft.periodic();
-			frontRight.periodic();
-			backLeft.periodic();
-			backRight.periodic();
-
 			DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.stop);
 			drive();
 		}
+
+		frontLeft.periodic();
+		frontRight.periodic();
+		backLeft.periodic();
+		backRight.periodic();
 
 		frontLeftPosition = frontLeft.getModulePosition();
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
 		backRightPosition = backRight.getModulePosition();
 
-
 		odometry.update(getRotation(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
 
+		poseEstimator.update(getRotation(), new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition});
+
 		Logger.recordOutput("Drivetrain/currentStates", frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
+		Logger.recordOutput("Drivetrain/estimatedPose", poseEstimator.getEstimatedPosition());
 		Logger.recordOutput("Drivetrain/states", new SwerveModuleState[]{frontLeftState, frontRightState, backLeftState, backRightState});
 		Logger.recordOutput("Drivetrain/gyro", getRotation());
 		Logger.recordOutput("RobotPose", getPose());
 		Logger.recordOutput("Drivetrain/mode", mode);
 		Logger.recordOutput("Drivetrain/TargetPose", trajectoryState.poseMeters);
 		Logger.recordOutput("Drivetrain/AtSetpoint", getDriveControllerAtSetpoint());
-
 
 		if (Robot.isSimulation())
 		{
@@ -174,14 +180,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		return kinematics.toChassisSpeeds(frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
 	}
 
+	public void addVisionMeasurement(EstimatedRobotPose estimatedPose)
+	{
+		poseEstimator.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
+
+	}
+
 	public void resetOdometry(Pose2d newPose)
 	{
 		frontLeftPosition = frontLeft.getModulePosition();
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
 		backRightPosition = backRight.getModulePosition();
-		newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d());
-		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
+//		newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d());
+//		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
+//		addVisionMeasurement();
 	}
 	public void resetOdometryAuto(Pose2d newPose)
 	{
@@ -333,6 +346,5 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		frontRightState = states[1];
 		backLeftState = states[2];
 		backRightState = states[3];
-
 	}
 }
