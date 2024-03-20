@@ -4,7 +4,7 @@ public enum Paths {
     FourPieceAuto,
     TwoPieceBottom,
     Score,
-    Testing,
+    Side,
     TwoPieceCenter,
     None
 }

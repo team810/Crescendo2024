@@ -55,9 +55,12 @@ public class AutosBuilder {
 
     private static Command generateIntakeWhileDriveCommand(ChoreoTrajectory trajectory)
     {
-        return new ParallelCommandGroup(
+        return new ParallelRaceGroup(
                 new IntakeFwdCommand(),
-                new ChoreoTrajectoryCommand(trajectory)
+                new SequentialCommandGroup(
+                        new ChoreoTrajectoryCommand(trajectory),
+                        new WaitCommand(1)
+                )
         );
     }
 
@@ -96,17 +99,16 @@ public class AutosBuilder {
                         generateIntakeWhileDriveCommand(trajectories.get(0)),
                         generateScoreSubCommand(),
                         generateIntakeWhileDriveCommand(trajectories.get(1))
-
-
                 );
             }
-            case Testing ->
+            case Side ->
             {
                 ArrayList<ChoreoTrajectory> trajectories = Choreo.getTrajectoryGroup("Side");
                 return new SequentialCommandGroup(
                         new InstantCommand(() -> start(trajectories.get(0))),
                         generateScoreSubCommand(),
-                        generateIntakeWhileDriveCommand(trajectories.get(0))
+                        generateIntakeWhileDriveCommand(trajectories.get(0)),
+                        generateScoreSubCommand()
                 );
             }
             case TwoPieceCenter ->
