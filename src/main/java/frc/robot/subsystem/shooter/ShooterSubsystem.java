@@ -2,10 +2,9 @@ package frc.robot.subsystem.shooter;
 
 
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.MechanismState;
 import frc.robot.Robot;
-import frc.robot.util.Shooting.ShooterState;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -36,8 +35,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooterMode = ShooterMode.off;
 
-//        SmartDashboard.putNumber("TopSpeedTest", 2000);
-//        SmartDashboard.putNumber("BottomSpeedTest", 2000);
+        SmartDashboard.putNumber("TopSpeedTest", 4000);
+        SmartDashboard.putNumber("BottomSpeedTest", 2000);
 
         targetTopTestRPM = 2000;
         targetBottomTestRPM = 2000;
@@ -46,8 +45,8 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-//        targetTopTestRPM = SmartDashboard.getNumber("TopSpeedTest", targetTopTestRPM);
-//        targetBottomTestRPM = SmartDashboard.getNumber("BottomSpeedTest", targetBottomTestRPM);
+        targetTopTestRPM = SmartDashboard.getNumber("TopSpeedTest", targetTopTestRPM);
+        targetBottomTestRPM = SmartDashboard.getNumber("BottomSpeedTest", targetBottomTestRPM);
 
         if (RobotState.isEnabled())
         {
@@ -58,12 +57,12 @@ public class ShooterSubsystem extends SubsystemBase {
                     bottomTargetSpeed = -2000;
                 }
                 case Amp -> {
-                    topTargetSpeed = 4000;
-                    bottomTargetSpeed = 2000;
+                    topTargetSpeed = 1800;
+                    bottomTargetSpeed = 1800;
                 }
                 case Tape -> {
-                    topTargetSpeed = 4000;
-                    bottomTargetSpeed = 2000;
+                    topTargetSpeed = targetTopTestRPM;
+                    bottomTargetSpeed = targetBottomTestRPM;
                 }
                 case Subwoofer -> {
                     topTargetSpeed = 3500;

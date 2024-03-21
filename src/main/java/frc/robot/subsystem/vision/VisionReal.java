@@ -62,15 +62,15 @@ public class VisionReal implements VisionIO {
             if (poseEstimation.isPresent()) {
 //                System.out.println("ESTIMATING. . . ");
                 Logger.recordOutput("Vision/estimatedPose", poseEstimation.get().estimatedPose.toPose2d());
-                System.out.println("FOUND");
+
                 return poseEstimation.get();
             }  else {
-                System.out.println("NO");
+
                 return new EstimatedRobotPose(new Pose3d(), -1, new ArrayList<PhotonTrackedTarget>(),
                         PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR);
             }
         }else{
-            System.out.println("WORSE");
+
             return new EstimatedRobotPose(new Pose3d(), -1, new ArrayList<PhotonTrackedTarget>(),
                     PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR);
         }

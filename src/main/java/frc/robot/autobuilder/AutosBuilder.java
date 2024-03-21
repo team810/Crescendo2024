@@ -27,6 +27,7 @@ public class AutosBuilder {
 
         DrivetrainSubsystem.getInstance().resetOdometryAuto(trajectory.getInitialState().getPose());
         DrivetrainSubsystem.getInstance().setYaw(trajectory.getInitialPose().getRotation().getDegrees());
+
     }
 
     private static Command generateScoreTapeCommand()
@@ -56,11 +57,12 @@ public class AutosBuilder {
     private static Command generateIntakeWhileDriveCommand(ChoreoTrajectory trajectory)
     {
         return new ParallelRaceGroup(
-                new IntakeFwdCommand(),
                 new SequentialCommandGroup(
-                        new ChoreoTrajectoryCommand(trajectory),
+                        new IntakeFwdCommand(),
                         new WaitCommand(1)
-                )
+                ),
+
+                new ChoreoTrajectoryCommand(trajectory)
         );
     }
 
@@ -81,6 +83,7 @@ public class AutosBuilder {
                 ArrayList<ChoreoTrajectory> trajectories = Choreo.getTrajectoryGroup("4Piece");
 
                 return new SequentialCommandGroup(
+                        new InstantCommand(() -> System.out.println("Started")),
                         new InstantCommand(() -> start(trajectories.get(0))),
                         generateScoreSubCommand(),
                         generateIntakeWhileDriveCommand(trajectories.get(0)),
@@ -104,6 +107,7 @@ public class AutosBuilder {
             case Side ->
             {
                 ArrayList<ChoreoTrajectory> trajectories = Choreo.getTrajectoryGroup("Side");
+
                 return new SequentialCommandGroup(
                         new InstantCommand(() -> start(trajectories.get(0))),
                         generateScoreSubCommand(),
@@ -118,6 +122,27 @@ public class AutosBuilder {
                         new InstantCommand(() -> start(trajectories.get(0))),
                         generateScoreSubCommand(),
                         generateIntakeWhileDrivingWithoutLaser(trajectories.get(0))
+                );
+            }
+            case ThreePieceMid ->
+            {
+                ArrayList<ChoreoTrajectory> trajectories = Choreo.getTrajectoryGroup("SubMiddle3Peice");
+                return new SequentialCommandGroup(
+                        new InstantCommand(() -> start(trajectories.get(0))),
+                        generateScoreSubCommand(),
+                        generateIntakeWhileDrivingWithoutLaser(trajectories.get(0)),
+                        new InstantCommand(() -> {
+
+                        }),
+                        generateIntakeWhileDriveCommand(trajectories.get(1))
+                );
+            }
+            case Move ->
+            {
+                ArrayList<ChoreoTrajectory> trajectories = Choreo.getTrajectoryGroup("Move");
+                return new SequentialCommandGroup(
+                        new InstantCommand(() -> start(trajectories.get(0))),
+                        new ChoreoTrajectoryCommand(trajectories.get(0))
                 );
             }
             case Score ->

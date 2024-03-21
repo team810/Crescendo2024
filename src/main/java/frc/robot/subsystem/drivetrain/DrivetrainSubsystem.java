@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -326,8 +327,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
 			}
 		}
 
+
+		var alliance = DriverStation.getAlliance();
+		int invert = 1;
+
+		if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+			invert = -1;
+		}
+
+
 		states = kinematics.toSwerveModuleStates(
-				ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds, getRotation())
+				ChassisSpeeds.fromFieldRelativeSpeeds(targetSpeeds.vxMetersPerSecond * invert,
+						targetSpeeds.vyMetersPerSecond * invert,
+						targetSpeeds.omegaRadiansPerSecond,
+						getRotation())
 		);
 
 
