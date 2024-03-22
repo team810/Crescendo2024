@@ -2,6 +2,7 @@ package frc.robot.autobuilder;
 
 import com.choreo.lib.Choreo;
 import com.choreo.lib.ChoreoTrajectory;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.lib.MechanismState;
 import frc.robot.commands.ChoreoTrajectoryCommand;
@@ -23,6 +24,11 @@ public class AutosBuilder {
 
     private static void start(ChoreoTrajectory trajectory)
     {
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+        {
+            trajectory = trajectory.flipped();
+        }
+
         DrivetrainSubsystem.getInstance().setMode(DrivetrainMode.stop);
 
         DrivetrainSubsystem.getInstance().resetOdometryAuto(trajectory.getInitialState().getPose());
@@ -56,18 +62,40 @@ public class AutosBuilder {
 
     private static Command generateIntakeWhileDriveCommand(ChoreoTrajectory trajectory)
     {
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+        {
+            trajectory = trajectory.flipped();
+        }
         return new ParallelRaceGroup(
                 new SequentialCommandGroup(
                         new IntakeFwdCommand(),
                         new WaitCommand(1)
                 ),
+                new SequentialCommandGroup(
+                        new ChoreoTrajectoryCommand(trajectory),
+                        new WaitCommand(1)
+                )
+        );
+    }
+    private static Command generateParallelCommandIntake(ChoreoTrajectory trajectory)
+    {
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+        {
+            trajectory = trajectory.flipped();
+        }
 
+        return new ParallelCommandGroup(
+                new IntakeFwdCommand(),
                 new ChoreoTrajectoryCommand(trajectory)
         );
     }
 
     private static Command generateIntakeWhileDrivingWithoutLaser(ChoreoTrajectory trajectory)
     {
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+        {
+            trajectory = trajectory.flipped();
+        }
         return new ParallelCommandGroup(
                 new InstantCommand(() -> IntakeSubsystem.getInstance().setState(IntakeStates.fwd)),
                 new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterMode(ShooterMode.Tape)),
@@ -111,7 +139,7 @@ public class AutosBuilder {
                 return new SequentialCommandGroup(
                         new InstantCommand(() -> start(trajectories.get(0))),
                         generateScoreSubCommand(),
-                        generateIntakeWhileDriveCommand(trajectories.get(0)),
+                        generateParallelCommandIntake(trajectories.get(0)),
                         generateScoreSubCommand()
                 );
             }

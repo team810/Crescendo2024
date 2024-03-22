@@ -125,9 +125,12 @@ class SwerveModule {
 
     public SwerveModulePosition getModulePosition()
     {
-        if (Robot.isReal()) {
-            position.distanceMeters = -position.distanceMeters;
-        }
+//        if (Robot.isReal()) {
+//            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+//                position.distanceMeters = position.distanceMeters;
+//            } else {position.distanceMeters = -position.distanceMeters;}
+//        }
+        position.distanceMeters = -position.distanceMeters;
         return position;
     }
 

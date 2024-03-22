@@ -120,7 +120,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 					new PIDController(4.7,.08,1.2),
 					new ProfiledPIDController(6.5,.5,0,new TrapezoidProfile.Constraints(Math.PI * 2,Math.PI ))
 			);
-		}else{
+		} else {
 			driveController = new HolonomicDriveController(
 					new PIDController(4.7,.08,1.2),
 					new PIDController(4.7,.08,1.2),
@@ -199,11 +199,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
 	}
 	public void resetOdometryAuto(Pose2d newPose)
 	{
+
 		frontLeftPosition = frontLeft.getModulePosition();
 		frontRightPosition = frontRight.getModulePosition();
 		backLeftPosition = backLeft.getModulePosition();
 		backRightPosition = backRight.getModulePosition();
-		newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d());
+
+		var alliance = DriverStation.getAlliance();
+
+		if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+			newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d());
+		} else {
+			newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d());
+		}
+
 		odometry.resetPosition(getRotation(),new SwerveModulePosition[] {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition}, newPose);
 	}
 
@@ -331,8 +340,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		var alliance = DriverStation.getAlliance();
 		int invert = 1;
 
-		if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+		if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red && RobotState.isAutonomous()) {
 			invert = -1;
+		}else{
+			invert = 1;
 		}
 
 
@@ -354,7 +365,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 		backLeft.setState(states[2]);
 		backRight.setState(states[3]);
 
-		// Commented out for testing purposes
 		frontLeftState = states[0];
 		frontRightState = states[1];
 		backLeftState = states[2];
