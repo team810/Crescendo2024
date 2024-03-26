@@ -56,6 +56,7 @@ public class RobotContainer {
         autoChooser.addOption("2 Piece Bottom", Paths.TwoPieceBottom);
         autoChooser.addOption("Side", Paths.Side);
         autoChooser.addOption("Sub Middle", Paths.TwoPieceCenter);
+        autoChooser.addOption("Deliver", Paths.Deliver);
         autoChooser.setDefaultOption("None", Paths.None);
 
         competitionTab.add("Auto Chooser", autoChooser);

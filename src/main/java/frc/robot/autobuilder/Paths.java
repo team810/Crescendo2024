@@ -7,6 +7,7 @@ public enum Paths {
     ThreePieceMid,
     Side,
     TwoPieceCenter,
+    Deliver,
     Move,
     None
 }

@@ -329,6 +329,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 			{
 				targetSpeeds = new ChassisSpeeds(0,0,0);
 				driveController.setEnabled(false);
+
 			}
 			default -> {
 				driveController.setEnabled(false);

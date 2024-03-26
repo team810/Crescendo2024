@@ -104,6 +104,21 @@ public class AutosBuilder {
         );
     }
 
+    private static Command runIntakeAndShooterWhileDrivingCommand(ChoreoTrajectory trajectory)
+    {
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+        {
+            trajectory = trajectory.flipped();
+        }
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> {
+                    IntakeSubsystem.getInstance().setState(IntakeStates.fwd);
+                    ShooterSubsystem.getInstance().setShooterMode(ShooterMode.Amp);
+                }),
+                new ChoreoTrajectoryCommand(trajectory)
+        );
+    }
+
     public static Command generateAutos(Paths path) {
 
         switch (path) {
@@ -141,6 +156,14 @@ public class AutosBuilder {
                         generateScoreSubCommand(),
                         generateParallelCommandIntake(trajectories.get(0)),
                         generateScoreSubCommand()
+                );
+            }
+            case Deliver ->
+            {
+                ArrayList<ChoreoTrajectory> trajectories = Choreo.getTrajectoryGroup("Deliver");
+                return new SequentialCommandGroup(
+                        new InstantCommand(() -> start(trajectories.get(0))),
+                        runIntakeAndShooterWhileDrivingCommand(trajectories.get(0))
                 );
             }
             case TwoPieceCenter ->
